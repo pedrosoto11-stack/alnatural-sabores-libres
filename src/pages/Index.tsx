@@ -3,10 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
 import { Leaf, Heart, Shield, Star } from "lucide-react";
 import heroProducts from "@/assets/hero-products.jpg";
-
 const Index = () => {
-  return (
-    <main>
+  return <main>
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/20">
         <div className="container mx-auto px-4 py-20">
@@ -19,9 +17,7 @@ const Index = () => {
               <p className="text-xl lg:text-2xl text-muted-foreground font-medium">
                 Sabores naturales sin gluten
               </p>
-              <p className="text-lg text-muted-foreground max-w-md mx-auto lg:mx-0">
-                Hecho con plátano y yuca, pensado para ti. Descubre el sabor auténtico de Venezuela en cada bocado.
-              </p>
+              <p className="text-lg text-muted-foreground max-w-md mx-auto lg:mx-0">Hecho con plátano, yuca y cambur verde, pensado para ti. Descubre el sabor auténtico de Venezuela en cada bocado.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button size="lg" className="bg-primary hover:bg-primary-dark text-lg px-8 py-6" asChild>
                   <NavLink to="/productos">Ver productos</NavLink>
@@ -32,11 +28,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative">
-              <img 
-                src={heroProducts}
-                alt="Productos Al Natural - Arepas, tequeños y panes sin gluten"
-                className="w-full h-auto rounded-2xl shadow-2xl"
-              />
+              <img src={heroProducts} alt="Productos Al Natural - Arepas, tequeños y panes sin gluten" className="w-full h-auto rounded-2xl shadow-2xl" />
               <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground rounded-full p-6 shadow-lg">
                 <Leaf className="h-8 w-8" />
               </div>
@@ -128,8 +120,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </main>
-  );
+    </main>;
 };
-
 export default Index;
