@@ -8,6 +8,9 @@ import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
 import panesImg from "@/assets/panes.jpg";
 import fajitasImg from "@/assets/fajitas.jpg";
+import fajitaYucaImg from "@/assets/fajita-yuca.png";
+import fajitaYucaPimentonImg from "@/assets/fajita-yuca-pimenton.png";
+import fajitaYucaZanahoriaImg from "@/assets/fajita-yuca-zanahoria.png";
 import pataconesImg from "@/assets/patacones.jpg";
 interface Product {
   id: string;
@@ -26,21 +29,21 @@ const products: Product[] = [
   category: "Fajitas",
   description: "Tortilla libre de gluten hecha 100% con yuca fresca. Su sabor neutro las hace perfectas para wraps, tacos y pizzas saludables. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Hechas solo con yuca fresca", "Sin gluten", "Empacadas al vacío", "Versátiles para recetas dulces o saladas"],
-  image: fajitasImg
+  image: fajitaYucaImg
 }, {
   id: "fajita-yuca-pimenton",
   name: "Fajita de Yuca con Pimentón",
   category: "Fajitas",
   description: "Fajitas de yuca con el sabor y color natural del pimentón, logrando una opción atractiva, sabrosa y nutritiva. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Yuca + pimentón natural", "Sin gluten", "Color y sabor atractivo", "Empacadas al vacío"],
-  image: fajitasImg
+  image: fajitaYucaPimentonImg
 }, {
   id: "fajita-yuca-zanahoria",
   name: "Fajita de Yuca con Zanahoria",
   category: "Fajitas",
   description: "Tortillas de yuca con el aporte nutritivo de la zanahoria. Rica en betacarotenos y fibra, con un color vibrante y sabor suave. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Yuca + zanahoria fresca", "Fuente de fibra y antioxidantes", "Sin gluten", "Rica en betacarotenos"],
-  image: fajitasImg
+  image: fajitaYucaZanahoriaImg
 }, {
   id: "fajita-yuca-acelga-espinaca",
   name: "Fajita de Yuca con Acelga y Espinacas",
