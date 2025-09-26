@@ -12,6 +12,7 @@ import fajitasImg from "@/assets/fajitas.jpg";
 import fajitaYucaImg from "@/assets/fajita-yuca.png";
 import fajitaYucaPimentonImg from "@/assets/fajita-yuca-pimenton.png";
 import fajitaYucaZanahoriaImg from "@/assets/fajita-yuca-zanahoria.png";
+import fajitaYucaAcelgaEspinacaImg from "@/assets/fajita-yuca-acelga-espinaca.jpg";
 import pataconesImg from "@/assets/patacones.jpg";
 interface Product {
   id: string;
@@ -51,7 +52,7 @@ const products: Product[] = [
   category: "Fajitas",
   description: "Fajitas de yuca con el poder verde de la acelga y espinaca. Rica en hierro, fibra y antioxidantes naturales. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Yuca + acelga + espinaca", "Fuente natural de hierro y fibra", "Sin gluten", "Sin aditivos"],
-  image: fajitasImg
+  image: fajitaYucaAcelgaEspinacaImg
 }, {
   id: "fajita-yuca-oregano",
   name: "Fajita de Yuca con Orégano",
