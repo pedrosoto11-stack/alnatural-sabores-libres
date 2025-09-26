@@ -13,6 +13,7 @@ import fajitaYucaImg from "@/assets/fajita-yuca.png";
 import fajitaYucaPimentonImg from "@/assets/fajita-yuca-pimenton.png";
 import fajitaYucaZanahoriaImg from "@/assets/fajita-yuca-zanahoria.png";
 import fajitaYucaAcelgaEspinacaImg from "@/assets/fajita-yuca-acelga-espinaca.jpg";
+import fajitaYucaOreganoImg from "@/assets/fajita-yuca-oregano.png";
 import pataconesImg from "@/assets/patacones.jpg";
 interface Product {
   id: string;
@@ -59,7 +60,7 @@ const products: Product[] = [
   category: "Fajitas",
   description: "Fajitas de yuca aromatizadas con orégano natural. El sabor fresco y herbal potencia la yuca. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Yuca + orégano natural", "Sabor único", "Sin aditivos", "Apta para celíacos"],
-  image: fajitasImg
+  image: fajitaYucaOreganoImg
 }, {
   id: "fajita-platano-amarillo",
   name: "Fajita de Plátano Amarillo",
