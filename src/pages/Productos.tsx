@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Minus } from "lucide-react";
 import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
@@ -187,6 +188,7 @@ const Productos = () => {
       variant?: string;
     };
   }>({});
+  const [selectedImage, setSelectedImage] = useState<{src: string, alt: string} | null>(null);
   const {
     toast
   } = useToast();
@@ -251,8 +253,13 @@ const Productos = () => {
         {/* Products Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map(product => <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-video overflow-hidden">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <div className="aspect-video overflow-hidden cursor-pointer">
+                <img 
+                  src={product.image} 
+                  alt={product.name} 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+                  onClick={() => setSelectedImage({src: product.image, alt: product.name})}
+                />
               </div>
               
               <CardHeader>
@@ -335,6 +342,19 @@ const Productos = () => {
           </Button>
         </div>
       </div>
+
+      {/* Image Modal */}
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl w-full p-0">
+          {selectedImage && (
+            <img 
+              src={selectedImage.src} 
+              alt={selectedImage.alt} 
+              className="w-full h-auto max-h-[90vh] object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </main>;
 };
 export default Productos;
