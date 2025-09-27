@@ -18,7 +18,7 @@ import fajitasImg from "@/assets/fajitas.jpg";
 import fajitaYucaImg from "@/assets/fajita-yuca.png";
 import fajitaYucaPimentonImg from "@/assets/fajita-yuca-pimenton.png";
 import fajitaYucaZanahoriaImg from "@/assets/fajita-yuca-zanahoria.png";
-import fajitaYucaAcelgaEspinacaImg from "@/assets/fajita-yuca-acelga-espinaca.jpg";
+import fajitaYucaAcelgaEspinacaImg from "@/assets/fajita-yuca-acelga-espinaca.png";
 import fajitaYucaOreganoImg from "@/assets/fajita-yuca-oregano.png";
 import fajitaPlátanoAmarilloImg from "@/assets/fajita-platano-amarillo.png";
 import fajitaPlátanoVerdeImg from "@/assets/fajita-platano-verde.png";
