@@ -9,6 +9,8 @@ import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
 import tequenosYucaImg from "@/assets/tequenos-yuca.png";
 import tequenosPlátanoVerdeImg from "@/assets/tequenos-platano-verde.png";
+import tequenosPlátanoAmarilloImg from "@/assets/tequenos-platano-amarillo.png";
+import tequenosCombinadoImg from "@/assets/tequenos-combinado.png";
 import panesImg from "@/assets/panes.jpg";
 import fajitasImg from "@/assets/fajitas.jpg";
 import fajitaYucaImg from "@/assets/fajita-yuca.png";
@@ -109,14 +111,14 @@ const products: Product[] = [
   category: "Tequeños",
   description: "El tequeño más sabroso: masa de plátano maduro amarillo y queso fresco. Versión naturalmente dulce del snack venezolano. 10 unidades de 60g empacadas al vacío.",
   benefits: ["Masa de plátano maduro amarillo", "Toque naturalmente dulce", "Sin gluten", "Empacados al vacío"],
-  image: tequenosImg
+  image: tequenosPlátanoAmarilloImg
 }, {
   id: "tequenos-combinados-queso",
   name: "Tequeños Combinados (Yuca + Plátano) con Queso",
   category: "Tequeños",
   description: "Masa mixta de yuca y plátano, rellena de queso fresco: un tequeño único y sin gluten. Una propuesta innovadora. 10 unidades de 60g empacadas al vacío.",
   benefits: ["Masa combinada de yuca + plátano", "Relleno de queso fresco venezolano", "Libres de gluten", "Snack delicioso y versátil"],
-  image: tequenosImg
+  image: tequenosCombinadoImg
 },
 // PANES - 2 productos (las dos presentaciones)
 {
