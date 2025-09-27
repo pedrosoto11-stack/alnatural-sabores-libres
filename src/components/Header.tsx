@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, Lock, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { AccessCodeModal } from "./AccessCodeModal";
 import logoAlNatural from "@/assets/logo-al-natural.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAccessModal, setShowAccessModal] = useState(false);
   const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown } = useCart();
+  const { isAuthenticated, accessCode, logout } = useAuth();
 
   const navigationItems = [
     { path: "/", label: "Inicio" },
@@ -41,16 +46,20 @@ const Header = () => {
                   {item.variant && `${item.variant} - `}Cantidad: {item.quantity}
                 </p>
               </div>
-              <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+              {isAuthenticated && (
+                <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+              )}
             </div>
           ))}
           <div className="border-t pt-3 mt-3">
-            <div className="flex justify-between items-center font-semibold">
-              <span>Total:</span>
-              <span>${cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
-            </div>
+            {isAuthenticated && (
+              <div className="flex justify-between items-center font-semibold mb-3">
+                <span>Total:</span>
+                <span>${cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
+              </div>
+            )}
             <Button className="w-full mt-3 bg-primary hover:bg-primary-dark">
-              Finalizar Pedido
+              {isAuthenticated ? "Enviar pedido por WhatsApp" : "Solicitar cotización"}
             </Button>
           </div>
         </div>
@@ -89,19 +98,52 @@ const Header = () => {
                 {item.label}
               </NavLink>
             ))}
-            <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="sm" className="relative">
-                  <ShoppingCart className="h-5 w-5" />
-                  {getTotalItems() > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {getTotalItems()}
-                    </span>
-                  )}
+            
+            <div className="flex items-center space-x-3">
+              {/* Auth Button */}
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                      <Lock className="h-4 w-4" />
+                      <span className="text-xs">{accessCode}</span>
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={logout}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Cerrar sesión
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowAccessModal(true)}
+                  className="flex items-center space-x-1"
+                >
+                  <Lock className="h-4 w-4" />
+                  <span>Acceso</span>
                 </Button>
-              </PopoverTrigger>
-              <CartDropdown />
-            </Popover>
+              )}
+              
+              {/* Cart */}
+              <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="relative">
+                    <ShoppingCart className="h-5 w-5" />
+                    {getTotalItems() > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {getTotalItems()}
+                      </span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <CartDropdown />
+              </Popover>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -152,6 +194,11 @@ const Header = () => {
           </div>
         )}
       </nav>
+      
+      <AccessCodeModal 
+        isOpen={showAccessModal} 
+        onClose={() => setShowAccessModal(false)} 
+      />
     </header>
   );
 };

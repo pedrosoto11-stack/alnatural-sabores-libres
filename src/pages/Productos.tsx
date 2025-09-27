@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { AccessCodeModal } from "@/components/AccessCodeModal";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Lock } from "lucide-react";
 import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
 import tequenosYucaImg from "@/assets/tequenos-yuca.png";
@@ -200,9 +202,16 @@ const products: Product[] = [
 }];
 const Productos = () => {
   const [selectedImage, setSelectedImage] = useState<{src: string, alt: string} | null>(null);
+  const [showAccessModal, setShowAccessModal] = useState(false);
   const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
+  const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const handleAddToCart = (product: Product, variant?: string) => {
+    if (!isAuthenticated) {
+      setShowAccessModal(true);
+      return;
+    }
+    
     addToCart({
       id: product.id,
       name: product.name,
@@ -228,8 +237,33 @@ const Productos = () => {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">Descubre nuestra línea completa de productos sin gluten, elaborados con plátano, yuca y cambur verde de la mejor calidad.</p>
         </div>
 
+        {/* Authentication Notice */}
+        {!isAuthenticated && (
+          <div className="mb-8 p-6 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <Lock className="h-5 w-5 text-amber-600 mt-0.5" />
+              <div>
+                <h3 className="font-medium text-amber-800 mb-1">
+                  Acceso para Distribuidores
+                </h3>
+                <p className="text-amber-700 text-sm mb-3">
+                  Para ver precios y realizar pedidos necesitas un código de acceso. Los consumidores pueden explorar nuestros productos y solicitar información.
+                </p>
+                <Button 
+                  size="sm" 
+                  onClick={() => setShowAccessModal(true)}
+                  className="bg-amber-600 hover:bg-amber-700 text-white"
+                >
+                  Ingresar código de acceso
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Cart Summary */}
-        {getTotalItems() > 0 && <div className="mb-8 p-4 bg-primary/10 rounded-lg border border-primary/20">
+        {getTotalItems() > 0 && (
+          <div className="mb-8 p-4 bg-primary/10 rounded-lg border border-primary/20">
             <div className="flex justify-between items-center">
               <span className="font-medium">
                 Productos en tu pedido: {getTotalItems()}
@@ -239,10 +273,11 @@ const Productos = () => {
                 className="bg-primary hover:bg-primary-dark"
                 onClick={handleFinalizarPedido}
               >
-                Finalizar pedido
+                {isAuthenticated ? "Finalizar pedido" : "Solicitar cotización"}
               </Button>
             </div>
-          </div>}
+          </div>
+        )}
 
         {/* Products Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -279,6 +314,14 @@ const Productos = () => {
                   </div>
                 </div>
 
+                {/* Price - Only for authenticated users */}
+                {isAuthenticated && (
+                  <div className="mb-3">
+                    <span className="text-lg font-bold text-primary">$15.99</span>
+                    <span className="text-sm text-muted-foreground ml-1">por paquete</span>
+                  </div>
+                )}
+
                 {/* Variants */}
                 {product.variants && <div className="space-y-2">
                     <h4 className="font-medium text-sm">Presentaciones:</h4>
@@ -286,16 +329,34 @@ const Productos = () => {
                       {product.variants.map(variant => {
                   const quantity = getCartQuantity(product.id, variant);
                   return <div key={variant} className="flex items-center justify-between p-2 rounded bg-muted/30">
-                            <span className="text-sm">{variant}</span>
+                            <div className="flex-1">
+                              <span className="text-sm">{variant}</span>
+                              {isAuthenticated && (
+                                <div className="text-xs text-muted-foreground mt-1">$15.99</div>
+                              )}
+                            </div>
                             <div className="flex items-center space-x-2">
-                              {quantity > 0 && <Button size="sm" variant="outline" onClick={() => removeFromCart(product.id, variant)} className="h-8 w-8 p-0">
+                              {quantity > 0 && isAuthenticated && (
+                                <Button size="sm" variant="outline" onClick={() => removeFromCart(product.id, variant)} className="h-8 w-8 p-0">
                                   <Minus className="h-4 w-4" />
-                                </Button>}
-                              {quantity > 0 && <span className="text-sm font-medium w-8 text-center">
+                                </Button>
+                              )}
+                              {quantity > 0 && (
+                                <span className="text-sm font-medium w-8 text-center">
                                   {quantity}
-                                </span>}
-                              <Button size="sm" variant="default" onClick={() => handleAddToCart(product, variant)} className="h-8 w-8 p-0 bg-primary hover:bg-primary-dark">
-                                <Plus className="h-4 w-4" />
+                                </span>
+                              )}
+                              <Button 
+                                size="sm" 
+                                variant={isAuthenticated ? "default" : "outline"} 
+                                onClick={() => handleAddToCart(product, variant)} 
+                                className={isAuthenticated ? "h-8 w-8 p-0 bg-primary hover:bg-primary-dark" : "h-8 text-xs px-2"}
+                              >
+                                {isAuthenticated ? (
+                                  <Plus className="h-4 w-4" />
+                                ) : (
+                                  "Cotizar"
+                                )}
                               </Button>
                             </div>
                           </div>;
@@ -304,20 +365,44 @@ const Productos = () => {
                   </div>}
 
                 {/* Add to cart for products without variants */}
-                {!product.variants && <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      {getCartQuantity(product.id) > 0 && <Button size="sm" variant="outline" onClick={() => removeFromCart(product.id)}>
-                          <Minus className="h-4 w-4" />
-                        </Button>}
-                      {getCartQuantity(product.id) > 0 && <span className="font-medium">
-                          {getCartQuantity(product.id)}
-                        </span>}
+                {!product.variants && (
+                  <div className="space-y-3">
+                    {isAuthenticated && (
+                      <div>
+                        <span className="text-lg font-bold text-primary">$15.99</span>
+                        <span className="text-sm text-muted-foreground ml-1">por paquete</span>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        {getCartQuantity(product.id) > 0 && isAuthenticated && (
+                          <Button size="sm" variant="outline" onClick={() => removeFromCart(product.id)}>
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {getCartQuantity(product.id) > 0 && (
+                          <span className="font-medium">
+                            {getCartQuantity(product.id)}
+                          </span>
+                        )}
+                      </div>
+                      <Button 
+                        onClick={() => handleAddToCart(product)} 
+                        variant={isAuthenticated ? "default" : "outline"}
+                        className={isAuthenticated ? "bg-primary hover:bg-primary-dark" : ""}
+                      >
+                        {isAuthenticated ? (
+                          <>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Agregar al pedido
+                          </>
+                        ) : (
+                          "Solicitar cotización"
+                        )}
+                      </Button>
                     </div>
-                    <Button onClick={() => handleAddToCart(product)} className="bg-primary hover:bg-primary-dark">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Agregar al pedido
-                    </Button>
-                  </div>}
+                  </div>
+                )}
               </CardContent>
             </Card>)}
         </div>
@@ -349,6 +434,11 @@ const Productos = () => {
           )}
         </DialogContent>
       </Dialog>
+      
+      <AccessCodeModal 
+        isOpen={showAccessModal} 
+        onClose={() => setShowAccessModal(false)} 
+      />
     </main>;
 };
 export default Productos;
