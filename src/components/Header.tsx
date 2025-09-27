@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import logoAlNatural from "@/assets/logo-al-natural.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
 
   const navigationItems = [
     { path: "/", label: "Inicio" },
@@ -16,6 +18,42 @@ const Header = () => {
     { path: "/clientes", label: "Clientes" },
     { path: "/contacto", label: "Contacto" },
   ];
+
+  const CartDropdown = () => (
+    <PopoverContent className="w-80 p-4">
+      <h3 className="font-semibold text-lg mb-3">Carrito de Compras</h3>
+      {cartItems.length === 0 ? (
+        <div className="text-center py-6">
+          <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+          <p className="text-muted-foreground">Tu carrito está vacío</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Agrega productos desde nuestra sección de productos
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {cartItems.map((item, index) => (
+            <div key={index} className="flex justify-between items-center p-2 border rounded">
+              <div>
+                <p className="font-medium">{item.name}</p>
+                <p className="text-sm text-muted-foreground">Cantidad: {item.quantity}</p>
+              </div>
+              <p className="font-semibold">${item.price}</p>
+            </div>
+          ))}
+          <div className="border-t pt-3 mt-3">
+            <div className="flex justify-between items-center font-semibold">
+              <span>Total:</span>
+              <span>${cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
+            </div>
+            <Button className="w-full mt-3 bg-primary hover:bg-primary-dark">
+              Finalizar Pedido
+            </Button>
+          </div>
+        </div>
+      )}
+    </PopoverContent>
+  );
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -48,9 +86,19 @@ const Header = () => {
                 {item.label}
               </NavLink>
             ))}
-            <Button variant="default" className="bg-primary hover:bg-primary-dark">
-              Haz tu pedido
-            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  {cartItems.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartItems.length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <CartDropdown />
+            </Popover>
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,13 +131,20 @@ const Header = () => {
                   {item.label}
                 </NavLink>
               ))}
-              <Button 
-                variant="default" 
-                className="bg-primary hover:bg-primary-dark mt-4 mx-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Haz tu pedido
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="relative mt-4 mx-2" onClick={() => setIsMenuOpen(false)}>
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    Carrito
+                    {cartItems.length > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {cartItems.length}
+                      </span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <CartDropdown />
+              </Popover>
             </div>
           </div>
         )}
