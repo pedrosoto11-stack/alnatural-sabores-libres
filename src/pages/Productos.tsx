@@ -181,7 +181,7 @@ const products: Product[] = [
   category: "Arepas",
   description: "Arepa tradicional venezolana hecha con masa de yuca fresca. Textura suave, sabor neutro y 100% libre de gluten. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Hechas con yuca fresca", "Sin gluten", "Empacadas al vacío", "Versátiles para recetas dulces y saladas"],
-  image: arepaPlátanoAmarilloImg
+  image: arepaYucaImg
 }, {
   id: "arepa-yuca-mixta-6-sabores",
   name: "Arepa Mixta de Yuca (6 Sabores)",
