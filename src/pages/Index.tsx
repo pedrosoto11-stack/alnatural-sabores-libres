@@ -11,8 +11,8 @@ const Index = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left space-y-6">
               <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
-                <span className="text-primary">Del campo</span><br />
-                <span>a tu mesa</span>
+                <span className="text-primary text-7xl">Del campo</span><br />
+                <span className="text-8xl">a tu mesa</span>
               </h1>
               <p className="text-xl lg:text-2xl text-muted-foreground font-medium">
                 Sabores naturales sin gluten
