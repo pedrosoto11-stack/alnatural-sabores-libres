@@ -15,6 +15,8 @@ import fajitaYucaZanahoriaImg from "@/assets/fajita-yuca-zanahoria.png";
 import fajitaYucaAcelgaEspinacaImg from "@/assets/fajita-yuca-acelga-espinaca.jpg";
 import fajitaYucaOreganoImg from "@/assets/fajita-yuca-oregano.png";
 import fajitaPlátanoAmarilloImg from "@/assets/fajita-platano-amarillo.png";
+import fajitaPlátanoVerdeImg from "@/assets/fajita-platano-verde.png";
+import fajitaCamburVerdeImg from "@/assets/fajita-cambur-verde.png";
 import pataconesImg from "@/assets/patacones.jpg";
 interface Product {
   id: string;
@@ -75,14 +77,14 @@ const products: Product[] = [
   category: "Fajitas",
   description: "Tortilla elaborada con plátano verde fresco, con textura firme y sabor neutro. Ideal para wraps salados. 6 unidades de 65g empacadas al vacío.",
   benefits: ["100% plátano verde", "Textura firme", "Sabor neutro", "Sin gluten"],
-  image: fajitasImg
+  image: fajitaPlátanoVerdeImg
 }, {
   id: "fajita-cambur-verde",
   name: "Fajita de Cambur Verde",
   category: "Fajitas",
   description: "Tortilla saludable hecha con cambur verde. Una opción innovadora, con un sabor suave y gran aporte de energía. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Hechas con cambur verde", "Fuente de potasio y fibra", "Sin gluten", "Aporte energético"],
-  image: fajitasImg
+  image: fajitaCamburVerdeImg
 },
 // TEQUEÑOS - 4 productos
 {
