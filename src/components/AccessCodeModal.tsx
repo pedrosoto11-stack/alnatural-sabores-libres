@@ -18,15 +18,14 @@ export const AccessCodeModal = ({ isOpen, onClose }: AccessCodeModalProps) => {
   const { login } = useAuth();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code.trim()) return;
 
     setIsLoading(true);
     
-    // Simular validación
-    setTimeout(() => {
-      const success = login(code);
+    try {
+      const success = await login(code);
       
       if (success) {
         toast({
@@ -42,8 +41,15 @@ export const AccessCodeModal = ({ isOpen, onClose }: AccessCodeModalProps) => {
           variant: "destructive",
         });
       }
-      setIsLoading(false);
-    }, 500);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al validar el código. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    }
+    
+    setIsLoading(false);
   };
 
   return (

@@ -13,7 +13,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAccessModal, setShowAccessModal] = useState(false);
   const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown } = useCart();
-  const { isAuthenticated, accessCode, logout } = useAuth();
+  const { isAuthenticated, accessCode, user, client, signOut } = useAuth();
 
   const navigationItems = [
     { path: "/", label: "Inicio" },
@@ -101,32 +101,41 @@ const Header = () => {
             
             <div className="flex items-center space-x-3">
               {/* Auth Button */}
-              {isAuthenticated ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
-                      <Lock className="h-4 w-4" />
-                      <span className="text-xs">{accessCode}</span>
-                      <ChevronDown className="h-3 w-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={logout}>
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Cerrar sesión
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              {user ? (
+                isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                        <Lock className="h-4 w-4" />
+                        <span className="text-xs">{client?.name || "Distribuidor"}</span>
+                        <ChevronDown className="h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={signOut}>
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Cerrar sesión
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setShowAccessModal(true)}
+                    className="flex items-center space-x-1"
+                  >
+                    <Lock className="h-4 w-4" />
+                    <span>Tengo código</span>
+                  </Button>
+                )
               ) : (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setShowAccessModal(true)}
-                  className="flex items-center space-x-1"
-                >
-                  <Lock className="h-4 w-4" />
-                  <span>Acceso</span>
-                </Button>
+                <NavLink to="/auth">
+                  <Button variant="outline" size="sm">
+                    <Lock className="h-4 w-4 mr-2" />
+                    Iniciar Sesión
+                  </Button>
+                </NavLink>
               )}
               
               {/* Cart */}
