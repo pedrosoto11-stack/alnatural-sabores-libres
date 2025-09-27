@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Minus } from "lucide-react";
 import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
+import tequenosYucaImg from "@/assets/tequenos-yuca.png";
+import tequenosPlátanoVerdeImg from "@/assets/tequenos-platano-verde.png";
 import panesImg from "@/assets/panes.jpg";
 import fajitasImg from "@/assets/fajitas.jpg";
 import fajitaYucaImg from "@/assets/fajita-yuca.png";
@@ -93,14 +95,14 @@ const products: Product[] = [
   category: "Tequeños",
   description: "El clásico venezolano con masa 100% yuca y queso fresco, libre de gluten. Crujientes por fuera y suaves por dentro. 10 unidades de 60g empacadas al vacío.",
   benefits: ["Masa 100% yuca fresca", "Relleno de queso fresco", "Libres de gluten", "Empacados al vacío"],
-  image: tequenosImg
+  image: tequenosYucaImg
 }, {
   id: "tequenos-platano-verde-queso",
   name: "Tequeños de Plátano Verde con Queso",
   category: "Tequeños",
   description: "Tequeños elaborados con masa de plátano verde y rellenos de queso fresco, 100% libres de gluten. 10 unidades de 60g empacadas al vacío.",
   benefits: ["Masa 100% plátano verde", "Libres de gluten", "Snack versátil", "Fáciles de preparar"],
-  image: tequenosImg
+  image: tequenosPlátanoVerdeImg
 }, {
   id: "tequenos-platano-amarillo-queso",
   name: "Tequeños de Plátano Amarillo con Queso",
