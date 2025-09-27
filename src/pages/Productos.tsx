@@ -14,6 +14,7 @@ import fajitaYucaPimentonImg from "@/assets/fajita-yuca-pimenton.png";
 import fajitaYucaZanahoriaImg from "@/assets/fajita-yuca-zanahoria.png";
 import fajitaYucaAcelgaEspinacaImg from "@/assets/fajita-yuca-acelga-espinaca.jpg";
 import fajitaYucaOreganoImg from "@/assets/fajita-yuca-oregano.png";
+import fajitaPlátanoAmarilloImg from "@/assets/fajita-platano-amarillo.png";
 import pataconesImg from "@/assets/patacones.jpg";
 interface Product {
   id: string;
@@ -67,7 +68,7 @@ const products: Product[] = [
   category: "Fajitas",
   description: "Fajita naturalmente dulce, elaborada con plátano maduro amarillo. Perfecta para recetas dulces y postres saludables. 6 unidades de 65g empacadas al vacío.",
   benefits: ["100% plátano amarillo", "Naturalmente dulce", "Sin gluten", "Ideal para postres"],
-  image: fajitasImg
+  image: fajitaPlátanoAmarilloImg
 }, {
   id: "fajita-platano-verde",
   name: "Fajita de Plátano Verde",
