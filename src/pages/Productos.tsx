@@ -12,6 +12,8 @@ import tequenosPlátanoVerdeImg from "@/assets/tequenos-platano-verde.png";
 import tequenosPlátanoAmarilloImg from "@/assets/tequenos-platano-amarillo.png";
 import tequenosCombinadoImg from "@/assets/tequenos-combinado.png";
 import panesImg from "@/assets/panes.jpg";
+import panes12UnidadesImg from "@/assets/panes-12-unidades.png";
+import panes4UnidadesImg from "@/assets/panes-4-unidades.png";
 import fajitasImg from "@/assets/fajitas.jpg";
 import fajitaYucaImg from "@/assets/fajita-yuca.png";
 import fajitaYucaPimentonImg from "@/assets/fajita-yuca-pimenton.png";
@@ -127,14 +129,14 @@ const products: Product[] = [
   category: "Panes",
   description: "Deliciosos pancitos elaborados con masa de yuca, queso fresco y almidón. 100% libres de gluten, congelados y listos para hornear. Paquete de 12 unidades (600g).",
   benefits: ["Hechos con yuca y almidón", "100% libres de gluten", "Empacados al vacío", "Preparación fácil: hornear 30 min a 180°C"],
-  image: panesImg
+  image: panes12UnidadesImg
 }, {
   id: "panes-yuca-queso-4",
   name: "Panes de Yuca con Queso - 4 unidades",
   category: "Panes",
   description: "Deliciosos pancitos elaborados con masa de yuca, queso fresco y almidón. 100% libres de gluten, congelados y listos para hornear. Paquete de 4 unidades (200g).",
   benefits: ["Hechos con yuca y almidón", "100% libres de gluten", "Empacados al vacío", "Preparación fácil: hornear 30 min a 180°C"],
-  image: panesImg
+  image: panes4UnidadesImg
 },
 // PATACONES - 1 producto
 {
