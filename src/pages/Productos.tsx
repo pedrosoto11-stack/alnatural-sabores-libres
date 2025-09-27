@@ -23,7 +23,13 @@ import fajitaYucaOreganoImg from "@/assets/fajita-yuca-oregano.png";
 import fajitaPlátanoAmarilloImg from "@/assets/fajita-platano-amarillo.png";
 import fajitaPlátanoVerdeImg from "@/assets/fajita-platano-verde.png";
 import fajitaCamburVerdeImg from "@/assets/fajita-cambur-verde.png";
-import pataconesImg from "@/assets/patacones.jpg";
+import pataconesImg from "@/assets/patacones.png";
+import arepaPlátanoVerdeImg from "@/assets/arepa-platano-verde.png";
+import arepaPlátanoVerdeAjoPeejilImg from "@/assets/arepa-platano-verde-ajo-perejil.png";
+import arepaPlátanoAmarilloImg from "@/assets/arepa-platano-amarillo.png";
+import arepaYucaImg from "@/assets/arepa-yuca.png";
+import arepaYucaMixtaImg from "@/assets/arepa-yuca-mixta.png";
+import arepaCamburVerdeImg from "@/assets/arepa-cambur-verde.png";
 interface Product {
   id: string;
   name: string;
@@ -154,42 +160,42 @@ const products: Product[] = [
   category: "Arepas",
   description: "La auténtica arepa venezolana elaborada con plátano verde. Nutritiva, de sabor suave y totalmente libre de gluten. 6 unidades de 140g empacadas al vacío.",
   benefits: ["100% naturales, hechas con plátano verde", "Libres de gluten", "Empacadas al vacío", "Fáciles de preparar"],
-  image: arepasImg
+  image: arepaPlátanoVerdeImg
 }, {
   id: "arepa-platano-verde-ajo-perejil",
   name: "Arepa de Plátano Verde con Ajo y Perejil",
   category: "Arepas",
   description: "Arepas elaboradas con plátano verde fresco, ajo y perejil natural. Combina el sabor neutro del plátano con el aroma fresco del perejil. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Elaboradas con plátano verde fresco", "Sazonadas con ajo y perejil natural", "Libres de gluten", "Ideales para rellenos salados"],
-  image: arepasImg
+  image: arepaCamburVerdeImg
 }, {
   id: "arepa-platano-amarillo",
   name: "Arepa de Plátano Amarillo",
   category: "Arepas",
   description: "Arepa dulce y nutritiva hecha con plátano maduro amarillo, 100% libre de gluten. Sabor naturalmente dulce y textura suave. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Hechas con plátano amarillo maduro", "Sabor naturalmente dulce", "Sin gluten", "Empacadas al vacío"],
-  image: arepasImg
+  image: arepaPlátanoVerdeAjoPeejilImg
 }, {
   id: "arepa-yuca",
   name: "Arepa de Yuca",
   category: "Arepas",
   description: "Arepa tradicional venezolana hecha con masa de yuca fresca. Textura suave, sabor neutro y 100% libre de gluten. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Hechas con yuca fresca", "Sin gluten", "Empacadas al vacío", "Versátiles para recetas dulces y saladas"],
-  image: arepasImg
+  image: arepaPlátanoAmarilloImg
 }, {
   id: "arepa-yuca-mixta-6-sabores",
   name: "Arepa Mixta de Yuca (6 Sabores)",
   category: "Arepas",
   description: "Una experiencia única: 6 arepas de yuca con diferentes sabores (remolacha, pimentón, zanahoria, acelgas y espinacas, semillas de chía y ajonjolí, orégano). 6 unidades de 140g empacadas al vacío.",
   benefits: ["Sin gluten y aptas para celíacos", "Empacadas al vacío", "Opción variada y nutritiva", "Colores y sabores naturales"],
-  image: arepasImg
+  image: arepaYucaImg
 }, {
   id: "arepa-cambur-verde",
   name: "Arepa de Cambur Verde",
   category: "Arepas",
   description: "Arepas elaboradas con cambur verde, una alternativa natural, nutritiva y libre de gluten. Sabor suave, ligeramente menos dulce que el plátano. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Elaboradas con cambur verde fresco", "Libres de gluten", "Empacadas al vacío", "Sabor diferente, nutritivo y versátil"],
-  image: arepasImg
+  image: arepaYucaMixtaImg
 }];
 const Productos = () => {
   const [cart, setCart] = useState<{
