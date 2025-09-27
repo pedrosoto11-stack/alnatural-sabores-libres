@@ -188,14 +188,14 @@ const products: Product[] = [
   category: "Arepas",
   description: "Una experiencia única: 6 arepas de yuca con diferentes sabores (remolacha, pimentón, zanahoria, acelgas y espinacas, semillas de chía y ajonjolí, orégano). 6 unidades de 140g empacadas al vacío.",
   benefits: ["Sin gluten y aptas para celíacos", "Empacadas al vacío", "Opción variada y nutritiva", "Colores y sabores naturales"],
-  image: arepaYucaImg
+  image: arepaYucaMixtaImg
 }, {
   id: "arepa-cambur-verde",
   name: "Arepa de Cambur Verde",
   category: "Arepas",
   description: "Arepas elaboradas con cambur verde, una alternativa natural, nutritiva y libre de gluten. Sabor suave, ligeramente menos dulce que el plátano. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Elaboradas con cambur verde fresco", "Libres de gluten", "Empacadas al vacío", "Sabor diferente, nutritivo y versátil"],
-  image: arepaYucaMixtaImg
+  image: arepaCamburVerdeImg
 }];
 const Productos = () => {
   const [cart, setCart] = useState<{
