@@ -3,11 +3,12 @@ import { NavLink } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useCart } from "@/contexts/CartContext";
 import logoAlNatural from "@/assets/logo-al-natural.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown } = useCart();
 
   const navigationItems = [
     { path: "/", label: "Inicio" },
@@ -36,9 +37,11 @@ const Header = () => {
             <div key={index} className="flex justify-between items-center p-2 border rounded">
               <div>
                 <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-muted-foreground">Cantidad: {item.quantity}</p>
+                <p className="text-sm text-muted-foreground">
+                  {item.variant && `${item.variant} - `}Cantidad: {item.quantity}
+                </p>
               </div>
-              <p className="font-semibold">${item.price}</p>
+              <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
             </div>
           ))}
           <div className="border-t pt-3 mt-3">
@@ -86,13 +89,13 @@ const Header = () => {
                 {item.label}
               </NavLink>
             ))}
-            <Popover>
+            <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative">
                   <ShoppingCart className="h-5 w-5" />
-                  {cartItems.length > 0 && (
+                  {getTotalItems() > 0 && (
                     <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {cartItems.length}
+                      {getTotalItems()}
                     </span>
                   )}
                 </Button>
@@ -131,14 +134,14 @@ const Header = () => {
                   {item.label}
                 </NavLink>
               ))}
-              <Popover>
+              <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" size="sm" className="relative mt-4 mx-2" onClick={() => setIsMenuOpen(false)}>
                     <ShoppingCart className="h-5 w-5 mr-2" />
                     Carrito
-                    {cartItems.length > 0 && (
+                    {getTotalItems() > 0 && (
                       <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {cartItems.length}
+                        {getTotalItems()}
                       </span>
                     )}
                   </Button>

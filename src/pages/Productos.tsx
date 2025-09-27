@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Minus } from "lucide-react";
 import arepasImg from "@/assets/arepas.jpg";
@@ -198,52 +199,24 @@ const products: Product[] = [
   image: arepaCamburVerdeImg
 }];
 const Productos = () => {
-  const [cart, setCart] = useState<{
-    [key: string]: {
-      product: Product;
-      quantity: number;
-      variant?: string;
-    };
-  }>({});
   const [selectedImage, setSelectedImage] = useState<{src: string, alt: string} | null>(null);
-  const {
-    toast
-  } = useToast();
-  const addToCart = (product: Product, variant?: string) => {
-    const key = `${product.id}-${variant || 'default'}`;
-    setCart(prev => ({
-      ...prev,
-      [key]: {
-        product,
-        quantity: (prev[key]?.quantity || 0) + 1,
-        variant
-      }
-    }));
+  const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
+  const { toast } = useToast();
+  const handleAddToCart = (product: Product, variant?: string) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: 15.99, // Precio por defecto, se puede personalizar por producto
+      variant
+    });
     toast({
       title: "Producto agregado",
       description: `${product.name}${variant ? ` (${variant})` : ''} agregado a tu pedido`
     });
   };
-  const removeFromCart = (productId: string, variant?: string) => {
-    const key = `${productId}-${variant || 'default'}`;
-    setCart(prev => {
-      const newCart = {
-        ...prev
-      };
-      if (newCart[key] && newCart[key].quantity > 1) {
-        newCart[key].quantity -= 1;
-      } else {
-        delete newCart[key];
-      }
-      return newCart;
-    });
-  };
-  const getCartQuantity = (productId: string, variant?: string) => {
-    const key = `${productId}-${variant || 'default'}`;
-    return cart[key]?.quantity || 0;
-  };
-  const getTotalItems = () => {
-    return Object.values(cart).reduce((total, item) => total + item.quantity, 0);
+
+  const handleFinalizarPedido = () => {
+    setShowCartDropdown(true);
   };
   return <main className="py-20">
       <div className="container mx-auto px-4">
@@ -261,7 +234,11 @@ const Productos = () => {
               <span className="font-medium">
                 Productos en tu pedido: {getTotalItems()}
               </span>
-              <Button variant="default" className="bg-primary hover:bg-primary-dark">
+              <Button 
+                variant="default" 
+                className="bg-primary hover:bg-primary-dark"
+                onClick={handleFinalizarPedido}
+              >
                 Finalizar pedido
               </Button>
             </div>
@@ -317,7 +294,7 @@ const Productos = () => {
                               {quantity > 0 && <span className="text-sm font-medium w-8 text-center">
                                   {quantity}
                                 </span>}
-                              <Button size="sm" variant="default" onClick={() => addToCart(product, variant)} className="h-8 w-8 p-0 bg-primary hover:bg-primary-dark">
+                              <Button size="sm" variant="default" onClick={() => handleAddToCart(product, variant)} className="h-8 w-8 p-0 bg-primary hover:bg-primary-dark">
                                 <Plus className="h-4 w-4" />
                               </Button>
                             </div>
@@ -336,7 +313,7 @@ const Productos = () => {
                           {getCartQuantity(product.id)}
                         </span>}
                     </div>
-                    <Button onClick={() => addToCart(product)} className="bg-primary hover:bg-primary-dark">
+                    <Button onClick={() => handleAddToCart(product)} className="bg-primary hover:bg-primary-dark">
                       <Plus className="h-4 w-4 mr-2" />
                       Agregar al pedido
                     </Button>
