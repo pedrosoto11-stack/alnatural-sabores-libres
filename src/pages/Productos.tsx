@@ -167,14 +167,14 @@ const products: Product[] = [
   category: "Arepas",
   description: "Arepas elaboradas con plátano verde fresco, ajo y perejil natural. Combina el sabor neutro del plátano con el aroma fresco del perejil. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Elaboradas con plátano verde fresco", "Sazonadas con ajo y perejil natural", "Libres de gluten", "Ideales para rellenos salados"],
-  image: arepaCamburVerdeImg
+  image: arepaPlátanoVerdeAjoPeejilImg
 }, {
   id: "arepa-platano-amarillo",
   name: "Arepa de Plátano Amarillo",
   category: "Arepas",
   description: "Arepa dulce y nutritiva hecha con plátano maduro amarillo, 100% libre de gluten. Sabor naturalmente dulce y textura suave. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Hechas con plátano amarillo maduro", "Sabor naturalmente dulce", "Sin gluten", "Empacadas al vacío"],
-  image: arepaPlátanoVerdeAjoPeejilImg
+  image: arepaPlátanoAmarilloImg
 }, {
   id: "arepa-yuca",
   name: "Arepa de Yuca",
