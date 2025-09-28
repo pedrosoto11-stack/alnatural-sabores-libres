@@ -1,70 +1,8 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { Phone, Mail, MapPin, MessageCircle, Clock, Send } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle, Clock } from "lucide-react";
 
 const Contacto = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    orderType: ""
-  });
-  const { toast } = useToast();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate form
-    if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        title: "Error",
-        description: "Por favor completa todos los campos requeridos",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Create WhatsApp message
-    const whatsappMessage = `¡Hola Al Natural! 
-    
-Nombre: ${formData.name}
-Email: ${formData.email}
-${formData.phone ? `Teléfono: ${formData.phone}` : ''}
-${formData.orderType ? `Tipo de pedido: ${formData.orderType}` : ''}
-
-Mensaje: ${formData.message}`;
-    
-    const whatsappUrl = `https://wa.me/584241234567?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    toast({
-      title: "¡Mensaje enviado!",
-      description: "Te hemos redirigido a WhatsApp para completar tu consulta",
-    });
-
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-      orderType: ""
-    });
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
   const contactInfo = [
     {
       icon: Phone,
@@ -98,109 +36,15 @@ Mensaje: ${formData.message}`;
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Contacto y Pedidos
+            Contacto
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            ¿Listo para probar Al Natural? Contáctanos para hacer tu pedido o 
-            resolver cualquier duda. ¡Estamos aquí para ayudarte!
+            ¿Tienes preguntas sobre nuestros productos? Contáctanos y estaremos 
+            encantados de ayudarte con toda la información que necesites.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div>
-            <Card className="p-6">
-              <CardHeader>
-                <CardTitle className="text-2xl flex items-center space-x-2">
-                  <Send className="h-6 w-6 text-primary" />
-                  <span>Haz tu pedido</span>
-                </CardTitle>
-                <p className="text-muted-foreground">
-                  Completa el formulario y nos pondremos en contacto contigo
-                </p>
-              </CardHeader>
-              
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nombre completo *</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="Tu nombre completo"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Correo electrónico *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="tu@email.com"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Teléfono (opcional)</Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="0424-123-4567"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="orderType">Tipo de consulta</Label>
-                    <select
-                      id="orderType"
-                      name="orderType"
-                      value={formData.orderType}
-                      onChange={handleInputChange}
-                      className="w-full p-3 border border-input rounded-lg bg-background"
-                    >
-                      <option value="">Selecciona una opción</option>
-                      <option value="pedido-productos">Pedido de productos</option>
-                      <option value="informacion-productos">Información sobre productos</option>
-                      <option value="distribuidor">Quiero ser distribuidor</option>
-                      <option value="soporte">Soporte técnico</option>
-                      <option value="otro">Otro</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Mensaje *</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      placeholder="Cuéntanos qué productos te interesan o cualquier pregunta que tengas..."
-                      rows={5}
-                      required
-                    />
-                  </div>
-
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary-dark">
-                    Enviar mensaje por WhatsApp
-                  </Button>
-
-                  <p className="text-xs text-muted-foreground text-center">
-                    Al enviar este formulario, serás redirigido a WhatsApp para completar tu consulta
-                  </p>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
+        <div className="max-w-4xl mx-auto">
           {/* Contact Information */}
           <div className="space-y-6">
             {/* Contact Cards */}
