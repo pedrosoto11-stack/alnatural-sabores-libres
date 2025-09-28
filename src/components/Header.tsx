@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X, ShoppingCart, Lock, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingCart, Lock, LogOut, ChevronDown, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/contexts/CartContext";
 import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "./AccessCodeModal";
@@ -14,6 +15,8 @@ import logoAlNatural from "@/assets/logo-al-natural.jpg";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAccessModal, setShowAccessModal] = useState(false);
+  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [whatsAppUrl, setWhatsAppUrl] = useState("");
   const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown, clearCart } = useCart();
   const { isAuthenticated, client, logout } = useAccessCode();
   const { toast } = useToast();
@@ -22,15 +25,40 @@ const Header = () => {
   // Número de WhatsApp de la empresa (puedes cambiarlo aquí)
   const COMPANY_WHATSAPP = "+584144089365";
 
-  // Función auxiliar para abrir WhatsApp evitando bloqueos de popup
-  const openWhatsApp = (url: string) => {
-    if (isMobile) {
-      // En móvil, window.open funciona bien para abrir la app nativa
-      window.open(url, '_blank');
-    } else {
-      // En desktop, navegar directamente en la misma ventana/pestaña
-      // Esto evita completamente el bloqueo de popups
-      window.location.href = url;
+  // Función para mostrar modal con enlace de WhatsApp
+  const showWhatsAppLink = (url: string) => {
+    setWhatsAppUrl(url);
+    setShowWhatsAppModal(true);
+  };
+
+  // Función para copiar enlace al portapapeles
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Enlace copiado",
+        description: "El enlace de WhatsApp se ha copiado al portapapeles.",
+      });
+    } catch (err) {
+      console.error('Error al copiar:', err);
+      toast({
+        title: "Error",
+        description: "No se pudo copiar el enlace. Intenta seleccionarlo manualmente.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Función para intentar abrir WhatsApp
+  const tryOpenWhatsApp = (url: string) => {
+    try {
+      if (isMobile) {
+        window.open(url, '_blank');
+      } else {
+        window.open(url, '_blank');
+      }
+    } catch (err) {
+      console.error('Error al abrir WhatsApp:', err);
     }
   };
 
@@ -86,14 +114,8 @@ const Header = () => {
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
     
-    // Abrir WhatsApp usando la función auxiliar
-    openWhatsApp(whatsappUrl);
-    
-    // Mostrar toast de confirmación
-    toast({
-      title: "Pedido enviado",
-      description: "Se ha abierto WhatsApp con tu pedido. Solo presiona enviar para completarlo.",
-    });
+    // Mostrar modal con enlace de WhatsApp
+    showWhatsAppLink(whatsappUrl);
 
     // Cerrar el dropdown del carrito
     setShowCartDropdown(false);
@@ -127,14 +149,8 @@ const Header = () => {
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
     
-    // Abrir WhatsApp usando la función auxiliar
-    openWhatsApp(whatsappUrl);
-    
-    // Mostrar toast de confirmación
-    toast({
-      title: "Solicitud de cotización enviada",
-      description: "Se ha abierto WhatsApp con tu solicitud. Solo presiona enviar para completarla.",
-    });
+    // Mostrar modal con enlace de WhatsApp
+    showWhatsAppLink(whatsappUrl);
 
     // Cerrar el dropdown del carrito
     setShowCartDropdown(false);
@@ -332,6 +348,56 @@ const Header = () => {
         isOpen={showAccessModal} 
         onClose={() => setShowAccessModal(false)} 
       />
+
+      {/* WhatsApp Link Modal */}
+      <Dialog open={showWhatsAppModal} onOpenChange={setShowWhatsAppModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Enlace de WhatsApp</DialogTitle>
+            <DialogDescription>
+              Copia este enlace y pégalo en tu navegador, o haz clic en "Abrir WhatsApp" para intentar abrirlo automáticamente.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <div className="grid flex-1 gap-2">
+                <label htmlFor="whatsapp-link" className="sr-only">
+                  Enlace de WhatsApp
+                </label>
+                <input
+                  id="whatsapp-link"
+                  defaultValue={whatsAppUrl}
+                  readOnly
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+              </div>
+              <Button size="sm" className="px-3" onClick={() => copyToClipboard(whatsAppUrl)}>
+                <span className="sr-only">Copiar</span>
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button 
+                onClick={() => {
+                  tryOpenWhatsApp(whatsAppUrl);
+                  setShowWhatsAppModal(false);
+                }} 
+                className="flex-1"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Abrir WhatsApp
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowWhatsAppModal(false)}
+                className="flex-1"
+              >
+                Cerrar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
