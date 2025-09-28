@@ -14,6 +14,7 @@ import Recetas from "./pages/Recetas";
 import Clientes from "./pages/Clientes";
 import Contacto from "./pages/Contacto";
 import Auth from "./pages/Auth";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
