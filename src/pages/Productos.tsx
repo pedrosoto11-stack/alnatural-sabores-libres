@@ -217,9 +217,9 @@ const Productos = () => {
       case "Panes":
         return 15.99;
       case "Patacones":
-        return 15.99;
+        return 3.00;
       case "Arepas":
-        return 15.99;
+        return 3.00;
       default:
         return 15.99;
     }
