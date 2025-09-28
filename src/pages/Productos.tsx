@@ -388,7 +388,7 @@ const Productos = () => {
                     {/* Show price only when authenticated */}
                     {isAuthenticated && (
                       <div>
-                        <span className="text-lg font-bold text-primary">$15.99</span>
+                        <span className="text-lg font-bold text-primary">${getProductPrice(product.category)}</span>
                         <span className="text-sm text-muted-foreground ml-1">por paquete</span>
                       </div>
                     )}
