@@ -207,8 +207,21 @@ const Productos = () => {
   const { isAuthenticated } = useAccessCode();
   const { toast } = useToast();
 
-  // Función para obtener el precio por categoría
-  const getProductPrice = (category: string): number => {
+  // Función para obtener el precio por categoría o producto específico
+  const getProductPrice = (category: string, productId?: string): number => {
+    // Precios específicos por producto
+    if (productId) {
+      switch (productId) {
+        case "panes-yuca-queso-12":
+          return 5.00;
+        case "panes-yuca-queso-4":
+          return 2.00;
+        case "arepa-yuca-mixta-6-sabores":
+          return 3.35;
+      }
+    }
+    
+    // Precios por categoría
     switch (category) {
       case "Fajitas":
         return 2.4;
@@ -233,7 +246,7 @@ const Productos = () => {
     addToCart({
       id: product.id,
       name: product.name,
-      price: getProductPrice(product.category),
+      price: getProductPrice(product.category, product.id),
       variant
     });
     toast({
@@ -343,7 +356,7 @@ const Productos = () => {
                             <div className="flex-1">
                               <span className="text-sm">{variant}</span>
                               {isAuthenticated && (
-                                <div className="text-xs text-muted-foreground mt-1">${getProductPrice(product.category)}</div>
+                                <div className="text-xs text-muted-foreground mt-1">${getProductPrice(product.category, product.id)}</div>
                               )}
                             </div>
                             <div className="flex items-center space-x-2">
@@ -381,7 +394,7 @@ const Productos = () => {
                     {/* Show price only when authenticated */}
                     {isAuthenticated && (
                       <div>
-                        <span className="text-lg font-bold text-primary">${getProductPrice(product.category)}</span>
+                        <span className="text-lg font-bold text-primary">${getProductPrice(product.category, product.id)}</span>
                         <span className="text-sm text-muted-foreground ml-1">por paquete</span>
                       </div>
                     )}
