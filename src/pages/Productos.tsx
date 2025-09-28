@@ -213,7 +213,7 @@ const Productos = () => {
       case "Fajitas":
         return 2.4;
       case "Tequeños":
-        return 15.99;
+        return 4.2;
       case "Panes":
         return 15.99;
       case "Patacones":
