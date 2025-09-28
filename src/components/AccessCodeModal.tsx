@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Eye, EyeOff } from "lucide-react";
 
@@ -15,7 +15,7 @@ export const AccessCodeModal = ({ isOpen, onClose }: AccessCodeModalProps) => {
   const [code, setCode] = useState("");
   const [showCode, setShowCode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { validateAccessCode } = useAccessCode();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +25,7 @@ export const AccessCodeModal = ({ isOpen, onClose }: AccessCodeModalProps) => {
     setIsLoading(true);
     
     try {
-      const success = await login(code);
+      const success = await validateAccessCode(code);
       
       if (success) {
         toast({

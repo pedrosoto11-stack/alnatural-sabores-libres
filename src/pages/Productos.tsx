@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "@/components/AccessCodeModal";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Minus, Lock } from "lucide-react";
@@ -204,7 +204,7 @@ const Productos = () => {
   const [selectedImage, setSelectedImage] = useState<{src: string, alt: string} | null>(null);
   const [showAccessModal, setShowAccessModal] = useState(false);
   const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAccessCode();
   const { toast } = useToast();
   const handleAddToCart = (product: Product, variant?: string) => {
     if (!isAuthenticated) {
@@ -314,7 +314,7 @@ const Productos = () => {
                   </div>
                 </div>
 
-                {/* Price - Only for authenticated users */}
+                {/* Price and Add to Cart - Only show prices when authenticated */}
                 {isAuthenticated && (
                   <div className="mb-3">
                     <span className="text-lg font-bold text-primary">$15.99</span>
@@ -367,6 +367,7 @@ const Productos = () => {
                 {/* Add to cart for products without variants */}
                 {!product.variants && (
                   <div className="space-y-3">
+                    {/* Show price only when authenticated */}
                     {isAuthenticated && (
                       <div>
                         <span className="text-lg font-bold text-primary">$15.99</span>
