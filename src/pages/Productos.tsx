@@ -332,13 +332,6 @@ const Productos = () => {
                   </div>
                 </div>
 
-                {/* Price and Add to Cart - Only show prices when authenticated */}
-                {isAuthenticated && (
-                  <div className="mb-3">
-                    <span className="text-lg font-bold text-primary">${getProductPrice(product.category)}</span>
-                    <span className="text-sm text-muted-foreground ml-1">por paquete</span>
-                  </div>
-                )}
 
                 {/* Variants */}
                 {product.variants && <div className="space-y-2">
