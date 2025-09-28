@@ -206,6 +206,24 @@ const Productos = () => {
   const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
   const { isAuthenticated } = useAccessCode();
   const { toast } = useToast();
+
+  // Función para obtener el precio por categoría
+  const getProductPrice = (category: string): number => {
+    switch (category) {
+      case "Fajitas":
+        return 2.4;
+      case "Tequeños":
+        return 15.99;
+      case "Panes":
+        return 15.99;
+      case "Patacones":
+        return 15.99;
+      case "Arepas":
+        return 15.99;
+      default:
+        return 15.99;
+    }
+  };
   const handleAddToCart = (product: Product, variant?: string) => {
     if (!isAuthenticated) {
       setShowAccessModal(true);
@@ -215,7 +233,7 @@ const Productos = () => {
     addToCart({
       id: product.id,
       name: product.name,
-      price: 15.99, // Precio por defecto, se puede personalizar por producto
+      price: getProductPrice(product.category),
       variant
     });
     toast({
@@ -317,7 +335,7 @@ const Productos = () => {
                 {/* Price and Add to Cart - Only show prices when authenticated */}
                 {isAuthenticated && (
                   <div className="mb-3">
-                    <span className="text-lg font-bold text-primary">$15.99</span>
+                    <span className="text-lg font-bold text-primary">${getProductPrice(product.category)}</span>
                     <span className="text-sm text-muted-foreground ml-1">por paquete</span>
                   </div>
                 )}
@@ -332,7 +350,7 @@ const Productos = () => {
                             <div className="flex-1">
                               <span className="text-sm">{variant}</span>
                               {isAuthenticated && (
-                                <div className="text-xs text-muted-foreground mt-1">$15.99</div>
+                                <div className="text-xs text-muted-foreground mt-1">${getProductPrice(product.category)}</div>
                               )}
                             </div>
                             <div className="flex items-center space-x-2">
