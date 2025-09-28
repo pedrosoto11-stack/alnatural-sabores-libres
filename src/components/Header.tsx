@@ -7,13 +7,124 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useCart } from "@/contexts/CartContext";
 import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "./AccessCodeModal";
+import { useToast } from "@/hooks/use-toast";
 import logoAlNatural from "@/assets/logo-al-natural.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAccessModal, setShowAccessModal] = useState(false);
-  const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown } = useCart();
+  const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown, clearCart } = useCart();
   const { isAuthenticated, client, logout } = useAccessCode();
+  const { toast } = useToast();
+
+  // Número de WhatsApp de la empresa (puedes cambiarlo aquí)
+  const COMPANY_WHATSAPP = "+584241234567";
+
+  const generateWhatsAppMessage = () => {
+    if (cartItems.length === 0) return "";
+
+    let message = `¡Hola! Quisiera hacer el siguiente pedido desde Al Natural:\n\n`;
+    message += `📋 *DETALLES DEL PEDIDO:*\n`;
+    message += `👤 Cliente: ${client?.name || "Cliente"}\n`;
+    if (client?.company) {
+      message += `🏢 Empresa: ${client.company}\n`;
+    }
+    message += `📧 Email: ${client?.email || "No especificado"}\n\n`;
+
+    message += `🛒 *PRODUCTOS:*\n`;
+    
+    cartItems.forEach((item, index) => {
+      message += `${index + 1}. ${item.name}\n`;
+      if (item.variant) {
+        message += `   📝 Variante: ${item.variant}\n`;
+      }
+      message += `   📦 Cantidad: ${item.quantity}\n`;
+      if (isAuthenticated) {
+        message += `   💰 Precio unitario: $${item.price.toFixed(2)}\n`;
+        message += `   💸 Subtotal: $${(item.price * item.quantity).toFixed(2)}\n`;
+      }
+      message += `\n`;
+    });
+
+    if (isAuthenticated) {
+      const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      message += `💳 *TOTAL DEL PEDIDO: $${total.toFixed(2)}*\n\n`;
+    }
+
+    message += `📅 Fecha: ${new Date().toLocaleDateString('es-ES')}\n`;
+    message += `🕐 Hora: ${new Date().toLocaleTimeString('es-ES')}\n\n`;
+    message += `¡Gracias por su atención! 😊`;
+
+    return message;
+  };
+
+  const sendWhatsAppOrder = () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Carrito vacío",
+        description: "Agrega productos al carrito antes de enviar el pedido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const message = generateWhatsAppMessage();
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Mostrar toast de confirmación
+    toast({
+      title: "Pedido enviado",
+      description: "Se ha abierto WhatsApp con tu pedido. Solo presiona enviar para completarlo.",
+    });
+
+    // Cerrar el dropdown del carrito
+    setShowCartDropdown(false);
+  };
+
+  const requestQuote = () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Carrito vacío",
+        description: "Agrega productos al carrito antes de solicitar cotización.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let message = `¡Hola! Me gustaría solicitar una cotización para los siguientes productos de Al Natural:\n\n`;
+    message += `🛒 *PRODUCTOS:*\n`;
+    
+    cartItems.forEach((item, index) => {
+      message += `${index + 1}. ${item.name}\n`;
+      if (item.variant) {
+        message += `   📝 Variante: ${item.variant}\n`;
+      }
+      message += `   📦 Cantidad: ${item.quantity}\n\n`;
+    });
+
+    message += `📅 Fecha: ${new Date().toLocaleDateString('es-ES')}\n`;
+    message += `🕐 Hora: ${new Date().toLocaleTimeString('es-ES')}\n\n`;
+    message += `¿Podrían proporcionarme una cotización para estos productos? ¡Gracias! 😊`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Mostrar toast de confirmación
+    toast({
+      title: "Solicitud de cotización enviada",
+      description: "Se ha abierto WhatsApp con tu solicitud. Solo presiona enviar para completarla.",
+    });
+
+    // Cerrar el dropdown del carrito
+    setShowCartDropdown(false);
+  };
 
   const navigationItems = [
     { path: "/", label: "Inicio" },
@@ -63,7 +174,10 @@ const Header = () => {
                 <span>${cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
               </div>
             )}
-            <Button className="w-full mt-3 bg-primary hover:bg-primary-dark">
+            <Button 
+              className="w-full mt-3 bg-primary hover:bg-primary-dark"
+              onClick={isAuthenticated ? sendWhatsAppOrder : requestQuote}
+            >
               {isAuthenticated ? "Enviar pedido por WhatsApp" : "Solicitar cotización"}
             </Button>
           </div>
