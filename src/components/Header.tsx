@@ -26,7 +26,7 @@ const Header = () => {
   ];
 
   const CartDropdown = () => (
-    <PopoverContent className="w-80 p-4">
+    <PopoverContent className="w-80 p-4 bg-background border shadow-md z-50">
       <h3 className="font-semibold text-lg mb-3">Carrito de Compras</h3>
       {cartItems.length === 0 ? (
         <div className="text-center py-6">
@@ -38,20 +38,25 @@ const Header = () => {
         </div>
       ) : (
         <div className="space-y-3">
-          {cartItems.map((item, index) => (
-            <div key={index} className="flex justify-between items-center p-2 border rounded">
-              <div>
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {item.variant && `${item.variant} - `}Cantidad: {item.quantity}
-                </p>
+          {/* Lista de productos con scroll */}
+          <div className="max-h-60 overflow-y-auto pr-2 space-y-3">
+            {cartItems.map((item, index) => (
+              <div key={index} className="flex justify-between items-center p-2 border rounded">
+                <div>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {item.variant && `${item.variant} - `}Cantidad: {item.quantity}
+                  </p>
+                </div>
+                {isAuthenticated && (
+                  <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                )}
               </div>
-              {isAuthenticated && (
-                <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
-              )}
-            </div>
-          ))}
-          <div className="border-t pt-3 mt-3">
+            ))}
+          </div>
+          
+          {/* Total siempre visible */}
+          <div className="border-t pt-3 mt-3 bg-background">
             {isAuthenticated && (
               <div className="flex justify-between items-center font-semibold mb-3">
                 <span>Total:</span>
