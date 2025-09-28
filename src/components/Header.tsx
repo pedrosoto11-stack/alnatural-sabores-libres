@@ -8,6 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "./AccessCodeModal";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import logoAlNatural from "@/assets/logo-al-natural.jpg";
 
 const Header = () => {
@@ -16,9 +17,27 @@ const Header = () => {
   const { cartItems, getTotalItems, showCartDropdown, setShowCartDropdown, clearCart } = useCart();
   const { isAuthenticated, client, logout } = useAccessCode();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Número de WhatsApp de la empresa (puedes cambiarlo aquí)
   const COMPANY_WHATSAPP = "+584144089365";
+
+  // Función auxiliar para abrir WhatsApp evitando bloqueos de popup
+  const openWhatsApp = (url: string) => {
+    if (isMobile) {
+      // En móvil, window.open funciona bien
+      window.open(url, '_blank');
+    } else {
+      // En desktop, usar createelement('a') para evitar bloqueos
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   const generateWhatsAppMessage = () => {
     if (cartItems.length === 0) return "";
@@ -72,8 +91,8 @@ const Header = () => {
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
     
-    // Abrir WhatsApp
-    window.open(whatsappUrl, '_blank');
+    // Abrir WhatsApp usando la función auxiliar
+    openWhatsApp(whatsappUrl);
     
     // Mostrar toast de confirmación
     toast({
@@ -113,8 +132,8 @@ const Header = () => {
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
     
-    // Abrir WhatsApp
-    window.open(whatsappUrl, '_blank');
+    // Abrir WhatsApp usando la función auxiliar
+    openWhatsApp(whatsappUrl);
     
     // Mostrar toast de confirmación
     toast({
