@@ -18,7 +18,7 @@ const Header = () => {
   const { toast } = useToast();
 
   // Número de WhatsApp de la empresa (puedes cambiarlo aquí)
-  const COMPANY_WHATSAPP = "+584241234567";
+  const COMPANY_WHATSAPP = "+584144089365";
 
   const generateWhatsAppMessage = () => {
     if (cartItems.length === 0) return "";
