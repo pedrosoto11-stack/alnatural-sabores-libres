@@ -25,17 +25,12 @@ const Header = () => {
   // Función auxiliar para abrir WhatsApp evitando bloqueos de popup
   const openWhatsApp = (url: string) => {
     if (isMobile) {
-      // En móvil, window.open funciona bien
+      // En móvil, window.open funciona bien para abrir la app nativa
       window.open(url, '_blank');
     } else {
-      // En desktop, usar createelement('a') para evitar bloqueos
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // En desktop, navegar directamente en la misma ventana/pestaña
+      // Esto evita completamente el bloqueo de popups
+      window.location.href = url;
     }
   };
 
