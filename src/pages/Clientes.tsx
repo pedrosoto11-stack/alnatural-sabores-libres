@@ -209,9 +209,7 @@ const Clientes = () => {
               <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary-dark transition-colors">
                 Hacer mi primer pedido
               </button>
-              <button className="px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors">
-                Encontrar punto de venta
-              </button>
+              
             </div>
           </div>
         </section>
