@@ -83,13 +83,13 @@ const Clientes = () => {
       name: "Super Éxito",
       logo: "SE",
       description: "Especialistas en alimentación saludable",
-      coverage: "Valencia y Maracay"
+      coverage: "Tovar, Mérida"
     },
     {
       name: "Distribuidora Sujer",
       logo: "DS",
       description: "Tienda gourmet y productos especiales",
-      coverage: "Maracaibo"
+      coverage: "Mérida"
     }
   ];
 
