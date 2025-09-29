@@ -19,7 +19,7 @@ const Contacto = () => {
     {
       icon: MapPin,
       title: "Ubicación", 
-      content: "Caracas, Venezuela",
+      content: "Tovar estado Mérida, Venezuela",
       subtitle: "Entregas a nivel nacional"
     },
     {
