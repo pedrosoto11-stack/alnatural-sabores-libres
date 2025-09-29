@@ -7,7 +7,7 @@ import { useState } from "react";
 import arepasImg from "@/assets/arepa-reina-pepiada.png";
 import tequenosImg from "@/assets/tequenos-al-natural.png";
 import fajitasImg from "@/assets/fajitas.jpg";
-import pataconesImg from "@/assets/patacones.jpg";
+import pataconesImg from "@/assets/patacones-gourmet.png";
 import wrapFajitasImg from "@/assets/wrap-saludable-fajitas.png";
 
 interface Recipe {
