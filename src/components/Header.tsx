@@ -23,7 +23,7 @@ const Header = () => {
   const isMobile = useIsMobile();
 
   // Número de WhatsApp de la empresa (puedes cambiarlo aquí)
-  const COMPANY_WHATSAPP = "+584144089365";
+  const COMPANY_WHATSAPP = "+584124566318";
 
   // Función para mostrar modal con enlace de WhatsApp
   const showWhatsAppLink = (url: string) => {

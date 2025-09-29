@@ -20,7 +20,7 @@ const Contacto = () => {
   }, {
     icon: MessageCircle,
     title: "WhatsApp",
-    content: "+58 424-776-8813",
+    content: "+58 412-456-6318",
     subtitle: "Respuesta inmediata"
   }];
   return <main className="py-20">
@@ -94,7 +94,7 @@ const Contacto = () => {
                 <CardTitle className="text-xl">Acciones Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.open('https://wa.me/584247768813?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.open('https://wa.me/584124566318?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Chat por WhatsApp
                 </Button>
@@ -102,7 +102,7 @@ const Contacto = () => {
                   <Mail className="h-4 w-4 mr-2" />
                   Enviar Email
                 </Button>
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'tel:+584247768813'}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'tel:+584124566318'}>
                   <Phone className="h-4 w-4 mr-2" />
                   Llamar Ahora
                 </Button>
