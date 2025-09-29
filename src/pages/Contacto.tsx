@@ -120,11 +120,8 @@ const Contacto = () => {
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <Card className="p-6">
               <CardContent>
-                <h3 className="font-semibold mb-2">¿Hacen entregas a domicilio?</h3>
-                <p className="text-sm text-muted-foreground">
-                  Sí, realizamos entregas en Caracas y área metropolitana. Para otras ciudades, 
-                  trabajamos con servicios de envío confiables.
-                </p>
+                <h3 className="font-semibold mb-2">¿Hacen entregas a mi negocio?</h3>
+                <p className="text-sm text-muted-foreground">Sí. Al ser 100% naturales y sin conservantes, deben mantenerse en frío. Para prolongar su vida útil, consérvalos a ≤ 0 °C (congelados) Procura guardar de inmediato al recibirlos y no romper la cadena de frío. </p>
               </CardContent>
             </Card>
             
@@ -147,11 +144,8 @@ const Contacto = () => {
             
             <Card className="p-6">
               <CardContent>
-                <h3 className="font-semibold mb-2">¿Tienen certificación sin gluten?</h3>
-                <p className="text-sm text-muted-foreground">
-                  Sí, todos nuestros productos cuentan con certificación oficial libre de gluten 
-                  y son seguros para personas celíacas.
-                </p>
+                <h3 className="font-semibold mb-2">¿Permisos sanitarios?</h3>
+                <p className="text-sm text-muted-foreground">Sí. Operamos con permisos sanitarios en regla. Estos documentos se actualizan periódicamente; si necesitas la versión vigente para auditorías o compras institucionales, te la enviamos por correo.</p>
               </CardContent>
             </Card>
           </div>
