@@ -68,8 +68,8 @@ const Clientes = () => {
       coverage: "Zona Central"
     },
     {
-      name: "Mercados San Ignacio",
-      logo: "MSI",
+      name: "Distribuidora la Granja",
+      logo: "DLG",
       description: "Supermercados especializados en productos orgánicos",
       coverage: "Caracas y alrededores"
     },
