@@ -13,7 +13,7 @@ const Contacto = () => {
     {
       icon: Mail,
       title: "Email",
-      content: "pedidos@alnatural.com.ve",
+      content: "soloalnatural1@gmail.com",
       subtitle: "Respuesta en 24 horas"
     },
     {
@@ -115,7 +115,7 @@ const Contacto = () => {
                 <Button 
                   variant="outline" 
                   className="w-full border-primary text-primary hover:bg-primary/10"
-                  onClick={() => window.location.href = 'mailto:pedidos@alnatural.com.ve'}
+                  onClick={() => window.location.href = 'mailto:soloalnatural1@gmail.com'}
                 >
                   <Mail className="h-4 w-4 mr-2" />
                   Enviar Email
