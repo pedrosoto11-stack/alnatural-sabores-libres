@@ -56,8 +56,8 @@ const Clientes = () => {
 
   const partners = [
     {
-      name: "Supermercados Excelsior",
-      logo: "SE",
+      name: "Supermercados LM Market",
+      logo: "LM",
       description: "Cadena líder en distribución de alimentos premium",
       coverage: "Nacional"
     },
