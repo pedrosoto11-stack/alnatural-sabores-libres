@@ -58,7 +58,7 @@ const Clientes = () => {
     {
       name: "Supermercados LM Market",
       logo: "LM",
-      description: "Cadena líder en distribución de alimentos premium",
+      description: "Lideres en Venta al mayor y al detal en viveres y confitería.",
       coverage: "Nacional"
     },
     {
