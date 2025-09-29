@@ -1,37 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, MapPin, MessageCircle, Clock } from "lucide-react";
-
 const Contacto = () => {
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: "Teléfono",
-      content: "+58 424-776-8813 / 414-728-1366",
-      subtitle: "Lun - Vie: 8:00 AM - 6:00 PM"
-    },
-    {
-      icon: Mail,
-      title: "Email",
-      content: "soloalnatural1@gmail.com",
-      subtitle: "Respuesta en 24 horas"
-    },
-    {
-      icon: MapPin,
-      title: "Ubicación", 
-      content: "Tovar estado Mérida, Venezuela",
-      subtitle: "Entregas a nivel nacional"
-    },
-    {
-      icon: MessageCircle,
-      title: "WhatsApp",
-      content: "+58 424-776-8813",
-      subtitle: "Respuesta inmediata"
-    }
-  ];
-
-  return (
-    <main className="py-20">
+  const contactInfo = [{
+    icon: Phone,
+    title: "Teléfono",
+    content: "+58 424-123-4567",
+    subtitle: "Lun - Vie: 8:00 AM - 6:00 PM"
+  }, {
+    icon: Mail,
+    title: "Email",
+    content: "pedidos@alnatural.com.ve",
+    subtitle: "Respuesta en 24 horas"
+  }, {
+    icon: MapPin,
+    title: "Ubicación",
+    content: "Caracas, Venezuela",
+    subtitle: "Entregas a nivel nacional"
+  }, {
+    icon: MessageCircle,
+    title: "WhatsApp",
+    content: "+58 424-123-4567",
+    subtitle: "Respuesta inmediata"
+  }];
+  return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -50,9 +42,8 @@ const Contacto = () => {
             {/* Contact Cards */}
             <div className="grid gap-4">
               {contactInfo.map((info, index) => {
-                const Icon = info.icon;
-                return (
-                  <Card key={index} className="p-4 hover:shadow-md transition-shadow">
+              const Icon = info.icon;
+              return <Card key={index} className="p-4 hover:shadow-md transition-shadow">
                     <CardContent className="flex items-start space-x-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                         <Icon className="h-6 w-6 text-primary" />
@@ -63,9 +54,8 @@ const Contacto = () => {
                         <p className="text-sm text-muted-foreground">{info.subtitle}</p>
                       </div>
                     </CardContent>
-                  </Card>
-                );
-              })}
+                  </Card>;
+            })}
             </div>
 
             {/* Business Hours */}
@@ -104,27 +94,15 @@ const Contacto = () => {
                 <CardTitle className="text-xl">Acciones Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full border-primary text-primary hover:bg-primary/10"
-                  onClick={() => window.open('https://wa.me/584247768813?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}
-                >
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.open('https://wa.me/584241234567?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Chat por WhatsApp
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-primary text-primary hover:bg-primary/10"
-                  onClick={() => window.location.href = 'mailto:soloalnatural1@gmail.com'}
-                >
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'mailto:pedidos@alnatural.com.ve'}>
                   <Mail className="h-4 w-4 mr-2" />
                   Enviar Email
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-primary text-primary hover:bg-primary/10"
-                  onClick={() => window.location.href = 'tel:+584247768813'}
-                >
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'tel:+584241234567'}>
                   <Phone className="h-4 w-4 mr-2" />
                   Llamar Ahora
                 </Button>
@@ -153,10 +131,7 @@ const Contacto = () => {
             <Card className="p-6">
               <CardContent>
                 <h3 className="font-semibold mb-2">¿Cuál es el pedido mínimo?</h3>
-                <p className="text-sm text-muted-foreground">
-                  No tenemos pedido mínimo. Sin embargo, para entregas a domicilio aplicamos 
-                  un costo de envío que varía según la zona.
-                </p>
+                <p className="text-sm text-muted-foreground">No tenemos pedido mínimo. Si quieres vender o distribuir nuestros productos, contáctanos y te asignamos tu código de acceso para ver precios y hacer pedidos..</p>
               </CardContent>
             </Card>
             
@@ -182,8 +157,6 @@ const Contacto = () => {
           </div>
         </section>
       </div>
-    </main>
-  );
+    </main>;
 };
-
 export default Contacto;
