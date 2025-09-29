@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
 import { Leaf, Heart, Shield, Star } from "lucide-react";
-import heroProducts from "@/assets/hero-products.jpg";
+import heroProducts from "@/assets/equipo-al-natural.png";
 const Index = () => {
   return <main>
       {/* Hero Section */}
@@ -28,7 +28,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative">
-              <img src={heroProducts} alt="Productos Al Natural - Arepas, tequeños y panes sin gluten" className="w-full h-auto rounded-2xl shadow-2xl" />
+              <img src={heroProducts} alt="Equipo Al Natural - Productores de alimentos sin gluten" className="w-full h-auto rounded-2xl shadow-2xl" />
               <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground rounded-full p-6 shadow-lg">
                 <Leaf className="h-8 w-8" />
               </div>
