@@ -1,111 +1,87 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, Quote } from "lucide-react";
-
 const Clientes = () => {
-  const testimonials = [
-    {
-      name: "María González",
-      role: "Madre de familia",
-      avatar: "MG",
-      rating: 5,
-      comment: "Desde que descubrí Al Natural, mi hija celíaca puede disfrutar de arepas como toda la familia. La calidad es excepcional y el sabor idéntico al tradicional.",
-      city: "Caracas"
-    },
-    {
-      name: "Carlos Rodríguez",
-      role: "Chef profesional",
-      avatar: "CR", 
-      rating: 5,
-      comment: "Como chef, puedo asegurar que los productos Al Natural mantienen la textura y sabor auténtico. Los uso en mi restaurante con excelentes resultados.",
-      city: "Valencia"
-    },
-    {
-      name: "Ana Suárez",
-      role: "Nutricionista",
-      avatar: "AS",
-      rating: 5,
-      comment: "Recomiendo Al Natural a todos mis pacientes. Son productos nutritivos, sin gluten certificado y con ingredientes naturales de calidad.",
-      city: "Maracaibo"
-    },
-    {
-      name: "Pedro Martínez",
-      role: "Cliente frecuente",
-      avatar: "PM",
-      rating: 5,
-      comment: "Los tequeños Al Natural son increíbles. Mis invitados nunca notan la diferencia con los tradicionales, pero yo sé que son más saludables.",
-      city: "Barquisimeto"
-    },
-    {
-      name: "Lucía Herrera",
-      role: "Deportista",
-      avatar: "LH",
-      rating: 5,
-      comment: "Perfecto para mi dieta. Los patacones Al Natural me dan la energía que necesito antes del entrenamiento, sin sentirme pesada.",
-      city: "Mérida"
-    },
-    {
-      name: "Roberto Díaz",
-      role: "Padre de familia",
-      avatar: "RD",
-      rating: 5,
-      comment: "Mis hijos aman las arepas Al Natural. Como padre, me tranquiliza saber que están comiendo algo natural y nutritivo todos los días.",
-      city: "San Cristóbal"
-    }
-  ];
-
-  const partners = [
-    {
-      name: "Supermercados LM Market",
-      logo: "LM",
-      description: "Cadena líder en distribución de alimentos premium",
-      coverage: "Nacional"
-    },
-    {
-      name: "Feria de hortalizas Tierra Santa",
-      logo: "FTS",
-      description: "Feria especializada en productos frescos y hortalizas",
-      coverage: "Zona Central"
-    },
-    {
-      name: "Distribuidora la Granja",
-      logo: "DLG",
-      description: "Supermercados especializados en productos orgánicos",
-      coverage: "Caracas y alrededores"
-    },
-    {
-      name: "Mérida Glutenfree",
-      logo: "MG",
-      description: "Mayorista especializado en productos sin gluten",
-      coverage: "Región Andina"
-    },
-    {
-      name: "Super Éxito",
-      logo: "SE",
-      description: "Especialistas en alimentación saludable",
-      coverage: "Tovar, Mérida"
-    },
-    {
-      name: "Distribuidora Sujer",
-      logo: "DS",
-      description: "Tienda gourmet y productos especiales",
-      coverage: "Mérida"
-    }
-  ];
-
+  const testimonials = [{
+    name: "María González",
+    role: "Madre de familia",
+    avatar: "MG",
+    rating: 5,
+    comment: "Desde que descubrí Al Natural, mi hija celíaca puede disfrutar de arepas como toda la familia. La calidad es excepcional y el sabor idéntico al tradicional.",
+    city: "Caracas"
+  }, {
+    name: "Carlos Rodríguez",
+    role: "Chef profesional",
+    avatar: "CR",
+    rating: 5,
+    comment: "Como chef, puedo asegurar que los productos Al Natural mantienen la textura y sabor auténtico. Los uso en mi restaurante con excelentes resultados.",
+    city: "Valencia"
+  }, {
+    name: "Ana Suárez",
+    role: "Nutricionista",
+    avatar: "AS",
+    rating: 5,
+    comment: "Recomiendo Al Natural a todos mis pacientes. Son productos nutritivos, sin gluten certificado y con ingredientes naturales de calidad.",
+    city: "Maracaibo"
+  }, {
+    name: "Pedro Martínez",
+    role: "Cliente frecuente",
+    avatar: "PM",
+    rating: 5,
+    comment: "Los tequeños Al Natural son increíbles. Mis invitados nunca notan la diferencia con los tradicionales, pero yo sé que son más saludables.",
+    city: "Barquisimeto"
+  }, {
+    name: "Lucía Herrera",
+    role: "Deportista",
+    avatar: "LH",
+    rating: 5,
+    comment: "Perfecto para mi dieta. Los patacones Al Natural me dan la energía que necesito antes del entrenamiento, sin sentirme pesada.",
+    city: "Mérida"
+  }, {
+    name: "Roberto Díaz",
+    role: "Padre de familia",
+    avatar: "RD",
+    rating: 5,
+    comment: "Mis hijos aman las arepas Al Natural. Como padre, me tranquiliza saber que están comiendo algo natural y nutritivo todos los días.",
+    city: "San Cristóbal"
+  }];
+  const partners = [{
+    name: "Supermercados LM Market",
+    logo: "LM",
+    description: "Cadena líder en distribución de alimentos premium",
+    coverage: "Nacional"
+  }, {
+    name: "Feria de hortalizas Tierra Santa",
+    logo: "FTS",
+    description: "Feria especializada en productos frescos y hortalizas",
+    coverage: "Zona Central"
+  }, {
+    name: "Distribuidora la Granja",
+    logo: "DLG",
+    description: "Supermercados especializados en productos orgánicos",
+    coverage: "Caracas y alrededores"
+  }, {
+    name: "Mérida Glutenfree",
+    logo: "MG",
+    description: "Mayorista especializado en productos sin gluten",
+    coverage: "Región Andina"
+  }, {
+    name: "Super Éxito",
+    logo: "SE",
+    description: "Especialistas en alimentación saludable",
+    coverage: "Tovar, Mérida"
+  }, {
+    name: "Distribuidora Sujer",
+    logo: "DS",
+    description: "Tienda gourmet y productos especiales",
+    coverage: "Mérida"
+  }];
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star
-        key={index}
-        className={`h-4 w-4 ${
-          index < rating ? "text-yellow-400 fill-current" : "text-muted-foreground"
-        }`}
-      />
-    ));
+    return Array.from({
+      length: 5
+    }, (_, index) => <Star key={index} className={`h-4 w-4 ${index < rating ? "text-yellow-400 fill-current" : "text-muted-foreground"}`} />);
   };
-
-  return (
-    <main className="py-20">
+  return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -130,8 +106,7 @@ const Clientes = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="p-6 hover:shadow-lg transition-shadow relative">
+            {testimonials.map((testimonial, index) => <Card key={index} className="p-6 hover:shadow-lg transition-shadow relative">
                 <Quote className="absolute top-4 right-4 h-8 w-8 text-primary/20" />
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-4">
@@ -156,25 +131,19 @@ const Clientes = () => {
                     "{testimonial.comment}"
                   </p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </section>
 
         {/* Partners Section */}
         <section className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Nuestros Aliados Comerciales
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Trabajamos con los mejores distribuidores y puntos de venta del país
-            </p>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Algunos de Nuestros Aliados Comerciales</h2>
+            <p className="text-lg text-muted-foreground">Trabajamos con los mejores distribuidores y puntos de venta del país</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partners.map((partner, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
+            {partners.map((partner, index) => <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
                 <CardContent className="space-y-4">
                   <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                     <span className="text-primary font-bold text-lg">
@@ -195,8 +164,7 @@ const Clientes = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </section>
 
@@ -248,8 +216,6 @@ const Clientes = () => {
           </div>
         </section>
       </div>
-    </main>
-  );
+    </main>;
 };
-
 export default Clientes;
