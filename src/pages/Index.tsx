@@ -113,9 +113,7 @@ const Index = () => {
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
               <NavLink to="/productos">Explorar productos</NavLink>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10" asChild>
-              <NavLink to="/contacto">Contactar ahora</NavLink>
-            </Button>
+            
           </div>
         </div>
       </section>
