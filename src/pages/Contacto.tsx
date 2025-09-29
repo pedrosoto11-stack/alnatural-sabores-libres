@@ -5,22 +5,22 @@ const Contacto = () => {
   const contactInfo = [{
     icon: Phone,
     title: "Teléfono",
-    content: "+58 424-123-4567",
+    content: "+58 424-776-8813 / 4147281366",
     subtitle: "Lun - Vie: 8:00 AM - 6:00 PM"
   }, {
     icon: Mail,
     title: "Email",
-    content: "pedidos@alnatural.com.ve",
+    content: "soloalnatural1@gmail.com",
     subtitle: "Respuesta en 24 horas"
   }, {
     icon: MapPin,
     title: "Ubicación",
-    content: "Caracas, Venezuela",
+    content: "Tovar estado Mérida, Venezuela",
     subtitle: "Entregas a nivel nacional"
   }, {
     icon: MessageCircle,
     title: "WhatsApp",
-    content: "+58 424-123-4567",
+    content: "+58 424-776-8813",
     subtitle: "Respuesta inmediata"
   }];
   return <main className="py-20">
@@ -94,15 +94,15 @@ const Contacto = () => {
                 <CardTitle className="text-xl">Acciones Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.open('https://wa.me/584241234567?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.open('https://wa.me/584247768813?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Chat por WhatsApp
                 </Button>
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'mailto:pedidos@alnatural.com.ve'}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'mailto:soloalnatural1@gmail.com'}>
                   <Mail className="h-4 w-4 mr-2" />
                   Enviar Email
                 </Button>
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'tel:+584241234567'}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'tel:+584247768813'}>
                   <Phone className="h-4 w-4 mr-2" />
                   Llamar Ahora
                 </Button>
