@@ -107,9 +107,8 @@ const Index = () => {
           <h2 className="text-3xl lg:text-4xl font-bold mb-6">
             ¿Listo para probar Al Natural?
           </h2>
-          <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
-            Descubre todos nuestros productos y haz tu pedido hoy mismo. ¡Te llevamos el sabor natural directo a tu hogar!
-          </p>
+          <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">Descubre todos nuestros productos y comienza a comercializarlos hoy mismo. 
+¡Te llevamos el sabor natural directo a tu hogar o negocio!</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
               <NavLink to="/productos">Explorar productos</NavLink>
