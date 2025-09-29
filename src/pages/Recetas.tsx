@@ -6,6 +6,7 @@ import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
 import fajitasImg from "@/assets/fajitas.jpg";
 import pataconesImg from "@/assets/patacones.jpg";
+import wrapFajitasImg from "@/assets/wrap-saludable-fajitas.png";
 
 interface Recipe {
   id: string;
@@ -57,7 +58,7 @@ const recipes: Recipe[] = [
     time: "15 min",
     serves: "2 personas", 
     difficulty: "Fácil",
-    image: fajitasImg,
+    image: wrapFajitasImg,
     ingredients: [
       "4 fajitas Al Natural",
       "1 pechuga de pollo a la plancha",
