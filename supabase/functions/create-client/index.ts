@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,8 +18,6 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -72,45 +69,14 @@ serve(async (req) => {
       throw new Error(`Error creating access code: ${codeError.message}`);
     }
 
-    // Send email with access code
-    const fromEmail = Deno.env.get("FROM_EMAIL") || "noreply@alnatural.com";
-    
-    const emailResponse = await resend.emails.send({
-      from: fromEmail,
-      to: [email],
-      subject: "Tu código de acceso - Al Natural",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #4CAF50;">¡Bienvenido a Al Natural!</h1>
-          <p>Hola <strong>${name}</strong>,</p>
-          <p>Gracias por unirte a nuestra red de distribuidores. Tu código de acceso único es:</p>
-          <div style="background: #f5f5f5; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
-            <h2 style="color: #333; font-size: 24px; margin: 0; letter-spacing: 2px;">${accessCode}</h2>
-          </div>
-          <p>Con este código podrás:</p>
-          <ul>
-            <li>Ver precios especiales para distribuidores</li>
-            <li>Realizar pedidos directamente desde nuestro catálogo</li>
-            <li>Acceder a información exclusiva de productos</li>
-          </ul>
-          <p>Para acceder, visita nuestro catálogo y haz clic en "Tengo código de acceso".</p>
-          <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-          <p style="font-size: 12px; color: #666;">
-            Este código es personal e intransferible. Manténlo seguro.<br>
-            Si tienes alguna pregunta, contáctanos directamente.
-          </p>
-        </div>
-      `,
-    });
-
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Client and access code created successfully - manual handling required");
 
     return new Response(
       JSON.stringify({
         success: true,
         client: client,
         accessCode: accessCode,
-        message: "Cliente creado exitosamente y código enviado por email",
+        message: "Cliente creado exitosamente. Código de acceso disponible para envío manual",
       }),
       {
         status: 200,

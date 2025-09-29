@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,8 +16,6 @@ interface PlaceOrderRequest {
   items: OrderItem[];
   notes?: string;
 }
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -115,29 +112,20 @@ serve(async (req) => {
       throw new Error(`Error creating order items: ${itemsError.message}`);
     }
 
-    // Get product details for email
+    // Get product details for WhatsApp notification
     const productIds = items.map(item => item.productId);
     const { data: products } = await adminSupabase
       .from("products")
       .select("id, name, price")
       .in("id", productIds);
 
-    // Prepare email content
+    // Prepare WhatsApp content
     const client = userClient.clients as any;
-    let orderDetailsHtml = "";
     let orderTextWA = "Nuevo pedido de " + client.name + ":\n\n";
 
     items.forEach(item => {
       const product = products?.find(p => p.id === item.productId);
       if (product) {
-        orderDetailsHtml += `
-          <tr>
-            <td style="padding: 8px; border-bottom: 1px solid #eee;">${product.name}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">$${item.unitPrice.toLocaleString()}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">$${(item.quantity * item.unitPrice).toLocaleString()}</td>
-          </tr>
-        `;
         orderTextWA += `• ${product.name} x${item.quantity} = $${(item.quantity * item.unitPrice).toLocaleString()}\n`;
       }
     });
@@ -151,52 +139,7 @@ serve(async (req) => {
     orderTextWA += `\nEmail: ${client.email}`;
     if (client.phone) orderTextWA += `\nTeléfono: ${client.phone}`;
 
-    // Send email notification
-    const fromEmail = Deno.env.get("FROM_EMAIL") || "noreply@alnatural.com";
-    
-    try {
-      await resend.emails.send({
-        from: fromEmail,
-        to: [client.email],
-        subject: `Confirmación de pedido #${order.id.slice(-8)}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #4CAF50;">Pedido Confirmado</h1>
-            <p>Hola <strong>${client.name}</strong>,</p>
-            <p>Tu pedido ha sido recibido exitosamente:</p>
-            
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-              <thead>
-                <tr style="background: #f5f5f5;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd;">Producto</th>
-                  <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd;">Cantidad</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ddd;">Precio Unit.</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #ddd;">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${orderDetailsHtml}
-                <tr style="background: #f9f9f9; font-weight: bold;">
-                  <td colspan="3" style="padding: 12px; text-align: right;">TOTAL:</td>
-                  <td style="padding: 12px; text-align: right;">$${totalAmount.toLocaleString()}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            ${notes ? `<p><strong>Notas:</strong> ${notes}</p>` : ''}
-            
-            <p>Nos pondremos en contacto contigo pronto para coordinar la entrega.</p>
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-            <p style="font-size: 12px; color: #666;">
-              Al Natural - Productos sin gluten de calidad<br>
-              Número de pedido: #${order.id.slice(-8)}
-            </p>
-          </div>
-        `,
-      });
-    } catch (emailError) {
-      console.error("Email error (non-critical):", emailError);
-    }
+    console.log("Order created successfully - email confirmation disabled");
 
     // Send WhatsApp notification if configured
     const whatsappToken = Deno.env.get("WHATSAPP_TOKEN");
