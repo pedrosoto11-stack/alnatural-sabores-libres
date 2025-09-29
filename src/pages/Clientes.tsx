@@ -74,20 +74,20 @@ const Clientes = () => {
       coverage: "Caracas y alrededores"
     },
     {
-      name: "Super Éxito",
-      logo: "SE",
+      name: "Mérida Glutenfree",
+      logo: "MG",
       description: "Mayorista especializado en productos sin gluten",
       coverage: "Región Andina"
     },
     {
-      name: "Tiendas Vita Sana",
-      logo: "TVS",
+      name: "Super Éxito",
+      logo: "SE",
       description: "Especialistas en alimentación saludable",
       coverage: "Valencia y Maracay"
     },
     {
-      name: "Delicias Gourmet",
-      logo: "DG",
+      name: "Distribuidora Sujer",
+      logo: "DS",
       description: "Tienda gourmet y productos especiales",
       coverage: "Maracaibo"
     }
