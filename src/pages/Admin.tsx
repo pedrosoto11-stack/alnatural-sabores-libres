@@ -11,7 +11,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Users, Calendar } from "lucide-react";
+import { Loader2, Users, Calendar, Phone } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 const clientSchema = z.object({
   name: z.string().trim().min(1, "El nombre es requerido").max(100, "El nombre debe tener menos de 100 caracteres"),
@@ -45,6 +46,7 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoadingClients, setIsLoadingClients] = useState(true);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
@@ -80,6 +82,30 @@ const Admin = () => {
   useEffect(() => {
     fetchClients();
   }, []);
+
+  const updateClientStatus = async (clientId: string, isActive: boolean) => {
+    setUpdatingStatus(clientId);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-client-status', {
+        body: { clientId, isActive }
+      });
+
+      if (error) {
+        console.error('Error updating client status:', error);
+        toast.error("Error al actualizar el estado del cliente");
+        return;
+      }
+
+      toast.success(data.message);
+      // Refresh the clients list
+      fetchClients();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al actualizar el estado del cliente");
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
 
   const onSubmit = async (data: ClientFormData) => {
     setIsLoading(true);
@@ -247,6 +273,7 @@ const Admin = () => {
                       <TableRow>
                         <TableHead>Nombre</TableHead>
                         <TableHead>Email</TableHead>
+                        <TableHead>Teléfono</TableHead>
                         <TableHead>Empresa</TableHead>
                         <TableHead>Código de Acceso</TableHead>
                         <TableHead>Estado</TableHead>
@@ -258,6 +285,18 @@ const Admin = () => {
                         <TableRow key={client.id}>
                           <TableCell className="font-medium">{client.name}</TableCell>
                           <TableCell>{client.email}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {client.phone ? (
+                                <>
+                                  <Phone className="h-4 w-4 text-muted-foreground" />
+                                  {client.phone}
+                                </>
+                              ) : (
+                                '-'
+                              )}
+                            </div>
+                          </TableCell>
                           <TableCell>{client.company || '-'}</TableCell>
                           <TableCell>
                             {client.access_codes[0] ? (
@@ -269,9 +308,19 @@ const Admin = () => {
                             )}
                           </TableCell>
                           <TableCell>
-                            <Badge variant={client.is_active ? "default" : "secondary"}>
-                              {client.is_active ? "Activo" : "Inactivo"}
-                            </Badge>
+                            <div className="flex items-center gap-2">
+                              <Switch
+                                checked={client.is_active}
+                                onCheckedChange={(checked) => updateClientStatus(client.id, checked)}
+                                disabled={updatingStatus === client.id}
+                              />
+                              <span className="text-sm">
+                                {client.is_active ? "Activo" : "Inactivo"}
+                              </span>
+                              {updatingStatus === client.id && (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell>
                             {new Date(client.created_at).toLocaleDateString('es-ES')}
