@@ -7,7 +7,7 @@ const Contacto = () => {
     {
       icon: Phone,
       title: "Teléfono",
-      content: "+58 424-123-4567",
+      content: "+58 424-776-8813 / 414-728-1366",
       subtitle: "Lun - Vie: 8:00 AM - 6:00 PM"
     },
     {
@@ -25,7 +25,7 @@ const Contacto = () => {
     {
       icon: MessageCircle,
       title: "WhatsApp",
-      content: "+58 424-123-4567",
+      content: "+58 424-776-8813",
       subtitle: "Respuesta inmediata"
     }
   ];
@@ -107,7 +107,7 @@ const Contacto = () => {
                 <Button 
                   variant="outline" 
                   className="w-full border-primary text-primary hover:bg-primary/10"
-                  onClick={() => window.open('https://wa.me/584241234567?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}
+                  onClick={() => window.open('https://wa.me/584247768813?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}
                 >
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Chat por WhatsApp
@@ -123,7 +123,7 @@ const Contacto = () => {
                 <Button 
                   variant="outline" 
                   className="w-full border-primary text-primary hover:bg-primary/10"
-                  onClick={() => window.location.href = 'tel:+584241234567'}
+                  onClick={() => window.location.href = 'tel:+584247768813'}
                 >
                   <Phone className="h-4 w-4 mr-2" />
                   Llamar Ahora
