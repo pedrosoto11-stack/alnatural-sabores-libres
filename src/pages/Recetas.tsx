@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Clock, Users, ChefHat, X } from "lucide-react";
 import { useState } from "react";
 import arepasImg from "@/assets/arepa-reina-pepiada.png";
-import tequenosImg from "@/assets/tequeños.jpg";
+import tequenosImg from "@/assets/tequenos-al-natural.png";
 import fajitasImg from "@/assets/fajitas.jpg";
 import pataconesImg from "@/assets/patacones.jpg";
 import wrapFajitasImg from "@/assets/wrap-saludable-fajitas.png";
