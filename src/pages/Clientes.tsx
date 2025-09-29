@@ -62,9 +62,9 @@ const Clientes = () => {
       coverage: "Nacional"
     },
     {
-      name: "Panadería La Tradición",
-      logo: "PT",
-      description: "Red de panaderías artesanales",
+      name: "Feria de hortalizas Tierra Santa",
+      logo: "FTS",
+      description: "Feria especializada en productos frescos y hortalizas",
       coverage: "Zona Central"
     },
     {
@@ -74,8 +74,8 @@ const Clientes = () => {
       coverage: "Caracas y alrededores"
     },
     {
-      name: "Distribuidora Norte",
-      logo: "DN",
+      name: "Super Éxito",
+      logo: "SE",
       description: "Mayorista especializado en productos sin gluten",
       coverage: "Región Andina"
     },
