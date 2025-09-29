@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Users, ChefHat } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Clock, Users, ChefHat, X } from "lucide-react";
+import { useState } from "react";
 import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
 import fajitasImg from "@/assets/fajitas.jpg";
@@ -140,6 +142,8 @@ const recipes: Recipe[] = [
 ];
 
 const Recetas = () => {
+  const [selectedImage, setSelectedImage] = useState<{ src: string; title: string } | null>(null);
+  
   const getDifficultyColor = (difficulty: Recipe['difficulty']) => {
     switch (difficulty) {
       case 'Fácil': return 'bg-primary/10 text-primary';
@@ -176,7 +180,7 @@ const Recetas = () => {
         <div className="grid lg:grid-cols-2 gap-8">
           {recipes.map((recipe) => (
             <Card key={recipe.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-video overflow-hidden">
+              <div className="aspect-video overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ src: recipe.image, title: recipe.title })}>
                 <img 
                   src={recipe.image}
                   alt={recipe.title}
@@ -277,6 +281,24 @@ const Recetas = () => {
           </Button>
         </div>
       </div>
+
+      {/* Image Modal */}
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl w-full p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="text-xl">{selectedImage?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="p-6">
+            {selectedImage && (
+              <img 
+                src={selectedImage.src} 
+                alt={selectedImage.title}
+                className="w-full h-auto rounded-lg shadow-lg max-h-[70vh] object-contain mx-auto"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };
