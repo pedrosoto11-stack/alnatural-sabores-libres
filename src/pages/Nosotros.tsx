@@ -1,9 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Leaf, Heart, Users, Award } from "lucide-react";
-
 const Nosotros = () => {
-  return (
-    <main className="py-20">
+  return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -46,7 +44,7 @@ const Nosotros = () => {
                     <Leaf className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">2019</h3>
+                    <h3 className="font-semibold">2022</h3>
                     <p className="text-sm text-muted-foreground">Fundación de Al Natural</p>
                   </div>
                 </div>
@@ -55,8 +53,8 @@ const Nosotros = () => {
                     <Award className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">2021</h3>
-                    <p className="text-sm text-muted-foreground">Certificación libre de gluten</p>
+                    <h3 className="font-semibold">2023</h3>
+                    <p className="text-sm text-muted-foreground">Certificaciones y Permisos Sanitarios </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -64,7 +62,7 @@ const Nosotros = () => {
                     <Users className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">2023</h3>
+                    <h3 className="font-semibold">2024</h3>
                     <p className="text-sm text-muted-foreground">Expansión nacional</p>
                   </div>
                 </div>
@@ -166,8 +164,6 @@ const Nosotros = () => {
           </div>
         </section>
       </div>
-    </main>
-  );
+    </main>;
 };
-
 export default Nosotros;
