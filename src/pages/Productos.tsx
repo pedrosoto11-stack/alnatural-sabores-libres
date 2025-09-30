@@ -48,7 +48,7 @@ const products: Product[] = [
   id: "fajita-yuca",
   name: "Fajita de Yuca",
   category: "Fajitas",
-  description: "Tortilla libre de gluten hecha 100% con yuca fresca. Su sabor neutro las hace perfectas para wraps, tacos y pizzas saludables. 6 unidades de 65g empacadas al vacío.",
+  description: "Fajita libre de gluten hecha 100% con yuca fresca. Su sabor neutro las hace perfectas para wraps, tacos y pizzas saludables. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Hechas solo con yuca fresca", "Sin gluten", "Empacadas al vacío", "Versátiles para recetas dulces o saladas"],
   image: fajitaYucaImg
 }, {
@@ -62,7 +62,7 @@ const products: Product[] = [
   id: "fajita-yuca-zanahoria",
   name: "Fajita de Yuca con Zanahoria",
   category: "Fajitas",
-  description: "Tortillas de yuca con el aporte nutritivo de la zanahoria. Rica en betacarotenos y fibra, con un color vibrante y sabor suave. 6 unidades de 65g empacadas al vacío.",
+  description: "Fajitas de yuca con el aporte nutritivo de la zanahoria. Rica en betacarotenos y fibra, con un color vibrante y sabor suave. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Yuca + zanahoria fresca", "Fuente de fibra y antioxidantes", "Sin gluten", "Rica en betacarotenos"],
   image: fajitaYucaZanahoriaImg
 }, {
@@ -90,14 +90,14 @@ const products: Product[] = [
   id: "fajita-platano-verde",
   name: "Fajita de Plátano Verde",
   category: "Fajitas",
-  description: "Tortilla elaborada con plátano verde fresco, con textura firme y sabor neutro. Ideal para wraps salados. 6 unidades de 65g empacadas al vacío.",
+  description: "Fajita elaborada con plátano verde fresco, con textura firme y sabor neutro. Ideal para wraps salados. 6 unidades de 65g empacadas al vacío.",
   benefits: ["100% plátano verde", "Textura firme", "Sabor neutro", "Sin gluten"],
   image: fajitaPlátanoVerdeImg
 }, {
   id: "fajita-cambur-verde",
   name: "Fajita de Cambur Verde",
   category: "Fajitas",
-  description: "Tortilla saludable hecha con cambur verde. Una opción innovadora, con un sabor suave y gran aporte de energía. 6 unidades de 65g empacadas al vacío.",
+  description: "Fajita saludable hecha con cambur verde. Una opción innovadora, con un sabor suave y gran aporte de energía. 6 unidades de 65g empacadas al vacío.",
   benefits: ["Hechas con cambur verde", "Fuente de potasio y fibra", "Sin gluten", "Aporte energético"],
   image: fajitaCamburVerdeImg
 },
