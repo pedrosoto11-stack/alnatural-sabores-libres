@@ -23,7 +23,28 @@ serve(async (req) => {
   }
 
   try {
-    const { items, notes }: PlaceOrderRequest = await req.json();
+    // Validate request body
+    const requestData = await req.json();
+    
+    if (!requestData.items || !Array.isArray(requestData.items)) {
+      throw new Error('Items array is required');
+    }
+    
+    const items = requestData.items.filter(item => 
+      item && 
+      typeof item.product_id === 'string' && 
+      typeof item.quantity === 'number' && 
+      item.quantity > 0 && 
+      item.quantity <= 100 &&
+      typeof item.unit_price === 'number' &&
+      item.unit_price > 0
+    );
+    
+    if (items.length === 0) {
+      throw new Error('At least one valid item is required');
+    }
+    
+    const notes = typeof requestData.notes === 'string' ? requestData.notes.trim().substring(0, 500) : '';
 
     // Get user from Authorization header
     const authorization = req.headers.get("Authorization");

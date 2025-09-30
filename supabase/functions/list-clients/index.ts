@@ -17,6 +17,30 @@ serve(async (req: Request) => {
   }
 
   try {
+    // Check authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Authorization header required');
+    }
+
+    // Verify user is authenticated and has admin role
+    const { data: { user }, error: userError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+    if (userError || !user) {
+      throw new Error('Invalid authentication');
+    }
+
+    // Check if user has admin role
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .single();
+
+    if (roleError || !roleData) {
+      throw new Error('Admin access required');
+    }
+
     console.log('Fetching clients list...');
 
     // Fetch clients with their access codes

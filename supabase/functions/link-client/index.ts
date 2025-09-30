@@ -16,7 +16,18 @@ serve(async (req) => {
   }
 
   try {
-    const { accessCode }: LinkClientRequest = await req.json();
+    // Validate request body
+    const requestData = await req.json();
+    
+    if (!requestData.accessCode || typeof requestData.accessCode !== 'string') {
+      throw new Error('Access code is required and must be a string');
+    }
+    
+    const accessCode = requestData.accessCode.trim().toUpperCase();
+    
+    if (accessCode.length === 0) {
+      throw new Error('Access code cannot be empty');
+    }
     
     // Get user from Authorization header
     const authorization = req.headers.get("Authorization");

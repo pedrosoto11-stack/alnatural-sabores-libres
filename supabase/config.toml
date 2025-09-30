@@ -19,10 +19,16 @@ enable_signup = true
 enable_anonymous_sign_ins = false
 
 [functions.create-client]
-verify_jwt = false
+verify_jwt = true
 
 [functions.link-client]
 verify_jwt = true
 
 [functions.place-order]
+verify_jwt = true
+
+[functions.list-clients]
+verify_jwt = true
+
+[functions.update-client-status]
 verify_jwt = true

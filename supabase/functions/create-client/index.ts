@@ -1,18 +1,19 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface CreateClientRequest {
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  city?: string;
-}
+const createClientSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  email: z.string().trim().email("Invalid email").max(255),
+  phone: z.string().trim().max(20).optional(),
+  company: z.string().trim().max(100).optional(),
+  city: z.string().trim().max(50).optional(),
+});
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -25,7 +26,33 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, company, city }: CreateClientRequest = await req.json();
+    // Check authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Authorization header required');
+    }
+
+    // Verify user is authenticated and has admin role
+    const { data: { user }, error: userError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+    if (userError || !user) {
+      throw new Error('Invalid authentication');
+    }
+
+    // Check if user has admin role
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .single();
+
+    if (roleError || !roleData) {
+      throw new Error('Admin access required');
+    }
+
+    // Validate request body
+    const requestData = await req.json();
+    const { name, email, phone, company, city } = createClientSchema.parse(requestData);
 
     console.log("Creating client:", { name, email, company });
 
