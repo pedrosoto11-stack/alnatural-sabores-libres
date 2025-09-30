@@ -52,20 +52,6 @@ const ProtectedAdmin: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [updatingClientId, setUpdatingClientId] = useState<string | null>(null);
 
-  // If loading auth state, show loading
-  if (adminLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  // If not authenticated or not admin, redirect to admin auth
-  if (!user || !isAdmin) {
-    return <Navigate to="/admin-auth" replace />;
-  }
-
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -98,8 +84,24 @@ const ProtectedAdmin: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchClients();
-  }, []);
+    if (user && isAdmin) {
+      fetchClients();
+    }
+  }, [user, isAdmin]);
+
+  // If loading auth state, show loading
+  if (adminLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // If not authenticated or not admin, redirect to admin auth
+  if (!user || !isAdmin) {
+    return <Navigate to="/admin-auth" replace />;
+  }
 
   const updateClientStatus = async (clientId: string, isActive: boolean) => {
     setUpdatingClientId(clientId);
