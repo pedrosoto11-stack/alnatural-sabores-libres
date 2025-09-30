@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, LogOut } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AdminAuth: React.FC = () => {
-  const { user, isAdmin, isLoading, signIn } = useAdmin();
+  const { user, isAdmin, isLoading, signIn, signOut } = useAdmin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +42,16 @@ const AdminAuth: React.FC = () => {
               No tienes permisos para acceder al panel de administración.
             </CardDescription>
           </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={signOut} 
+              variant="outline" 
+              className="w-full"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Cerrar Sesión
+            </Button>
+          </CardContent>
         </Card>
       </div>
     );
