@@ -60,15 +60,22 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Only synchronous state updates here
       setUser(session?.user ?? null);
+      
+      // Defer Supabase calls with setTimeout
       if (session?.user) {
-        const adminStatus = await checkAdminRole(session.user.id);
-        setIsAdmin(adminStatus);
+        setTimeout(() => {
+          checkAdminRole(session.user.id).then(adminStatus => {
+            setIsAdmin(adminStatus);
+            setIsLoading(false);
+          });
+        }, 0);
       } else {
         setIsAdmin(false);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
