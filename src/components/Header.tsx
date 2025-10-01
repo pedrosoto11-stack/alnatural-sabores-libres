@@ -10,7 +10,7 @@ import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "./AccessCodeModal";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import logoAlNatural from "@/assets/logo-al-natural.png";
+import logoAlNatural from "@/assets/logo-al-natural.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -225,7 +225,7 @@ const Header = () => {
             <img 
               src={logoAlNatural} 
               alt="Al Natural" 
-              className="h-14 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
           </NavLink>
 
