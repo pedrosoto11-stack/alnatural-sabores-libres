@@ -10,7 +10,7 @@ import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "./AccessCodeModal";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import logoAlNatural from "@/assets/logo-al-natural.png";
+import logoAlNatural from "@/assets/logo-al-natural-nuevo.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
