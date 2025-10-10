@@ -45,9 +45,9 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
           </p>
         </div>
       ) : (
-        <div className="flex flex-col h-full">
-          <ScrollArea className="flex-1 mb-4 max-h-[50vh]">
-            <div className="space-y-3 pb-2 pr-3">
+        <div className="flex flex-col h-full max-h-[60vh]">
+          <ScrollArea className="flex-1 overflow-auto mb-4" style={{ maxHeight: 'calc(60vh - 200px)' }}>
+            <div className="space-y-3 pb-2 pr-4">
               {cartItems.map((item, index) => (
                 <div key={`${item.id}-${item.variant}-${index}`} className="flex gap-3 p-3 rounded-lg border bg-card animate-fade-in hover-lift transition-all duration-200">
                   <div className="flex-1 min-w-0">
@@ -145,7 +145,7 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
               {getTotalItems()} {getTotalItems() === 1 ? 'producto' : 'productos'} en tu carrito
             </DrawerDescription>
           </DrawerHeader>
-          <div className="px-4 pb-4 flex-1 overflow-hidden">
+          <div className="px-4 pb-4 flex flex-col flex-1 min-h-0">
             <CartContent />
           </div>
         </DrawerContent>
