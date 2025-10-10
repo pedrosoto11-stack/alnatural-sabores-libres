@@ -46,8 +46,8 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
         </div>
       ) : (
         <div className="flex flex-col h-full">
-          <ScrollArea className="flex-1 -mx-4 px-4 mb-4">
-            <div className="space-y-3 pb-2">
+          <ScrollArea className="flex-1 mb-4 max-h-[50vh]">
+            <div className="space-y-3 pb-2 pr-3">
               {cartItems.map((item, index) => (
                 <div key={`${item.id}-${item.variant}-${index}`} className="flex gap-3 p-3 rounded-lg border bg-card animate-fade-in hover-lift transition-all duration-200">
                   <div className="flex-1 min-w-0">
@@ -99,7 +99,7 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
             </div>
           </ScrollArea>
           
-          <div className="mt-auto pt-3 border-t">
+          <div className="mt-auto pt-3 border-t flex-shrink-0">
             {isAuthenticated && (
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
@@ -159,12 +159,12 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
         {TriggerButton}
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="end" sideOffset={8}>
-        <div className="p-4">
-          <div className="flex items-center gap-2 mb-4">
+        <div className="p-4 flex flex-col max-h-[80vh]">
+          <div className="flex items-center gap-2 mb-4 flex-shrink-0">
             <ShoppingCart className="h-5 w-5" />
             <h3 className="font-semibold text-lg">Carrito de Compras</h3>
           </div>
-          <div className="max-h-[60vh]">
+          <div className="flex-1 overflow-hidden">
             <CartContent />
           </div>
         </div>
