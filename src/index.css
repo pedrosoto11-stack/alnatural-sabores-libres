@@ -166,47 +166,11 @@ All colors MUST be HSL.
 
   /* Card hover effects */
   .card-interactive {
-    @apply transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02];
+    @apply transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1;
   }
 
   /* Button press effect for mobile */
   .btn-press {
     @apply active:scale-95 active:brightness-95 transition-all duration-150 ease-out;
-  }
-
-  /* Enhanced image hover */
-  .image-hover {
-    @apply transition-transform duration-500 ease-out hover:scale-110;
-  }
-
-  /* Smooth fade effects */
-  .fade-enter {
-    animation: fadeIn 0.5s ease-out;
-  }
-
-  .fade-exit {
-    animation: fadeOut 0.5s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(10px);
-    }
   }
 }

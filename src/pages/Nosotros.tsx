@@ -1,17 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Leaf, Heart, Users, Award } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 const Nosotros = () => {
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: historyRef, isVisible: historyVisible } = useScrollAnimation({ threshold: 0.1 });
-  const { ref: missionRef, isVisible: missionVisible } = useScrollAnimation({ threshold: 0.1 });
-  const { ref: valuesRef, isVisible: valuesVisible } = useScrollAnimation({ threshold: 0.1 });
-  
   return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 animate-fade-in-up">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Sobre Al Natural
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -21,7 +15,7 @@ const Nosotros = () => {
         </div>
 
         {/* Historia */}
-        <section ref={historyRef} className={`mb-20 transition-all duration-700 ${historyVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <section className="mb-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-foreground">Nuestra Historia</h2>
@@ -78,9 +72,9 @@ const Nosotros = () => {
         </section>
 
         {/* Misión y Visión */}
-        <section ref={missionRef} className={`mb-20 transition-all duration-700 ${missionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <section className="mb-20">
           <div className="grid md:grid-cols-2 gap-8">
-            <Card className="p-8 card-interactive hover:shadow-xl touch-scale"  style={{ animationDelay: '0s' }}>
+            <Card className="p-8">
               <CardHeader className="pb-6">
                 <CardTitle className="text-2xl text-center">Nuestra Misión</CardTitle>
               </CardHeader>
@@ -94,7 +88,7 @@ const Nosotros = () => {
               </CardContent>
             </Card>
 
-            <Card className="p-8 card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: '0.15s' }}>
+            <Card className="p-8">
               <CardHeader className="pb-6">
                 <CardTitle className="text-2xl text-center">Nuestra Visión</CardTitle>
               </CardHeader>
@@ -111,7 +105,7 @@ const Nosotros = () => {
         </section>
 
         {/* Valores */}
-        <section ref={valuesRef} className={`transition-all duration-700 ${valuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <section>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Nuestros Valores</h2>
             <p className="text-lg text-muted-foreground">
@@ -120,7 +114,7 @@ const Nosotros = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center p-6 bg-card card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: '0s' }}>
+            <Card className="text-center p-6 bg-card hover:shadow-lg transition-shadow">
               <CardContent className="space-y-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                   <Leaf className="h-8 w-8 text-primary" />
@@ -132,7 +126,7 @@ const Nosotros = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6 bg-card card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: '0.1s' }}>
+            <Card className="text-center p-6 bg-card hover:shadow-lg transition-shadow">
               <CardContent className="space-y-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                   <Award className="h-8 w-8 text-primary" />
@@ -144,7 +138,7 @@ const Nosotros = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6 bg-card card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: '0.2s' }}>
+            <Card className="text-center p-6 bg-card hover:shadow-lg transition-shadow">
               <CardContent className="space-y-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                   <Heart className="h-8 w-8 text-primary" />
@@ -156,7 +150,7 @@ const Nosotros = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6 bg-card card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: '0.3s' }}>
+            <Card className="text-center p-6 bg-card hover:shadow-lg transition-shadow">
               <CardContent className="space-y-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                   <Users className="h-8 w-8 text-primary" />

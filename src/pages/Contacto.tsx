@@ -1,11 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, MapPin, MessageCircle, Clock } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 const Contacto = () => {
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation({ threshold: 0.1 });
-  
   const contactInfo = [{
     icon: Phone,
     title: "Teléfono",
@@ -30,8 +26,8 @@ const Contacto = () => {
   return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 animate-fade-in-up">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Contacto
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -40,14 +36,14 @@ const Contacto = () => {
           </p>
         </div>
 
-        <div ref={cardsRef} className={`max-w-4xl mx-auto transition-all duration-700 ${cardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className="max-w-4xl mx-auto">
           {/* Contact Information */}
           <div className="space-y-6">
             {/* Contact Cards */}
             <div className="grid gap-4">
               {contactInfo.map((info, index) => {
               const Icon = info.icon;
-              return <Card key={index} className="p-4 card-interactive hover:shadow-lg touch-scale" style={{ animationDelay: `${index * 0.1}s` }}>
+              return <Card key={index} className="p-4 hover:shadow-md transition-shadow">
                     <CardContent className="flex items-start space-x-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                         <Icon className="h-6 w-6 text-primary" />
@@ -98,15 +94,15 @@ const Contacto = () => {
                 <CardTitle className="text-xl">Acciones Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10 touch-scale transition-all duration-300" onClick={() => window.open('https://wa.me/584124566318?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.open('https://wa.me/584124566318?text=¡Hola! Quiero información sobre productos Al Natural', '_blank')}>
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Chat por WhatsApp
                 </Button>
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10 touch-scale transition-all duration-300" onClick={() => window.location.href = 'mailto:soloalnatural1@gmail.com'}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'mailto:soloalnatural1@gmail.com'}>
                   <Mail className="h-4 w-4 mr-2" />
                   Enviar Email
                 </Button>
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10 touch-scale transition-all duration-300" onClick={() => window.location.href = 'tel:+584124566318'}>
+                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10" onClick={() => window.location.href = 'tel:+584124566318'}>
                   <Phone className="h-4 w-4 mr-2" />
                   Llamar Ahora
                 </Button>

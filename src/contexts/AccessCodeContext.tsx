@@ -1,5 +1,5 @@
-import React, { createContext, useContext, ReactNode } from "react";
-import { useAuth } from "./AuthContext";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AccessCodeContextType {
   isAuthenticated: boolean;
@@ -19,10 +19,68 @@ export const useAccessCode = () => {
 };
 
 export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
-  const { isAuthenticated, client, login, logout } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [client, setClient] = useState<any | null>(null);
+
+  useEffect(() => {
+    // Check localStorage for existing valid access code
+    const storedClient = localStorage.getItem('al_natural_client');
+    const storedCode = localStorage.getItem('al_natural_access_code');
+    
+    if (storedClient && storedCode) {
+      try {
+        const clientData = JSON.parse(storedClient);
+        setClient(clientData);
+        setIsAuthenticated(true);
+      } catch (error) {
+        // Clear invalid data
+        localStorage.removeItem('al_natural_client');
+        localStorage.removeItem('al_natural_access_code');
+      }
+    }
+  }, []);
 
   const validateAccessCode = async (code: string): Promise<boolean> => {
-    return await login(code);
+    try {
+      const { data, error } = await supabase.rpc('validate_access_code', {
+        access_code: code
+      });
+
+      if (error) {
+        console.error("Error validating code:", error);
+        return false;
+      }
+
+      if (data && typeof data === 'object' && 'valid' in data && data.valid) {
+        const clientData = {
+          id: (data as any).client_id,
+          name: (data as any).client_name,
+          email: (data as any).client_email,
+          company: (data as any).client_company
+        };
+        
+        setClient(clientData);
+        setIsAuthenticated(true);
+        
+        // Store in localStorage
+        localStorage.setItem('al_natural_client', JSON.stringify(clientData));
+        localStorage.setItem('al_natural_access_code', code.toUpperCase().trim());
+        
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Access code validation error:", error);
+      return false;
+    }
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setClient(null);
+    localStorage.removeItem('al_natural_client');
+    localStorage.removeItem('al_natural_access_code');
   };
 
   return (

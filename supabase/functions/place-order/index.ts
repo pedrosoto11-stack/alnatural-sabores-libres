@@ -30,13 +30,14 @@ serve(async (req) => {
       throw new Error('Items array is required');
     }
     
-    // Validate items structure (but not prices - will fetch from DB)
-    const items = requestData.items.filter((item: any) => 
+    const items = requestData.items.filter(item => 
       item && 
       typeof item.product_id === 'string' && 
       typeof item.quantity === 'number' && 
       item.quantity > 0 && 
-      item.quantity <= 100
+      item.quantity <= 100 &&
+      typeof item.unit_price === 'number' &&
+      item.unit_price > 0
     );
     
     if (items.length === 0) {
@@ -87,41 +88,14 @@ serve(async (req) => {
       throw new Error("Usuario no tiene un cliente asociado");
     }
 
-    // Use service role to fetch actual product prices and create order
+    // Calculate total amount
+    const totalAmount = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+
+    // Use service role to create order (bypassing RLS)
     const adminSupabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-
-    // Fetch actual product prices from database (NEVER trust client prices)
-    const productIds = items.map((item: any) => item.product_id);
-    const { data: products, error: productsError } = await adminSupabase
-      .from("products")
-      .select("id, price, is_active")
-      .in("id", productIds);
-
-    if (productsError) {
-      throw new Error("Error fetching product prices");
-    }
-
-    // Validate all products exist and are active, use actual DB prices
-    const validatedItems = items.map((item: any) => {
-      const product = products?.find(p => p.id === item.product_id);
-      if (!product) {
-        throw new Error(`Product ${item.product_id} not found`);
-      }
-      if (!product.is_active) {
-        throw new Error(`Product ${item.product_id} is not available`);
-      }
-      return {
-        productId: item.product_id,
-        quantity: item.quantity,
-        unitPrice: product.price // Use actual price from database
-      };
-    });
-
-    // Calculate total amount using validated prices
-    const totalAmount = validatedItems.reduce((sum: number, item: any) => sum + (item.quantity * item.unitPrice), 0);
 
     // Create order
     const { data: order, error: orderError } = await adminSupabase
@@ -141,8 +115,8 @@ serve(async (req) => {
       throw new Error(`Error creating order: ${orderError.message}`);
     }
 
-    // Create order items using validated prices
-    const orderItems = validatedItems.map((item: any) => ({
+    // Create order items
+    const orderItems = items.map(item => ({
       order_id: order.id,
       product_id: item.productId,
       quantity: item.quantity,
@@ -159,18 +133,19 @@ serve(async (req) => {
       throw new Error(`Error creating order items: ${itemsError.message}`);
     }
 
-    // Get product names for WhatsApp notification
-    const { data: productDetails } = await adminSupabase
+    // Get product details for WhatsApp notification
+    const productIds = items.map(item => item.productId);
+    const { data: products } = await adminSupabase
       .from("products")
-      .select("id, name")
-      .in("id", validatedItems.map((item: any) => item.productId));
+      .select("id, name, price")
+      .in("id", productIds);
 
     // Prepare WhatsApp content
     const client = userClient.clients as any;
     let orderTextWA = "Nuevo pedido de " + client.name + ":\n\n";
 
-    validatedItems.forEach((item: any) => {
-      const product = productDetails?.find(p => p.id === item.productId);
+    items.forEach(item => {
+      const product = products?.find(p => p.id === item.productId);
       if (product) {
         orderTextWA += `• ${product.name} x${item.quantity} = $${(item.quantity * item.unitPrice).toLocaleString()}\n`;
       }
@@ -234,8 +209,8 @@ serve(async (req) => {
     console.error("Error in place-order function:", error);
     return new Response(
       JSON.stringify({ 
-        error: "Unable to process order. Please try again or contact support.",
-        code: "ORDER_PROCESSING_FAILED"
+        error: error.message,
+        details: error.toString()
       }),
       {
         status: 500,

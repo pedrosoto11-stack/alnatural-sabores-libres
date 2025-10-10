@@ -83,10 +83,7 @@ serve(async (req: Request) => {
   } catch (error: any) {
     console.error('Error in list-clients function:', error);
     return new Response(
-      JSON.stringify({ 
-        error: "Unable to fetch client list. Please try again or contact support.",
-        code: "CLIENT_LIST_FAILED"
-      }),
+      JSON.stringify({ error: error.message }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
