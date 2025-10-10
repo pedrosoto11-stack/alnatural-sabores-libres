@@ -31,7 +31,7 @@ serve(async (req) => {
     }
     
     // Validate items structure (but not prices - will fetch from DB)
-    const items = requestData.items.filter(item => 
+    const items = requestData.items.filter((item: any) => 
       item && 
       typeof item.product_id === 'string' && 
       typeof item.quantity === 'number' && 
@@ -94,7 +94,7 @@ serve(async (req) => {
     );
 
     // Fetch actual product prices from database (NEVER trust client prices)
-    const productIds = items.map(item => item.product_id);
+    const productIds = items.map((item: any) => item.product_id);
     const { data: products, error: productsError } = await adminSupabase
       .from("products")
       .select("id, price, is_active")
@@ -105,7 +105,7 @@ serve(async (req) => {
     }
 
     // Validate all products exist and are active, use actual DB prices
-    const validatedItems = items.map(item => {
+    const validatedItems = items.map((item: any) => {
       const product = products?.find(p => p.id === item.product_id);
       if (!product) {
         throw new Error(`Product ${item.product_id} not found`);
@@ -121,7 +121,7 @@ serve(async (req) => {
     });
 
     // Calculate total amount using validated prices
-    const totalAmount = validatedItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+    const totalAmount = validatedItems.reduce((sum: number, item: any) => sum + (item.quantity * item.unitPrice), 0);
 
     // Create order
     const { data: order, error: orderError } = await adminSupabase
@@ -142,7 +142,7 @@ serve(async (req) => {
     }
 
     // Create order items using validated prices
-    const orderItems = validatedItems.map(item => ({
+    const orderItems = validatedItems.map((item: any) => ({
       order_id: order.id,
       product_id: item.productId,
       quantity: item.quantity,
@@ -163,13 +163,13 @@ serve(async (req) => {
     const { data: productDetails } = await adminSupabase
       .from("products")
       .select("id, name")
-      .in("id", validatedItems.map(item => item.productId));
+      .in("id", validatedItems.map((item: any) => item.productId));
 
     // Prepare WhatsApp content
     const client = userClient.clients as any;
     let orderTextWA = "Nuevo pedido de " + client.name + ":\n\n";
 
-    validatedItems.forEach(item => {
+    validatedItems.forEach((item: any) => {
       const product = productDetails?.find(p => p.id === item.productId);
       if (product) {
         orderTextWA += `• ${product.name} x${item.quantity} = $${(item.quantity * item.unitPrice).toLocaleString()}\n`;
@@ -234,7 +234,8 @@ serve(async (req) => {
     console.error("Error in place-order function:", error);
     return new Response(
       JSON.stringify({ 
-        error: error.message || "Unable to process order"
+        error: "Unable to process order. Please try again or contact support.",
+        code: "ORDER_PROCESSING_FAILED"
       }),
       {
         status: 500,

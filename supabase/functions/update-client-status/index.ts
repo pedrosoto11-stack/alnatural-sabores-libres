@@ -93,7 +93,10 @@ serve(async (req: Request) => {
   } catch (error: any) {
     console.error('Error in update-client-status function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: "Unable to update client status. Please try again or contact support.",
+        code: "CLIENT_UPDATE_FAILED"
+      }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },

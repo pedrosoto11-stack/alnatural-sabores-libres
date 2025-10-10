@@ -114,8 +114,8 @@ serve(async (req) => {
     console.error("Error in create-client function:", error);
     return new Response(
       JSON.stringify({ 
-        error: error.message,
-        details: error.toString()
+        error: "Unable to create client. Please try again or contact support.",
+        code: "CLIENT_CREATION_FAILED"
       }),
       {
         status: 500,
