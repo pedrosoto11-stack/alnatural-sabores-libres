@@ -124,4 +124,53 @@ All colors MUST be HSL.
   img {
     @apply transition-transform duration-300 ease-in-out;
   }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Touch-friendly interactive elements */
+  .touch-scale {
+    @apply active:scale-95 transition-transform duration-200 ease-out;
+  }
+
+  .hover-lift {
+    @apply hover:scale-105 hover:shadow-lg transition-all duration-300 ease-out;
+  }
+
+  .hover-glow {
+    @apply hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] transition-shadow duration-300 ease-out;
+  }
+
+  /* Scroll-triggered animations */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Card hover effects */
+  .card-interactive {
+    @apply transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Button press effect for mobile */
+  .btn-press {
+    @apply active:scale-95 active:brightness-95 transition-all duration-150 ease-out;
+  }
 }
