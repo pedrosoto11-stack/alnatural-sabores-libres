@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
 import { Leaf, Heart, Shield, Star } from "lucide-react";
-import heroProducts from "@/assets/equipo-al-natural.jpg";
+import heroProducts from "@/assets/equipo-web-nuevo.png";
 const Index = () => {
   return <main>
       {/* Hero Section */}
