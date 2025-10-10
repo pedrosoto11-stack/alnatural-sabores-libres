@@ -1,6 +1,6 @@
 import { ShoppingCart, Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useCart } from "@/contexts/CartContext";
 import { useAccessCode } from "@/contexts/AccessCodeContext";
@@ -12,13 +12,23 @@ interface CartDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCheckout: () => void;
-  trigger?: React.ReactNode;
 }
 
-export const CartDrawer = ({ open, onOpenChange, onCheckout, trigger }: CartDrawerProps) => {
+export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) => {
   const { cartItems, addToCart, removeFromCart, getTotalItems } = useCart();
   const { isAuthenticated } = useAccessCode();
   const isMobile = useIsMobile();
+
+  const TriggerButton = (
+    <Button variant="ghost" size="sm" className="relative">
+      <ShoppingCart className="h-5 w-5" />
+      {getTotalItems() > 0 && (
+        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          {getTotalItems()}
+        </span>
+      )}
+    </Button>
+  );
 
   const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -124,7 +134,9 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout, trigger }: CartDraw
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        {trigger}
+        <DrawerTrigger asChild>
+          {TriggerButton}
+        </DrawerTrigger>
         <DrawerContent className="max-h-[85vh]">
           <DrawerHeader className="text-left pb-4">
             <DrawerTitle className="flex items-center gap-2 text-xl">
@@ -145,7 +157,9 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout, trigger }: CartDraw
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
-      {trigger}
+      <PopoverTrigger asChild>
+        {TriggerButton}
+      </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="end" sideOffset={8}>
         <div className="p-4">
           <div className="flex items-center gap-2 mb-4">
