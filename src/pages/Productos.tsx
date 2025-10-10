@@ -8,6 +8,7 @@ import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "@/components/AccessCodeModal";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Minus, Lock } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
 import tequenosYucaImg from "@/assets/tequenos-yuca.png";
@@ -206,6 +207,9 @@ const Productos = () => {
   const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
   const { isAuthenticated } = useAccessCode();
   const { toast } = useToast();
+  
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
 
   // Función para obtener el precio por categoría o producto específico
   const getProductPrice = (category: string, productId?: string): number => {
@@ -261,8 +265,8 @@ const Productos = () => {
   return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+        <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 animate-fade-in-up">
             Nuestros Productos
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">Descubre nuestra línea completa de productos sin gluten, elaborados con plátano, yuca y cambur verde de la mejor calidad.</p>
@@ -311,13 +315,13 @@ const Productos = () => {
         )}
 
         {/* Products Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map(product => <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+        <div ref={gridRef} className={`grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-700 ${gridVisible ? 'opacity-100' : 'opacity-0'}`}>
+          {products.map((product, index) => <Card key={product.id} className="overflow-hidden card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: `${index * 0.1}s` }}>
               <div className="aspect-video overflow-hidden cursor-pointer">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 ease-out" 
                   onClick={() => setSelectedImage({src: product.image, alt: product.name})}
                 />
               </div>

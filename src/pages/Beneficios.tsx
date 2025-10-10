@@ -1,8 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Leaf, Zap, Globe, Heart, Award, Users, Utensils } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const Beneficios = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: mainRef, isVisible: mainVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: nutritionRef, isVisible: nutritionVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: lifestyleRef, isVisible: lifestyleVisible } = useScrollAnimation({ threshold: 0.1 });
+  
   const mainBenefits = [
     {
       icon: Shield,
@@ -77,8 +83,8 @@ const Beneficios = () => {
     <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+        <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 animate-fade-in-up">
             Beneficios Al Natural
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -88,7 +94,7 @@ const Beneficios = () => {
         </div>
 
         {/* Main Benefits */}
-        <section className="mb-20">
+        <section ref={mainRef} className={`mb-20 transition-all duration-700 ${mainVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-3xl font-bold text-center text-foreground mb-12">
             Nuestros Pilares Fundamentales
           </h2>
@@ -97,7 +103,7 @@ const Beneficios = () => {
             {mainBenefits.map((benefit, index) => {
               const Icon = benefit.icon;
               return (
-                <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
+                <Card key={index} className="p-6 card-interactive hover:shadow-xl touch-scale"  style={{ animationDelay: `${index * 0.15}s` }}>
                   <CardHeader className="pb-4">
                     <div className="flex items-start space-x-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -128,7 +134,7 @@ const Beneficios = () => {
         </section>
 
         {/* Nutritional Benefits */}
-        <section className="mb-20">
+        <section ref={nutritionRef} className={`mb-20 transition-all duration-700 ${nutritionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-3xl font-bold text-center text-foreground mb-12">
             Beneficios Nutricionales
           </h2>
@@ -137,7 +143,7 @@ const Beneficios = () => {
             {nutritionalBenefits.map((section, index) => {
               const Icon = section.icon;
               return (
-                <Card key={index} className="p-6">
+                <Card key={index} className="p-6 card-interactive hover:shadow-lg touch-scale" style={{ animationDelay: `${index * 0.2}s` }}>
                   <CardHeader className="pb-4">
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -167,7 +173,7 @@ const Beneficios = () => {
         </section>
 
         {/* Lifestyle Benefits */}
-        <section className="mb-20">
+        <section ref={lifestyleRef} className={`mb-20 transition-all duration-700 ${lifestyleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-3xl font-bold text-center text-foreground mb-12">
             Para Tu Estilo de Vida
           </h2>
@@ -176,7 +182,7 @@ const Beneficios = () => {
             {lifestyleBenefits.map((benefit, index) => {
               const Icon = benefit.icon;
               return (
-                <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
+                <Card key={index} className="text-center p-6 card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: `${index * 0.2}s` }}>
                   <CardContent className="space-y-4">
                     <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                       <Icon className="h-8 w-8 text-primary" />

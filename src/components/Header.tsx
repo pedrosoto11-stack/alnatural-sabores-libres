@@ -217,15 +217,15 @@ const Header = () => {
   );
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-      <nav className="container mx-auto px-4 py-4">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 border-b border-border transition-all duration-300 shadow-sm">
+      <nav className="container mx-auto px-4 py-4 animate-fade-in">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <NavLink to="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity">
+          <NavLink to="/" className="flex items-center space-x-2 hover:opacity-90 transition-all duration-300 hover:scale-105">
             <img 
               src={logoAlNatural} 
               alt="Al Natural" 
-              className="h-20 w-auto object-contain"
+              className="h-20 w-auto object-contain transition-transform duration-300"
             />
           </NavLink>
 
@@ -236,7 +236,7 @@ const Header = () => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `text-sm font-medium transition-colors hover:text-primary ${
+                  `text-sm font-medium transition-all duration-300 hover:text-primary hover:scale-105 ${
                     isActive
                       ? "text-primary border-b-2 border-primary"
                       : "text-muted-foreground"
@@ -253,7 +253,7 @@ const Header = () => {
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Button variant="outline" size="sm" className="flex items-center space-x-1 touch-scale hover:shadow-md transition-all duration-300">
                       <Lock className="h-4 w-4" />
                       <span className="text-xs">{client?.name || "Distribuidor"}</span>
                       <ChevronDown className="h-3 w-3" />
@@ -271,7 +271,7 @@ const Header = () => {
                   variant="outline" 
                   size="sm" 
                   onClick={() => setShowAccessModal(true)}
-                  className="flex items-center space-x-1"
+                  className="flex items-center space-x-1 touch-scale hover:shadow-md transition-all duration-300"
                 >
                   <Lock className="h-4 w-4" />
                   <span>Tengo código</span>
@@ -281,10 +281,10 @@ const Header = () => {
               {/* Cart */}
               <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="relative">
+                  <Button variant="ghost" size="sm" className="relative touch-scale hover:bg-accent transition-all duration-300">
                     <ShoppingCart className="h-5 w-5" />
                     {getTotalItems() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center animate-scale-in">
                         {getTotalItems()}
                       </span>
                     )}

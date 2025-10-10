@@ -1,7 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, Quote } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 const Clientes = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: testimonialsRef, isVisible: testimonialsVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: partnersRef, isVisible: partnersVisible } = useScrollAnimation({ threshold: 0.1 });
+  
   const testimonials = [{
     name: "María González",
     role: "Madre de familia",
@@ -84,8 +89,8 @@ const Clientes = () => {
   return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+        <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 animate-fade-in-up">
             Nuestros Clientes
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -95,7 +100,7 @@ const Clientes = () => {
         </div>
 
         {/* Testimonials Section */}
-        <section className="mb-20">
+        <section ref={testimonialsRef} className={`mb-20 transition-all duration-700 ${testimonialsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
               Lo que dicen nuestros clientes
@@ -106,7 +111,7 @@ const Clientes = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => <Card key={index} className="p-6 hover:shadow-lg transition-shadow relative">
+            {testimonials.map((testimonial, index) => <Card key={index} className="p-6 card-interactive hover:shadow-xl touch-scale relative" style={{ animationDelay: `${index * 0.1}s` }}>
                 <Quote className="absolute top-4 right-4 h-8 w-8 text-primary/20" />
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-4">
@@ -136,14 +141,14 @@ const Clientes = () => {
         </section>
 
         {/* Partners Section */}
-        <section className="mb-20">
+        <section ref={partnersRef} className={`mb-20 transition-all duration-700 ${partnersVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Algunos de Nuestros Aliados Comerciales</h2>
             <p className="text-lg text-muted-foreground">Trabajamos con los mejores distribuidores y puntos de venta del país</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partners.map((partner, index) => <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
+            {partners.map((partner, index) => <Card key={index} className="p-6 text-center card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: `${index * 0.1}s` }}>
                 <CardContent className="space-y-4">
                   <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                     <span className="text-primary font-bold text-lg">

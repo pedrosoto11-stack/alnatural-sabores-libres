@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Clock, Users, ChefHat, X } from "lucide-react";
 import { useState } from "react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import arepasImg from "@/assets/arepa-reina-pepiada.png";
 import tequenosImg from "@/assets/tequenos-al-natural.png";
 import fajitasImg from "@/assets/fajitas.jpg";
@@ -71,6 +72,9 @@ const Recetas = () => {
     src: string;
     title: string;
   } | null>(null);
+  
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
   const getDifficultyColor = (difficulty: Recipe['difficulty']) => {
     switch (difficulty) {
       case 'Fácil':
@@ -86,8 +90,8 @@ const Recetas = () => {
   return <main className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+        <div ref={headerRef} className={`text-center mb-16 transition-all duration-700 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 animate-fade-in-up">
             Recetas Al Natural
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -106,13 +110,13 @@ const Recetas = () => {
         </div>
 
         {/* Recipes Grid */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {recipes.map(recipe => <Card key={recipe.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+        <div ref={gridRef} className={`grid lg:grid-cols-2 gap-8 transition-all duration-700 ${gridVisible ? 'opacity-100' : 'opacity-0'}`}>
+          {recipes.map((recipe, index) => <Card key={recipe.id} className="overflow-hidden card-interactive hover:shadow-xl touch-scale" style={{ animationDelay: `${index * 0.15}s` }}>
               <div className="aspect-video overflow-hidden cursor-pointer" onClick={() => setSelectedImage({
             src: recipe.image,
             title: recipe.title
           })}>
-                <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 ease-out" />
               </div>
               
               <CardHeader>
