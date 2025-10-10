@@ -2,12 +2,14 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, X, ShoppingCart, Lock, LogOut, ChevronDown, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DrawerTrigger } from "@/components/ui/drawer";
+import { PopoverTrigger } from "@/components/ui/popover";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/contexts/CartContext";
 import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { AccessCodeModal } from "./AccessCodeModal";
+import { CartDrawer } from "./CartDrawer";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import logoAlNatural from "@/assets/logo-al-natural-new.png";
@@ -166,56 +168,6 @@ const Header = () => {
     { path: "/contacto", label: "Contacto" },
   ];
 
-  const CartDropdown = () => (
-    <PopoverContent className="w-80 p-4 bg-background border shadow-md z-50">
-      <h3 className="font-semibold text-lg mb-3">Carrito de Compras</h3>
-      {cartItems.length === 0 ? (
-        <div className="text-center py-6">
-          <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-          <p className="text-muted-foreground">Tu carrito está vacío</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Agrega productos desde nuestra sección de productos
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {/* Lista de productos con scroll */}
-          <div className="max-h-60 overflow-y-auto pr-2 space-y-3">
-            {cartItems.map((item, index) => (
-              <div key={index} className="flex justify-between items-center p-2 border rounded">
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {item.variant && `${item.variant} - `}Cantidad: {item.quantity}
-                  </p>
-                </div>
-                {isAuthenticated && (
-                  <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
-                )}
-              </div>
-            ))}
-          </div>
-          
-          {/* Total siempre visible */}
-          <div className="border-t pt-3 mt-3 bg-background">
-            {isAuthenticated && (
-              <div className="flex justify-between items-center font-semibold mb-3">
-                <span>Total:</span>
-                <span>${cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
-              </div>
-            )}
-            <Button 
-              className="w-full mt-3 bg-primary hover:bg-primary-dark"
-              onClick={isAuthenticated ? sendWhatsAppOrder : requestQuote}
-            >
-              {isAuthenticated ? "Enviar pedido por WhatsApp" : "Solicitar cotización"}
-            </Button>
-          </div>
-        </div>
-      )}
-    </PopoverContent>
-  );
-
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <nav className="container mx-auto px-4 py-4">
@@ -279,19 +231,23 @@ const Header = () => {
               )}
               
               {/* Cart */}
-              <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="relative">
-                    <ShoppingCart className="h-5 w-5" />
-                    {getTotalItems() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {getTotalItems()}
-                      </span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <CartDropdown />
-              </Popover>
+              <CartDrawer 
+                open={showCartDropdown} 
+                onOpenChange={setShowCartDropdown}
+                onCheckout={isAuthenticated ? sendWhatsAppOrder : requestQuote}
+                trigger={
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="relative">
+                      <ShoppingCart className="h-5 w-5" />
+                      {getTotalItems() > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {getTotalItems()}
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                }
+              />
             </div>
           </div>
 
@@ -325,20 +281,24 @@ const Header = () => {
                   {item.label}
                 </NavLink>
               ))}
-              <Popover open={showCartDropdown} onOpenChange={setShowCartDropdown}>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="relative mt-4 mx-2" onClick={() => setIsMenuOpen(false)}>
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Carrito
-                    {getTotalItems() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {getTotalItems()}
-                      </span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <CartDropdown />
-              </Popover>
+              <CartDrawer 
+                open={showCartDropdown} 
+                onOpenChange={setShowCartDropdown}
+                onCheckout={isAuthenticated ? sendWhatsAppOrder : requestQuote}
+                trigger={
+                  <DrawerTrigger asChild>
+                    <Button variant="ghost" size="sm" className="relative mt-4 mx-2" onClick={() => setIsMenuOpen(false)}>
+                      <ShoppingCart className="h-5 w-5 mr-2" />
+                      Carrito
+                      {getTotalItems() > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {getTotalItems()}
+                        </span>
+                      )}
+                    </Button>
+                  </DrawerTrigger>
+                }
+              />
             </div>
           </div>
         )}
