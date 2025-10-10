@@ -46,10 +46,10 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
         </div>
       ) : (
         <div className="flex flex-col h-full">
-          <ScrollArea className="flex-1 -mx-4 px-4">
-            <div className="space-y-4 pb-4">
+          <ScrollArea className="flex-1 -mx-4 px-4 mb-4">
+            <div className="space-y-3 pb-2">
               {cartItems.map((item, index) => (
-                <div key={`${item.id}-${item.variant}-${index}`} className="flex gap-4 p-3 rounded-lg border bg-card animate-fade-in">
+                <div key={`${item.id}-${item.variant}-${index}`} className="flex gap-3 p-3 rounded-lg border bg-card animate-fade-in hover-lift transition-all duration-200">
                   <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-sm leading-tight mb-1 truncate">{item.name}</h4>
                     {item.variant && (
@@ -61,13 +61,12 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
                       </p>
                     )}
                   </div>
-                  <div className="flex flex-col items-end justify-between">
+                  <div className="flex flex-col items-end justify-between gap-2">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                      className="h-7 w-7 text-muted-foreground hover:text-destructive transition-colors"
                       onClick={() => {
-                        // Remover completamente el item
                         for (let i = 0; i < item.quantity; i++) {
                           removeFromCart(item.id, item.variant);
                         }
@@ -75,11 +74,11 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-7 w-7"
+                        className="h-7 w-7 transition-all hover:scale-105"
                         onClick={() => removeFromCart(item.id, item.variant)}
                       >
                         <Minus className="h-3 w-3" />
@@ -88,7 +87,7 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-7 w-7"
+                        className="h-7 w-7 transition-all hover:scale-105"
                         onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, variant: item.variant })}
                       >
                         <Plus className="h-3 w-3" />
@@ -100,9 +99,8 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
             </div>
           </ScrollArea>
           
-          {isAuthenticated && (
-            <>
-              <Separator className="my-4" />
+          <div className="mt-auto pt-3 border-t">
+            {isAuthenticated && (
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
@@ -113,19 +111,19 @@ export const CartDrawer = ({ open, onOpenChange, onCheckout }: CartDrawerProps) 
                   <span className="text-primary">${totalAmount.toFixed(2)}</span>
                 </div>
               </div>
-            </>
-          )}
-          
-          <Button 
-            className="w-full h-12 text-base font-semibold"
-            size="lg"
-            onClick={() => {
-              onCheckout();
-              onOpenChange(false);
-            }}
-          >
-            {isAuthenticated ? "Enviar pedido por WhatsApp" : "Solicitar cotización"}
-          </Button>
+            )}
+            
+            <Button 
+              className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              size="lg"
+              onClick={() => {
+                onCheckout();
+                onOpenChange(false);
+              }}
+            >
+              {isAuthenticated ? "Enviar pedido por WhatsApp" : "Solicitar cotización"}
+            </Button>
+          </div>
         </div>
       )}
     </>
