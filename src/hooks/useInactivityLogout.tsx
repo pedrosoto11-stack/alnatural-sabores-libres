@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 interface UseInactivityLogoutProps {
@@ -14,7 +13,6 @@ export const useInactivityLogout = ({
   isEnabled 
 }: UseInactivityLogoutProps) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   const resetTimer = () => {
@@ -25,13 +23,12 @@ export const useInactivityLogout = ({
     }
 
     timeoutRef.current = setTimeout(() => {
-      onLogout();
       toast({
         title: "Sesión expirada",
         description: "Tu sesión ha expirado por inactividad. Por favor, vuelve a ingresar tu código de acceso.",
         variant: "destructive",
       });
-      navigate('/');
+      onLogout();
     }, timeoutMinutes * 60 * 1000);
   };
 
