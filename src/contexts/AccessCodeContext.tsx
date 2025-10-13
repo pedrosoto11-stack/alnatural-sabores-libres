@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useInactivityLogout } from "@/hooks/useInactivityLogout";
 
 interface AccessCodeContextType {
   isAuthenticated: boolean;
@@ -21,6 +22,20 @@ export const useAccessCode = () => {
 export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [client, setClient] = useState<any | null>(null);
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setClient(null);
+    localStorage.removeItem('al_natural_client');
+    localStorage.removeItem('al_natural_access_code');
+  };
+
+  // Enable inactivity logout only for access code authenticated clients
+  useInactivityLogout({
+    onLogout: logout,
+    timeoutMinutes: 15,
+    isEnabled: isAuthenticated
+  });
 
   useEffect(() => {
     // Check localStorage for existing valid access code
@@ -74,13 +89,6 @@ export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
       console.error("Access code validation error:", error);
       return false;
     }
-  };
-
-  const logout = () => {
-    setIsAuthenticated(false);
-    setClient(null);
-    localStorage.removeItem('al_natural_client');
-    localStorage.removeItem('al_natural_access_code');
   };
 
   return (
