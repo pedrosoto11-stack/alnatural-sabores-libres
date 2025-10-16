@@ -124,44 +124,48 @@ const Header = () => {
         return;
       }
 
-      // Mapeo de variantes a productos base del dashboard
+      // Mapeo de IDs de productos a UUIDs del DASHBOARD
       const PRODUCT_UUID_MAP: { [key: string]: string } = {
-        // Fajitas - todas las variantes mapean al producto base
-        "fajita-yuca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-pimenton": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-zanahoria": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-acelga-espinaca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-oregano": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-platano-amarillo": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-platano-verde": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-cambur-verde": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        // Tequeños - todas las variantes mapean al producto base
-        "tequenos-yuca-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-platano-verde-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-platano-amarillo-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-combinados-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-al-natural": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        // Panes - todas las variantes mapean al producto base
-        "panes-yuca-queso-12": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
-        "panes-yuca-queso-4": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
+        // Fajitas
+        "fajita-yuca": "92d12d3e-ff77-409f-8f4e-195c6597b15f",
+        "fajita-yuca-pimenton": "c0250dee-133e-4649-8626-25c78fe5f436",
+        "fajita-yuca-zanahoria": "0fe90920-ec28-47cf-a924-ded9c87c3d46",
+        "fajita-yuca-acelga-espinaca": "e99a52a5-00df-4011-9fa9-5480a6c9f7a5",
+        "fajita-yuca-oregano": "8b335908-97d5-49a9-a176-ad88ad2c808d",
+        "fajita-platano-amarillo": "c8b7d4f0-f641-49b8-ae73-1ab0c68f382d",
+        "fajita-platano-verde": "eb814463-795b-42f1-8e3d-f2cfff4dfc49",
+        "fajita-cambur-verde": "c6da722c-4a71-40c1-a2e7-c3da920aa4c2",
+        
+        // Tequeños
+        "tequenos-yuca-queso": "7ca0c1b7-2794-4c68-9ec6-349e6bea221d",
+        "tequenos-platano-verde-queso": "bdc7bc75-687b-4976-8232-df884f5a79e7",
+        "tequenos-platano-amarillo-queso": "3f214f50-169f-414d-9176-3f2ab5d4b3b8",
+        "tequenos-combinados-queso": "1296abbb-4266-40fe-b5d4-9c133f0f7e51",
+        "tequenos-al-natural": "7ca0c1b7-2794-4c68-9ec6-349e6bea221d",
+        
+        // Panes
+        "panes-yuca-queso-12": "55c35b8f-9e74-4c5d-8efd-552f314f44e5",
+        "panes-yuca-queso-4": "a97b5d31-63c8-48de-af11-a181bb63d237",
+        
         // Patacones
-        "patacones": "234b7735-689f-4e91-b52d-681cbea947c6",
-        "patacones-gourmet": "234b7735-689f-4e91-b52d-681cbea947c6",
-        // Arepas de plátano - mapean a Arepa de Plátano Verde
-        "arepa-platano-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-platano-verde-ajo-perejil": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-platano-amarillo": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-cambur-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-reina-pepiada": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        // Arepas de yuca - mapean a Arepa de Yuca
-        "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
-        "arepa-yuca-mixta-6-sabores": "36516820-5e05-4b10-8164-aa2225daddd6",
-        "arepa-yuca-mixta": "36516820-5e05-4b10-8164-aa2225daddd6",
-        // Wraps (si existen, mapear a fajitas)
-        "wrap-saludable-fajitas": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
+        "patacones": "1f7bed1d-c07b-4c48-b723-5df26c0d353c",
+        "patacones-gourmet": "1f7bed1d-c07b-4c48-b723-5df26c0d353c",
+        
+        // Arepas
+        "arepa-platano-verde": "0b79763b-44b8-4f5b-98a8-c0848fefa9e4",
+        "arepa-platano-verde-ajo-perejil": "a8fa22b6-b72a-48ce-abe5-5f9028f159d3",
+        "arepa-platano-amarillo": "556b3d88-a586-4dbc-ac1c-3ebf9eeb6edf",
+        "arepa-cambur-verde": "27901f18-12c0-4141-809b-dbb3133faf92",
+        "arepa-yuca": "bca9391c-f0e2-4675-852b-729bc6c1220e",
+        "arepa-yuca-mixta-6-sabores": "f56338dc-98bb-4d01-ad4b-bf2529fb1997",
+        "arepa-yuca-mixta": "f56338dc-98bb-4d01-ad4b-bf2529fb1997",
+        "arepa-reina-pepiada": "0b79763b-44b8-4f5b-98a8-c0848fefa9e4",
+        
+        // Wraps
+        "wrap-saludable-fajitas": "92d12d3e-ff77-409f-8f4e-195c6597b15f",
       };
 
-      // Convertir IDs de variantes a UUIDs del dashboard, manteniendo el nombre específico
+      // Convertir IDs a UUIDs del dashboard, manteniendo el nombre específico
       const orderItems = cartItems.map(item => ({
         product_id: PRODUCT_UUID_MAP[item.id] || item.id,
         product_name: item.name, // El nombre específico de la variante se mantiene
