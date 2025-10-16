@@ -169,6 +169,14 @@ serve(async (req) => {
     const dashboardWebhookUrl = Deno.env.get("DASHBOARD_WEBHOOK_URL");
     const dashboardApiKey = Deno.env.get("DASHBOARD_API_KEY");
 
+    console.log("Dashboard webhook config:", {
+      hasUrl: !!dashboardWebhookUrl,
+      urlLength: dashboardWebhookUrl?.length || 0,
+      urlPrefix: dashboardWebhookUrl?.substring(0, 30),
+      hasApiKey: !!dashboardApiKey,
+      apiKeyLength: dashboardApiKey?.length || 0
+    });
+
     if (dashboardWebhookUrl && dashboardApiKey) {
       try {
         const webhookPayload = {
