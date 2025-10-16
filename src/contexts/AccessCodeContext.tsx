@@ -82,16 +82,11 @@ export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
           return false;
         }
         
-        // Link user to client directly in database
+        // Link user to client using edge function
         try {
-          const { error: linkError } = await supabase
-            .from('user_clients')
-            .upsert({
-              user_id: user.id,
-              client_id: clientData.id
-            }, {
-              onConflict: 'user_id,client_id'
-            });
+          const { error: linkError } = await supabase.functions.invoke('link-user-client', {
+            body: { client_id: clientData.id }
+          });
           
           if (linkError) {
             console.error("Error linking user to client:", linkError);

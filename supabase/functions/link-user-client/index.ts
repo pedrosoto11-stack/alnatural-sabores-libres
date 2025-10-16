@@ -56,12 +56,39 @@ serve(async (req) => {
     // Check if link already exists
     const { data: existingLink } = await adminSupabase
       .from("user_clients")
-      .select("id")
+      .select("id, client_id")
       .eq("user_id", user.id)
-      .eq("client_id", client_id)
       .single();
 
     if (existingLink) {
+      // If user is already linked to a different client, update the link
+      if (existingLink.client_id !== client_id) {
+        const { error: updateError } = await adminSupabase
+          .from("user_clients")
+          .update({ client_id: client_id })
+          .eq("user_id", user.id);
+
+        if (updateError) {
+          console.error("Error updating user-client link:", updateError);
+          throw new Error(`Error updating link: ${updateError.message}`);
+        }
+
+        console.log(`User ${user.id} updated to client ${client_id}`);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: "User updated to new client successfully",
+            link_id: existingLink.id
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          }
+        );
+      }
+
+      // Already linked to the same client
       return new Response(
         JSON.stringify({
           success: true,
