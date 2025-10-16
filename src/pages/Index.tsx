@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
 import { Leaf, Heart, Shield, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
-import heroProducts from "@/assets/equipo-web-nuevo.png";
+import heroProducts from "@/assets/equipo-3.png";
 
 const Index = () => {
   const heroAnimation = useScrollAnimation({ threshold: 0.2 });
