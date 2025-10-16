@@ -8,6 +8,7 @@ const corsHeaders = {
 
 interface OrderItem {
   productId: string;
+  productName: string;
   quantity: number;
   unitPrice: number;
 }
@@ -33,7 +34,8 @@ serve(async (req) => {
     const items: OrderItem[] = requestData.items
       .filter((item: any) => 
         item && 
-        typeof item.product_id === 'string' && 
+        typeof item.product_id === 'string' &&
+        typeof item.product_name === 'string' &&
         typeof item.quantity === 'number' && 
         item.quantity > 0 && 
         item.quantity <= 100 &&
@@ -42,6 +44,7 @@ serve(async (req) => {
       )
       .map((item: any) => ({
         productId: item.product_id,
+        productName: item.product_name,
         quantity: item.quantity,
         unitPrice: item.unit_price,
       }));
@@ -103,22 +106,12 @@ serve(async (req) => {
     // Generate temporary order ID
     const orderId = crypto.randomUUID();
 
-    // Get product details for WhatsApp notification
-    const productIds = items.map((item: OrderItem) => item.productId);
-    const { data: products } = await adminSupabase
-      .from("products")
-      .select("id, name, price")
-      .in("id", productIds);
-
-    // Prepare WhatsApp content
+    // Prepare WhatsApp content (using product names from request)
     const client = userClient.clients as any;
     let orderTextWA = "Nuevo pedido de " + client.name + ":\n\n";
 
     items.forEach((item: OrderItem) => {
-      const product = products?.find(p => p.id === item.productId);
-      if (product) {
-        orderTextWA += `• ${product.name} x${item.quantity} = $${(item.quantity * item.unitPrice).toLocaleString()}\n`;
-      }
+      orderTextWA += `• ${item.productName} x${item.quantity} = $${(item.quantity * item.unitPrice).toLocaleString()}\n`;
     });
 
     orderTextWA += `\nTotal: $${totalAmount.toLocaleString()}`;
@@ -154,16 +147,13 @@ serve(async (req) => {
       client_company: client.company || null,
       client_phone: client.phone || null,
       total_amount: totalAmount,
-      items: items.map((item: OrderItem) => {
-        const product = products?.find(p => p.id === item.productId);
-        return {
-          product_id: item.productId,
-          product_name: product?.name || "Unknown",
-          quantity: item.quantity,
-          unit_price: item.unitPrice,
-          total_price: item.quantity * item.unitPrice
-        };
-      }),
+      items: items.map((item: OrderItem) => ({
+        product_id: item.productId,
+        product_name: item.productName,
+        quantity: item.quantity,
+        unit_price: item.unitPrice,
+        total_price: item.quantity * item.unitPrice
+      })),
       notes: notes,
       created_at: new Date().toISOString()
     };

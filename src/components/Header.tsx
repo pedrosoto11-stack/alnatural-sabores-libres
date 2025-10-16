@@ -124,9 +124,10 @@ const Header = () => {
         return;
       }
 
-      // Enviar IDs de productos directamente (el dashboard espera IDs string, no UUIDs)
+      // Enviar IDs de productos directamente con nombres (el dashboard espera IDs string, no UUIDs)
       const orderItems = cartItems.map(item => ({
         product_id: item.id,
+        product_name: item.name,
         quantity: item.quantity,
         unit_price: item.price
       }));
