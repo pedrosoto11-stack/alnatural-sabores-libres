@@ -100,41 +100,8 @@ serve(async (req) => {
     // Calculate total amount
     const totalAmount = items.reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.unitPrice), 0);
 
-    // Create order
-    const { data: order, error: orderError } = await adminSupabase
-      .from("orders")
-      .insert({
-        client_id: userClient.client_id,
-        user_id: user.id,
-        total_amount: totalAmount,
-        status: "pending",
-        notes: notes,
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error("Order error:", orderError);
-      throw new Error(`Error creating order: ${orderError.message}`);
-    }
-
-    // Create order items
-    const orderItems = items.map((item: OrderItem) => ({
-      order_id: order.id,
-      product_id: item.productId,
-      quantity: item.quantity,
-      unit_price: item.unitPrice,
-      total_price: item.quantity * item.unitPrice,
-    }));
-
-    const { error: itemsError } = await adminSupabase
-      .from("order_items")
-      .insert(orderItems);
-
-    if (itemsError) {
-      console.error("Order items error:", itemsError);
-      throw new Error(`Error creating order items: ${itemsError.message}`);
-    }
+    // Generate temporary order ID
+    const orderId = crypto.randomUUID();
 
     // Get product details for WhatsApp notification
     const productIds = items.map((item: OrderItem) => item.productId);
@@ -163,9 +130,9 @@ serve(async (req) => {
     orderTextWA += `\nEmail: ${client.email}`;
     if (client.phone) orderTextWA += `\nTeléfono: ${client.phone}`;
 
-    console.log("Order created successfully - attempting webhook delivery");
+    console.log("Attempting to send order to dashboard");
 
-    // Send webhook to external dashboard (non-blocking)
+    // Send webhook to external dashboard (CRITICAL - main operation)
     const dashboardWebhookUrl = Deno.env.get("DASHBOARD_WEBHOOK_URL");
     const dashboardApiKey = Deno.env.get("DASHBOARD_API_KEY");
 
@@ -173,49 +140,50 @@ serve(async (req) => {
       hasUrl: !!dashboardWebhookUrl,
       url: dashboardWebhookUrl,
       hasApiKey: !!dashboardApiKey,
-      timestamp: new Date().toISOString(),
-      ready: true,
-      configured: true
+      timestamp: new Date().toISOString()
     });
 
-    if (dashboardWebhookUrl && dashboardApiKey) {
-      try {
-        const webhookPayload = {
-          order_id: order.id,
-          client_name: client.name,
-          client_email: client.email,
-          client_company: client.company || null,
-          client_phone: client.phone || null,
-          total_amount: totalAmount,
-          items: items.map((item: OrderItem) => {
-            const product = products?.find(p => p.id === item.productId);
-            return {
-              product_id: item.productId,
-              product_name: product?.name || "Unknown",
-              quantity: item.quantity,
-              unit_price: item.unitPrice,
-              total_price: item.quantity * item.unitPrice
-            };
-          }),
-          notes: notes,
-          created_at: order.created_at
-        };
-
-        await fetch(dashboardWebhookUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": dashboardApiKey
-          },
-          body: JSON.stringify(webhookPayload)
-        });
-        
-        console.log("Webhook sent to dashboard successfully");
-      } catch (webhookError) {
-        console.error("Dashboard webhook error (non-critical):", webhookError);
-        // No lanzar error, el pedido ya fue creado localmente
-      }
+    if (!dashboardWebhookUrl || !dashboardApiKey) {
+      throw new Error("Dashboard webhook not configured");
     }
+
+    const webhookPayload = {
+      order_id: orderId,
+      client_name: client.name,
+      client_email: client.email,
+      client_company: client.company || null,
+      client_phone: client.phone || null,
+      total_amount: totalAmount,
+      items: items.map((item: OrderItem) => {
+        const product = products?.find(p => p.id === item.productId);
+        return {
+          product_id: item.productId,
+          product_name: product?.name || "Unknown",
+          quantity: item.quantity,
+          unit_price: item.unitPrice,
+          total_price: item.quantity * item.unitPrice
+        };
+      }),
+      notes: notes,
+      created_at: new Date().toISOString()
+    };
+
+    const webhookResponse = await fetch(dashboardWebhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": dashboardApiKey
+      },
+      body: JSON.stringify(webhookPayload)
+    });
+
+    if (!webhookResponse.ok) {
+      const errorText = await webhookResponse.text();
+      console.error("Dashboard webhook failed:", errorText);
+      throw new Error(`Error sending order to dashboard: ${webhookResponse.status} - ${errorText}`);
+    }
+    
+    console.log("Order sent to dashboard successfully");
 
     // Send WhatsApp notification if configured
     const whatsappToken = Deno.env.get("WHATSAPP_TOKEN");
@@ -246,13 +214,13 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        orderId: order.id,
-        message: "Pedido creado exitosamente",
+        orderId: orderId,
+        message: "Pedido enviado exitosamente al dashboard",
         order: {
-          id: order.id,
+          id: orderId,
           total: totalAmount,
-          status: order.status,
-          items: orderItems.length,
+          status: "pending",
+          items: items.length,
         },
       }),
       {
