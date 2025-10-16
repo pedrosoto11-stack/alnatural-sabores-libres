@@ -276,11 +276,9 @@ const Productos = () => {
       return;
     }
     
-    // Obtener el UUID correcto de la base de datos
-    const productUUID = PRODUCT_ID_MAP[product.id] || product.id;
-    
+    // Usar el ID único del producto directamente
     addToCart({
-      id: productUUID, // Usar UUID en lugar del ID string
+      id: product.id,
       name: product.name,
       price: getProductPrice(product.category, product.id),
       variant
@@ -450,19 +448,18 @@ const Productos = () => {
                             size="sm" 
                             variant="ghost" 
                             onClick={() => {
-                              const productUUID = PRODUCT_ID_MAP[product.id] || product.id;
-                              const quantity = getCartQuantity(productUUID);
+                              const quantity = getCartQuantity(product.id);
                               if (quantity > 0) {
-                                removeFromCart(productUUID);
+                                removeFromCart(product.id);
                               }
                             }}
-                            disabled={getCartQuantity(PRODUCT_ID_MAP[product.id] || product.id) === 0}
+                            disabled={getCartQuantity(product.id) === 0}
                             className="h-10 w-10 p-0 hover:bg-muted disabled:opacity-50"
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
                           <span className="font-medium w-12 text-center">
-                            {getCartQuantity(PRODUCT_ID_MAP[product.id] || product.id)}
+                            {getCartQuantity(product.id)}
                           </span>
                         </div>
                         <Button 
