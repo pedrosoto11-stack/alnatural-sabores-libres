@@ -173,7 +173,8 @@ serve(async (req) => {
       hasUrl: !!dashboardWebhookUrl,
       url: dashboardWebhookUrl,
       hasApiKey: !!dashboardApiKey,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      ready: true
     });
 
     if (dashboardWebhookUrl && dashboardApiKey) {
