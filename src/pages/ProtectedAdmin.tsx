@@ -15,7 +15,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut } from 'lucide-react';
+import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const clientSchema = z.object({
   name: z.string().trim().min(1, "El nombre es requerido").max(100, "El nombre debe tener menos de 100 caracteres"),
@@ -51,8 +52,21 @@ const ProtectedAdmin: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [updatingClientId, setUpdatingClientId] = useState<string | null>(null);
+  const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const form = useForm<ClientFormData>({
+    resolver: zodResolver(clientSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      city: "",
+    },
+  });
+
+  const editForm = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
       name: "",
@@ -184,6 +198,63 @@ const ProtectedAdmin: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
       toast.error("Error al crear el cliente");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const openEditDialog = (client: Client) => {
+    setEditingClient(client);
+    editForm.reset({
+      name: client.name,
+      email: client.email,
+      phone: client.phone || "",
+      company: client.company || "",
+      city: client.city || "",
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const onEditSubmit = async (data: ClientFormData) => {
+    if (!editingClient) return;
+    
+    setIsSubmitting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error("Sesión no válida");
+        return;
+      }
+      
+      const { data: result, error } = await supabase.functions.invoke('update-client', {
+        body: {
+          clientId: editingClient.id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone || null,
+          company: data.company || null,
+          city: data.city || null,
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) {
+        console.error('Error updating client:', error);
+        const errorMessage = result?.error || result?.message || "Error al actualizar el cliente";
+        toast.error(errorMessage);
+        return;
+      }
+
+      toast.success("Cliente actualizado exitosamente");
+      setIsEditDialogOpen(false);
+      setEditingClient(null);
+      fetchClients();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al actualizar el cliente");
     } finally {
       setIsSubmitting(false);
     }
@@ -341,6 +412,7 @@ const ProtectedAdmin: React.FC = () => {
                         <TableHead>Código de Acceso</TableHead>
                         <TableHead>Estado</TableHead>
                         <TableHead>Fecha de Registro</TableHead>
+                        <TableHead>Acciones</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -411,6 +483,16 @@ const ProtectedAdmin: React.FC = () => {
                               {new Date(client.created_at).toLocaleDateString('es-ES')}
                             </div>
                           </TableCell>
+                          <TableCell>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => openEditDialog(client)}
+                            >
+                              <Pencil className="h-3 w-3 mr-1" />
+                              Editar
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -421,6 +503,114 @@ const ProtectedAdmin: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* Edit Client Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Editar Cliente</DialogTitle>
+            <DialogDescription>
+              Modifica la información del cliente
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...editForm}>
+            <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={editForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nombre completo del cliente" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={editForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email *</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="cliente@ejemplo.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={editForm.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Teléfono</FormLabel>
+                      <FormControl>
+                        <Input placeholder="+58 412 123 4567" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={editForm.control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Empresa</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nombre de la empresa" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={editForm.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ciudad</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ciudad del cliente" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex gap-2 justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditDialogOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Guardando...
+                    </>
+                  ) : (
+                    "Guardar Cambios"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
