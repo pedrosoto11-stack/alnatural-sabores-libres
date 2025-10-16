@@ -395,30 +395,39 @@ const Productos = () => {
                                 <div className="text-xs text-muted-foreground mt-1">${getProductPrice(product.category, product.id)}</div>
                               )}
                             </div>
-                            <div className="flex items-center space-x-2">
-                              {quantity > 0 && isAuthenticated && (
-                                <Button size="sm" variant="outline" onClick={() => removeFromCart(product.id, variant)} className="h-8 w-8 p-0">
+                            {isAuthenticated ? (
+                              <div className="flex items-center border rounded-lg bg-background">
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost" 
+                                  onClick={() => removeFromCart(product.id, variant)}
+                                  disabled={quantity === 0}
+                                  className="h-8 w-8 p-0 hover:bg-muted"
+                                >
                                   <Minus className="h-4 w-4" />
                                 </Button>
-                              )}
-                              {quantity > 0 && (
-                                <span className="text-sm font-medium w-8 text-center">
+                                <span className="text-sm font-medium w-10 text-center">
                                   {quantity}
                                 </span>
-                              )}
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost" 
+                                  onClick={() => handleAddToCart(product, variant)}
+                                  className="h-8 w-8 p-0 hover:bg-muted"
+                                >
+                                  <Plus className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ) : (
                               <Button 
                                 size="sm" 
-                                variant={isAuthenticated ? "default" : "outline"} 
+                                variant="outline" 
                                 onClick={() => handleAddToCart(product, variant)} 
-                                className={isAuthenticated ? "h-8 w-8 p-0 bg-primary hover:bg-primary-dark" : "h-8 text-xs px-2"}
+                                className="h-8 text-xs px-2"
                               >
-                                {isAuthenticated ? (
-                                  <Plus className="h-4 w-4" />
-                                ) : (
-                                  "Cotizar"
-                                )}
+                                Cotizar
                               </Button>
-                            </div>
+                            )}
                           </div>;
                 })}
                     </div>
@@ -435,32 +444,37 @@ const Productos = () => {
                       </div>
                     )}
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getCartQuantity(product.id) > 0 && isAuthenticated && (
-                          <Button size="sm" variant="outline" onClick={() => removeFromCart(product.id)}>
+                      {isAuthenticated ? (
+                        <div className="flex items-center border rounded-lg bg-background">
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => removeFromCart(product.id)}
+                            disabled={getCartQuantity(product.id) === 0}
+                            className="h-10 w-10 p-0 hover:bg-muted"
+                          >
                             <Minus className="h-4 w-4" />
                           </Button>
-                        )}
-                        {getCartQuantity(product.id) > 0 && (
-                          <span className="font-medium">
+                          <span className="font-medium w-12 text-center">
                             {getCartQuantity(product.id)}
                           </span>
-                        )}
-                      </div>
-                      <Button 
-                        onClick={() => handleAddToCart(product)} 
-                        variant={isAuthenticated ? "default" : "outline"}
-                        className={isAuthenticated ? "bg-primary hover:bg-primary-dark" : ""}
-                      >
-                        {isAuthenticated ? (
-                          <>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Agregar al pedido
-                          </>
-                        ) : (
-                          "Solicitar cotización"
-                        )}
-                      </Button>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => handleAddToCart(product)}
+                            className="h-10 w-10 p-0 hover:bg-muted"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button 
+                          onClick={() => handleAddToCart(product)} 
+                          variant="outline"
+                        >
+                          Solicitar cotización
+                        </Button>
+                      )}
                     </div>
                   </div>
                 )}
