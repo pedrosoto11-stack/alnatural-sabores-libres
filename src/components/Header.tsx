@@ -124,33 +124,9 @@ const Header = () => {
         return;
       }
 
-      // Mapeo de IDs de productos a UUIDs de base de datos
-      const PRODUCT_ID_MAP: { [key: string]: string } = {
-        "fajita-yuca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-pimenton": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-zanahoria": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-acelga-espinaca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-yuca-oregano": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-platano-amarillo": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-platano-verde": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "fajita-cambur-verde": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-        "tequenos-yuca-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-platano-verde-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-platano-amarillo-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "tequenos-combinados-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-        "panes-yuca-queso-12": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
-        "panes-yuca-queso-4": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
-        "patacones": "b8f0a7c0-d5df-4dbb-b671-5eeeb8896c4e",
-        "arepa-platano-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-platano-verde-ajo-perejil": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-platano-amarillo": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-yuca": "73d8a386-a327-4809-82ee-79f69e8d1157",
-        "arepa-yuca-mixta-6-sabores": "36516820-5e05-4b10-8164-aa2225daddd6",
-        "arepa-cambur-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
-      };
-
+      // Enviar IDs de productos directamente (el dashboard espera IDs string, no UUIDs)
       const orderItems = cartItems.map(item => ({
-        product_id: PRODUCT_ID_MAP[item.id] || item.id,
+        product_id: item.id,
         quantity: item.quantity,
         unit_price: item.price
       }));
