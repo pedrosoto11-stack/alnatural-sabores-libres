@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -200,6 +200,17 @@ const products: Product[] = [
   benefits: ["Elaboradas con cambur verde fresco", "Libres de gluten", "Empacadas al vacío", "Sabor diferente, nutritivo y versátil"],
   image: arepaCamburVerdeImg
 }];
+
+// Mapeo de IDs de producto string a UUIDs de la base de datos
+const PRODUCT_ID_MAP: Record<string, string> = {
+  "fajita-yuca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
+  "arepa-platano-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
+  "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
+  "tequenos-platano": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
+  "patacones": "234b7735-689f-4e91-b52d-681cbea947c6",
+  "panes-yuca-queso-4": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c"
+};
+
 const Productos = () => {
   const [selectedImage, setSelectedImage] = useState<{src: string, alt: string} | null>(null);
   const [showAccessModal, setShowAccessModal] = useState(false);
@@ -243,8 +254,11 @@ const Productos = () => {
       return;
     }
     
+    // Obtener el UUID correcto de la base de datos
+    const productUUID = PRODUCT_ID_MAP[product.id] || product.id;
+    
     addToCart({
-      id: product.id,
+      id: productUUID, // Usar UUID en lugar del ID string
       name: product.name,
       price: getProductPrice(product.category, product.id),
       variant
