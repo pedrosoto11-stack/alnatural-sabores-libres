@@ -168,6 +168,49 @@ serve(async (req) => {
 
     console.log("Order created successfully - email confirmation disabled");
 
+    // Send webhook to external dashboard (non-blocking)
+    const dashboardWebhookUrl = Deno.env.get("DASHBOARD_WEBHOOK_URL");
+    const dashboardApiKey = Deno.env.get("DASHBOARD_API_KEY");
+
+    if (dashboardWebhookUrl && dashboardApiKey) {
+      try {
+        const webhookPayload = {
+          order_id: order.id,
+          client_name: client.name,
+          client_email: client.email,
+          client_company: client.company || null,
+          client_phone: client.phone || null,
+          total_amount: totalAmount,
+          items: items.map((item: OrderItem) => {
+            const product = products?.find(p => p.id === item.productId);
+            return {
+              product_id: item.productId,
+              product_name: product?.name || "Unknown",
+              quantity: item.quantity,
+              unit_price: item.unitPrice,
+              total_price: item.quantity * item.unitPrice
+            };
+          }),
+          notes: notes,
+          created_at: order.created_at
+        };
+
+        await fetch(dashboardWebhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": dashboardApiKey
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+        
+        console.log("Webhook sent to dashboard successfully");
+      } catch (webhookError) {
+        console.error("Dashboard webhook error (non-critical):", webhookError);
+        // No lanzar error, el pedido ya fue creado localmente
+      }
+    }
+
     // Send WhatsApp notification if configured
     const whatsappToken = Deno.env.get("WHATSAPP_TOKEN");
     const whatsappPhoneId = Deno.env.get("WHATSAPP_PHONE_ID");

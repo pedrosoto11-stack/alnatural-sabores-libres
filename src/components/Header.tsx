@@ -10,6 +10,7 @@ import { AccessCodeModal } from "./AccessCodeModal";
 import { CartDrawer } from "./CartDrawer";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
 import logoAlNatural from "@/assets/logo-al-natural-new.png";
 
 const Header = () => {
@@ -100,7 +101,7 @@ const Header = () => {
     return message;
   };
 
-  const sendWhatsAppOrder = () => {
+  const sendWhatsAppOrder = async () => {
     if (cartItems.length === 0) {
       toast({
         title: "Carrito vacío",
@@ -110,15 +111,71 @@ const Header = () => {
       return;
     }
 
-    const message = generateWhatsAppMessage();
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
-    
-    // Mostrar modal con enlace de WhatsApp
-    showWhatsAppLink(whatsappUrl);
+    try {
+      // 1. PRIMERO: Guardar pedido en base de datos local
+      const { data: session } = await supabase.auth.getSession();
+      
+      if (!session?.session) {
+        toast({
+          title: "Error de autenticación",
+          description: "Debes iniciar sesión para hacer un pedido",
+          variant: "destructive"
+        });
+        return;
+      }
 
-    // Cerrar el dropdown del carrito
-    setShowCartDropdown(false);
+      const orderItems = cartItems.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        unit_price: item.price
+      }));
+
+      // Llamar al edge function place-order
+      const { data: orderData, error: orderError } = await supabase.functions.invoke('place-order', {
+        body: { 
+          items: orderItems, 
+          notes: '' 
+        }
+      });
+
+      if (orderError) {
+        console.error('Error creating order:', orderError);
+        toast({
+          title: "Error al crear pedido",
+          description: "No se pudo registrar el pedido. Por favor intenta nuevamente.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // 2. SEGUNDO: Generar mensaje WhatsApp
+      const message = generateWhatsAppMessage();
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+      
+      // 3. Mostrar modal con enlace
+      showWhatsAppLink(whatsappUrl);
+      
+      // 4. Limpiar carrito
+      clearCart();
+      
+      // 5. Cerrar el dropdown del carrito
+      setShowCartDropdown(false);
+      
+      // 6. Mostrar confirmación
+      toast({
+        title: "¡Pedido registrado!",
+        description: `Pedido #${orderData.orderId.substring(0, 8)} creado exitosamente`,
+      });
+
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast({
+        title: "Error inesperado",
+        description: "Ocurrió un error. Por favor contacta a soporte.",
+        variant: "destructive"
+      });
+    }
   };
 
   const requestQuote = () => {
