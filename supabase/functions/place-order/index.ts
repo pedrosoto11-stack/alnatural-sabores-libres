@@ -163,7 +163,7 @@ serve(async (req) => {
     orderTextWA += `\nEmail: ${client.email}`;
     if (client.phone) orderTextWA += `\nTeléfono: ${client.phone}`;
 
-    console.log("Order created successfully - email confirmation disabled");
+    console.log("Order created successfully - attempting webhook delivery");
 
     // Send webhook to external dashboard (non-blocking)
     const dashboardWebhookUrl = Deno.env.get("DASHBOARD_WEBHOOK_URL");
