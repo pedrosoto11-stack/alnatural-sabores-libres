@@ -10,9 +10,9 @@ const corsHeaders = {
 const createClientSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   email: z.string().trim().email("Invalid email").max(255),
-  phone: z.string().trim().max(20).optional(),
-  company: z.string().trim().max(100).optional(),
-  city: z.string().trim().max(50).optional(),
+  phone: z.string().trim().max(20).nullable().optional(),
+  company: z.string().trim().max(100).nullable().optional(),
+  city: z.string().trim().max(50).nullable().optional(),
 });
 
 const supabase = createClient(

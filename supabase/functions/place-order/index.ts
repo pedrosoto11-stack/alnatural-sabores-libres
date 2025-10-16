@@ -30,15 +30,21 @@ serve(async (req) => {
       throw new Error('Items array is required');
     }
     
-    const items = requestData.items.filter(item => 
-      item && 
-      typeof item.product_id === 'string' && 
-      typeof item.quantity === 'number' && 
-      item.quantity > 0 && 
-      item.quantity <= 100 &&
-      typeof item.unit_price === 'number' &&
-      item.unit_price > 0
-    );
+    const items: OrderItem[] = requestData.items
+      .filter((item: any) => 
+        item && 
+        typeof item.product_id === 'string' && 
+        typeof item.quantity === 'number' && 
+        item.quantity > 0 && 
+        item.quantity <= 100 &&
+        typeof item.unit_price === 'number' &&
+        item.unit_price > 0
+      )
+      .map((item: any) => ({
+        productId: item.product_id,
+        quantity: item.quantity,
+        unitPrice: item.unit_price,
+      }));
     
     if (items.length === 0) {
       throw new Error('At least one valid item is required');
@@ -89,7 +95,7 @@ serve(async (req) => {
     }
 
     // Calculate total amount
-    const totalAmount = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+    const totalAmount = items.reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.unitPrice), 0);
 
     // Use service role to create order (bypassing RLS)
     const adminSupabase = createClient(
@@ -116,7 +122,7 @@ serve(async (req) => {
     }
 
     // Create order items
-    const orderItems = items.map(item => ({
+    const orderItems = items.map((item: OrderItem) => ({
       order_id: order.id,
       product_id: item.productId,
       quantity: item.quantity,
@@ -134,7 +140,7 @@ serve(async (req) => {
     }
 
     // Get product details for WhatsApp notification
-    const productIds = items.map(item => item.productId);
+    const productIds = items.map((item: OrderItem) => item.productId);
     const { data: products } = await adminSupabase
       .from("products")
       .select("id, name, price")
@@ -144,7 +150,7 @@ serve(async (req) => {
     const client = userClient.clients as any;
     let orderTextWA = "Nuevo pedido de " + client.name + ":\n\n";
 
-    items.forEach(item => {
+    items.forEach((item: OrderItem) => {
       const product = products?.find(p => p.id === item.productId);
       if (product) {
         orderTextWA += `• ${product.name} x${item.quantity} = $${(item.quantity * item.unitPrice).toLocaleString()}\n`;
