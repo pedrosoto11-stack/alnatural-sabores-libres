@@ -450,18 +450,19 @@ const Productos = () => {
                             size="sm" 
                             variant="ghost" 
                             onClick={() => {
-                              const quantity = getCartQuantity(product.id);
+                              const productUUID = PRODUCT_ID_MAP[product.id] || product.id;
+                              const quantity = getCartQuantity(productUUID);
                               if (quantity > 0) {
-                                removeFromCart(product.id);
+                                removeFromCart(productUUID);
                               }
                             }}
-                            disabled={getCartQuantity(product.id) === 0}
+                            disabled={getCartQuantity(PRODUCT_ID_MAP[product.id] || product.id) === 0}
                             className="h-10 w-10 p-0 hover:bg-muted disabled:opacity-50"
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
                           <span className="font-medium w-12 text-center">
-                            {getCartQuantity(product.id)}
+                            {getCartQuantity(PRODUCT_ID_MAP[product.id] || product.id)}
                           </span>
                         </div>
                         <Button 
