@@ -449,9 +449,14 @@ const Productos = () => {
                           <Button 
                             size="sm" 
                             variant="ghost" 
-                            onClick={() => removeFromCart(product.id)}
+                            onClick={() => {
+                              const quantity = getCartQuantity(product.id);
+                              if (quantity > 0) {
+                                removeFromCart(product.id);
+                              }
+                            }}
                             disabled={getCartQuantity(product.id) === 0}
-                            className="h-10 w-10 p-0 hover:bg-muted"
+                            className="h-10 w-10 p-0 hover:bg-muted disabled:opacity-50"
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
@@ -461,7 +466,10 @@ const Productos = () => {
                           <Button 
                             size="sm" 
                             variant="ghost" 
-                            onClick={() => handleAddToCart(product)}
+                            onClick={() => {
+                              const price = getProductPrice(product.category, product.id);
+                              addToCart({ id: product.id, name: product.name, price });
+                            }}
                             className="h-10 w-10 p-0 hover:bg-muted"
                           >
                             <Plus className="h-4 w-4" />
@@ -469,7 +477,7 @@ const Productos = () => {
                         </div>
                         <Button 
                           onClick={() => handleAddToCart(product)}
-                          className="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white h-10"
+                          className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground h-10"
                         >
                           <Plus className="h-4 w-4 mr-2" />
                           Agregar al pedido
