@@ -89,7 +89,8 @@ serve(async (req) => {
         )
       `)
       .eq("user_id", user.id)
-      .single();
+      .limit(1)
+      .maybeSingle();
 
     if (clientError || !userClient) {
       console.error("Client lookup error:", clientError);
