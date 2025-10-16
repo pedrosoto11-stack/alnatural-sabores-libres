@@ -74,35 +74,42 @@ export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
           company: (data as any).client_company
         };
         
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          console.error("No authenticated user");
+          return false;
+        }
+        
+        // Link user to client directly in database
+        try {
+          const { error: linkError } = await supabase
+            .from('user_clients')
+            .upsert({
+              user_id: user.id,
+              client_id: clientData.id
+            }, {
+              onConflict: 'user_id,client_id'
+            });
+          
+          if (linkError) {
+            console.error("Error linking user to client:", linkError);
+            return false;
+          }
+          
+          console.log("User successfully linked to client");
+        } catch (linkError) {
+          console.error("Error in user-client linking:", linkError);
+          return false;
+        }
+        
         setClient(clientData);
         setIsAuthenticated(true);
         
         // Store in localStorage
         localStorage.setItem('al_natural_client', JSON.stringify(clientData));
         localStorage.setItem('al_natural_access_code', code.toUpperCase().trim());
-        
-        // Link user to client in database
-        try {
-          const { data: linkData, error: linkError } = await supabase.functions.invoke('link-user-client', {
-            body: { client_id: clientData.id }
-          });
-          
-          if (linkError) {
-            console.error("Error linking user to client:", linkError);
-            // Clear the stored data since linking failed
-            localStorage.removeItem('al_natural_client');
-            localStorage.removeItem('al_natural_access_code');
-            return false;
-          }
-          
-          console.log("User successfully linked to client:", linkData);
-        } catch (linkError) {
-          console.error("Error calling link-user-client:", linkError);
-          // Clear the stored data since linking failed
-          localStorage.removeItem('al_natural_client');
-          localStorage.removeItem('al_natural_access_code');
-          return false;
-        }
         
         return true;
       }

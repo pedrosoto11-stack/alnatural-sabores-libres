@@ -58,31 +58,25 @@ serve(async (req) => {
       throw new Error("No authorization header");
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
-    
-    if (!supabaseUrl || !supabaseKey) {
-      console.error("Missing environment variables:", { 
-        hasUrl: !!supabaseUrl, 
-        hasKey: !!supabaseKey 
-      });
-      throw new Error("Missing Supabase configuration");
-    }
+    // Use service role for all operations
+    const adminSupabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      {
+        global: {
+          headers: { Authorization: authorization },
+        },
+      }
+    );
 
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      global: {
-        headers: { Authorization: authorization },
-      },
-    });
-
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await adminSupabase.auth.getUser();
     
     if (userError || !user) {
       throw new Error("Usuario no autenticado");
     }
 
     // Get user's client information
-    const { data: userClient, error: clientError } = await supabase
+    const { data: userClient, error: clientError } = await adminSupabase
       .from("user_clients")
       .select(`
         client_id,
@@ -98,17 +92,12 @@ serve(async (req) => {
       .single();
 
     if (clientError || !userClient) {
+      console.error("Client lookup error:", clientError);
       throw new Error("Usuario no tiene un cliente asociado");
     }
 
     // Calculate total amount
     const totalAmount = items.reduce((sum: number, item: OrderItem) => sum + (item.quantity * item.unitPrice), 0);
-
-    // Use service role to create order (bypassing RLS)
-    const adminSupabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
 
     // Create order
     const { data: order, error: orderError } = await adminSupabase
