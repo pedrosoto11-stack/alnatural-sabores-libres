@@ -173,7 +173,8 @@ const ProtectedAdmin: React.FC = () => {
 
       if (error) {
         console.error('Error creating client:', error);
-        toast.error("Error al crear el cliente");
+        const errorMessage = result?.error || result?.message || "Error al crear el cliente";
+        toast.error(errorMessage);
         return;
       }
 

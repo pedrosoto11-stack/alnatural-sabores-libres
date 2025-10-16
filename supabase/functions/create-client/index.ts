@@ -71,6 +71,21 @@ serve(async (req) => {
 
     if (clientError) {
       console.error("Error creating client:", clientError);
+      
+      // Check for duplicate email error
+      if (clientError.code === '23505' && clientError.message.includes('clients_email_key')) {
+        return new Response(
+          JSON.stringify({ 
+            error: "El email ya está registrado",
+            message: "Ya existe un cliente con este email. Por favor usa otro email."
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+      
       throw new Error(`Error creating client: ${clientError.message}`);
     }
 
