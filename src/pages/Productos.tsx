@@ -463,17 +463,6 @@ const Productos = () => {
                           <span className="font-medium w-12 text-center">
                             {getCartQuantity(product.id)}
                           </span>
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
-                            onClick={() => {
-                              const price = getProductPrice(product.category, product.id);
-                              addToCart({ id: product.id, name: product.name, price });
-                            }}
-                            className="h-10 w-10 p-0 hover:bg-muted"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
                         </div>
                         <Button 
                           onClick={() => handleAddToCart(product)}
