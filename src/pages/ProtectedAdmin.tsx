@@ -66,7 +66,19 @@ const ProtectedAdmin: React.FC = () => {
   const fetchClients = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase.functions.invoke('list-clients');
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error("Sesión no válida");
+        return;
+      }
+      
+      const { data, error } = await supabase.functions.invoke('list-clients', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
       
       if (error) {
         console.error('Error fetching clients:', error);
@@ -106,8 +118,18 @@ const ProtectedAdmin: React.FC = () => {
   const updateClientStatus = async (clientId: string, isActive: boolean) => {
     setUpdatingClientId(clientId);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error("Sesión no válida");
+        return;
+      }
+      
       const { data, error } = await supabase.functions.invoke('update-client-status', {
-        body: { clientId, isActive }
+        body: { clientId, isActive },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (error) {
@@ -129,6 +151,13 @@ const ProtectedAdmin: React.FC = () => {
   const onSubmit = async (data: ClientFormData) => {
     setIsSubmitting(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error("Sesión no válida");
+        return;
+      }
+      
       const { data: result, error } = await supabase.functions.invoke('create-client', {
         body: {
           name: data.name,
@@ -136,7 +165,10 @@ const ProtectedAdmin: React.FC = () => {
           phone: data.phone || null,
           company: data.company || null,
           city: data.city || null,
-        }
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (error) {
