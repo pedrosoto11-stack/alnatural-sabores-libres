@@ -83,17 +83,25 @@ export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
         
         // Link user to client in database
         try {
-          const { error: linkError } = await supabase.functions.invoke('link-user-client', {
+          const { data: linkData, error: linkError } = await supabase.functions.invoke('link-user-client', {
             body: { client_id: clientData.id }
           });
           
           if (linkError) {
             console.error("Error linking user to client:", linkError);
-            // Don't fail the login, just log the error
+            // Clear the stored data since linking failed
+            localStorage.removeItem('al_natural_client');
+            localStorage.removeItem('al_natural_access_code');
+            return false;
           }
+          
+          console.log("User successfully linked to client:", linkData);
         } catch (linkError) {
           console.error("Error calling link-user-client:", linkError);
-          // Don't fail the login, just log the error
+          // Clear the stored data since linking failed
+          localStorage.removeItem('al_natural_client');
+          localStorage.removeItem('al_natural_access_code');
+          return false;
         }
         
         return true;
