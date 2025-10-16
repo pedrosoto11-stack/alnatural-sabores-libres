@@ -443,8 +443,8 @@ const Productos = () => {
                         <span className="text-sm text-muted-foreground ml-1">por paquete</span>
                       </div>
                     )}
-                    <div className="flex items-center justify-between">
-                      {isAuthenticated ? (
+                    {isAuthenticated ? (
+                      <div className="flex items-center gap-3">
                         <div className="flex items-center border rounded-lg bg-background">
                           <Button 
                             size="sm" 
@@ -467,15 +467,23 @@ const Productos = () => {
                             <Plus className="h-4 w-4" />
                           </Button>
                         </div>
-                      ) : (
                         <Button 
-                          onClick={() => handleAddToCart(product)} 
-                          variant="outline"
+                          onClick={() => handleAddToCart(product)}
+                          className="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white h-10"
                         >
-                          Solicitar cotización
+                          <Plus className="h-4 w-4 mr-2" />
+                          Agregar al pedido
                         </Button>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <Button 
+                        onClick={() => handleAddToCart(product)} 
+                        variant="outline"
+                        className="w-full"
+                      >
+                        Solicitar cotización
+                      </Button>
+                    )}
                   </div>
                 )}
               </CardContent>
