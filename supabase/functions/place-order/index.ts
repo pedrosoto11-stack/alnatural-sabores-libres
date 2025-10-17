@@ -155,7 +155,8 @@ serve(async (req) => {
         total_price: item.quantity * item.unitPrice
       })),
       notes: notes,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      skip_inventory_check: true
     };
 
     const webhookResponse = await fetch(dashboardWebhookUrl, {
