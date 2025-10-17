@@ -150,6 +150,7 @@ const Header = () => {
         // Patacones
         "patacones": "1f7bed1d-c07b-4c48-b723-5df26c0d353c",
         "patacones-gourmet": "1f7bed1d-c07b-4c48-b723-5df26c0d353c",
+        "patacones-platano-verde": "1f7bed1d-c07b-4c48-b723-5df26c0d353c",
         
         // Arepas
         "arepa-platano-verde": "0b79763b-44b8-4f5b-98a8-c0848fefa9e4",
