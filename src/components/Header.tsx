@@ -112,13 +112,13 @@ const Header = () => {
     }
 
     try {
-      // 1. PRIMERO: Guardar pedido en base de datos local
+      // 1. PRIMERO: Verificar que el cliente esté autenticado (con sesión O con código de acceso)
       const { data: session } = await supabase.auth.getSession();
       
-      if (!session?.session) {
+      if (!session?.session && !client) {
         toast({
           title: "Error de autenticación",
-          description: "Debes iniciar sesión para hacer un pedido",
+          description: "Debes iniciar sesión o ingresar con tu código de acceso para hacer un pedido",
           variant: "destructive"
         });
         return;
