@@ -203,6 +203,44 @@ serve(async (req) => {
     
     console.log("Order sent to dashboard successfully");
 
+    // 2. Save order to local database (non-critical)
+    try {
+      const { data: dbOrder, error: dbError } = await adminSupabase
+        .from("orders")
+        .insert({
+          client_id: clientId,
+          user_id: userId, // Puede ser null para clientes con código de acceso
+          total_amount: totalAmount,
+          status: "pending",
+          notes: notes || null,
+        })
+        .select()
+        .single();
+
+      if (dbError) {
+        console.error("Database save error (non-critical):", dbError);
+      } else {
+        // Save order items
+        const orderItemsToSave = items.map((item: OrderItem) => ({
+          order_id: dbOrder.id,
+          product_id: item.productId,
+          quantity: item.quantity,
+          unit_price: item.unitPrice,
+          total_price: item.quantity * item.unitPrice,
+        }));
+
+        const { error: itemsError } = await adminSupabase
+          .from("order_items")
+          .insert(orderItemsToSave);
+
+        if (itemsError) {
+          console.error("Order items save error (non-critical):", itemsError);
+        }
+      }
+    } catch (dbSaveError) {
+      console.error("Database operation failed (non-critical):", dbSaveError);
+    }
+
     // Send WhatsApp notification if configured
     const whatsappToken = Deno.env.get("WHATSAPP_TOKEN");
     const whatsappPhoneId = Deno.env.get("WHATSAPP_PHONE_ID");
