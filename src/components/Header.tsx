@@ -178,7 +178,8 @@ const Header = () => {
       const { data: orderData, error: orderError } = await supabase.functions.invoke('place-order', {
         body: { 
           items: orderItems, 
-          notes: '' 
+          notes: '',
+          client_id: client?.id // Enviar client_id si está disponible (código de acceso)
         }
       });
 

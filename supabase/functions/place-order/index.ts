@@ -16,6 +16,7 @@ interface OrderItem {
 interface PlaceOrderRequest {
   items: OrderItem[];
   notes?: string;
+  client_id?: string; // Client ID cuando se usa código de acceso
 }
 
 serve(async (req) => {
@@ -64,40 +65,67 @@ serve(async (req) => {
     // Use service role for all operations
     const adminSupabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-      {
-        global: {
-          headers: { Authorization: authorization },
-        },
-      }
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { data: { user }, error: userError } = await adminSupabase.auth.getUser();
-    
-    if (userError || !user) {
-      throw new Error("Usuario no autenticado");
+    let clientId = requestData.client_id; // Client ID from request (access code flow)
+    let userId = null;
+
+    // If no client_id provided, try to get user and their client
+    if (!clientId) {
+      const userSupabase = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+        {
+          global: {
+            headers: { Authorization: authorization },
+          },
+        }
+      );
+
+      const { data: { user }, error: userError } = await userSupabase.auth.getUser();
+      
+      if (userError || !user) {
+        throw new Error("Usuario no autenticado");
+      }
+
+      userId = user.id;
+
+      // Get user's client information
+      const { data: userClient, error: clientError } = await adminSupabase
+        .from("user_clients")
+        .select(`
+          client_id,
+          clients (
+            id,
+            name,
+            email,
+            company,
+            phone
+          )
+        `)
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
+
+      if (clientError || !userClient) {
+        console.error("Client lookup error:", clientError);
+        throw new Error("Usuario no tiene un cliente asociado");
+      }
+
+      clientId = userClient.client_id;
     }
 
-    // Get user's client information
-    const { data: userClient, error: clientError } = await adminSupabase
-      .from("user_clients")
-      .select(`
-        client_id,
-        clients (
-          id,
-          name,
-          email,
-          company,
-          phone
-        )
-      `)
-      .eq("user_id", user.id)
-      .limit(1)
+    // Get client information
+    const { data: client, error: clientFetchError } = await adminSupabase
+      .from("clients")
+      .select("id, name, email, company, phone")
+      .eq("id", clientId)
       .maybeSingle();
 
-    if (clientError || !userClient) {
-      console.error("Client lookup error:", clientError);
-      throw new Error("Usuario no tiene un cliente asociado");
+    if (clientFetchError || !client) {
+      console.error("Client fetch error:", clientFetchError);
+      throw new Error("No se pudo obtener información del cliente");
     }
 
     // Calculate total amount
@@ -107,7 +135,6 @@ serve(async (req) => {
     const orderId = crypto.randomUUID();
 
     // Prepare WhatsApp content (using product names from request)
-    const client = userClient.clients as any;
     let orderTextWA = "Nuevo pedido de " + client.name + ":\n\n";
 
     items.forEach((item: OrderItem) => {
