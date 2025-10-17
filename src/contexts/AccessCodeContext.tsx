@@ -74,29 +74,24 @@ export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
           company: (data as any).client_company
         };
         
-        // Get current user
+        // Get current user - but don't fail if not authenticated
         const { data: { user } } = await supabase.auth.getUser();
         
-        if (!user) {
-          console.error("No authenticated user");
-          return false;
-        }
-        
-        // Link user to client using edge function
-        try {
-          const { error: linkError } = await supabase.functions.invoke('link-user-client', {
-            body: { client_id: clientData.id }
-          });
-          
-          if (linkError) {
-            console.error("Error linking user to client:", linkError);
-            return false;
+        // Only link if user is authenticated
+        if (user) {
+          try {
+            const { error: linkError } = await supabase.functions.invoke('link-user-client', {
+              body: { client_id: clientData.id }
+            });
+            
+            if (linkError) {
+              console.error("Error linking user to client:", linkError);
+            } else {
+              console.log("User successfully linked to client");
+            }
+          } catch (linkError) {
+            console.error("Error in user-client linking:", linkError);
           }
-          
-          console.log("User successfully linked to client");
-        } catch (linkError) {
-          console.error("Error in user-client linking:", linkError);
-          return false;
         }
         
         setClient(clientData);
