@@ -485,8 +485,26 @@ const Productos = () => {
             </Card>)}
         </div>
 
+        {/* Cart Summary - Bottom */}
+        {getTotalItems() > 0 && (
+          <div className="mt-12 mb-8 p-4 bg-primary/10 rounded-lg border border-primary/20">
+            <div className="flex justify-between items-center">
+              <span className="font-medium">
+                Productos en tu pedido: {getTotalItems()}
+              </span>
+              <Button 
+                variant="default" 
+                className="bg-primary hover:bg-primary-dark"
+                onClick={handleFinalizarPedido}
+              >
+                {isAuthenticated ? "Finalizar pedido" : "Solicitar cotización"}
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Info Section */}
-        <div className="mt-20 text-center bg-muted/30 rounded-2xl p-12">
+        <div className="mt-8 text-center bg-muted/30 rounded-2xl p-12">
           <h3 className="text-2xl font-bold text-foreground mb-4">
             ¿Necesitas más información?
           </h3>
