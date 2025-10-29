@@ -20,7 +20,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 const clientSchema = z.object({
   name: z.string().trim().min(1, "El nombre es requerido").max(100, "El nombre debe tener menos de 100 caracteres"),
-  email: z.string().trim().email("Email inválido").max(255, "El email debe tener menos de 255 caracteres"),
+  email: z.string().trim().email("Email inválido").max(255, "El email debe tener menos de 255 caracteres").optional().or(z.literal("")),
   phone: z.string().trim().max(20, "El teléfono debe tener menos de 20 caracteres").optional(),
   company: z.string().trim().max(100, "La empresa debe tener menos de 100 caracteres").optional(),
   city: z.string().trim().max(50, "La ciudad debe tener menos de 50 caracteres").optional(),
@@ -309,7 +309,7 @@ const ProtectedAdmin: React.FC = () => {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email *</FormLabel>
+                          <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input type="email" placeholder="cliente@ejemplo.com" {...field} />
                           </FormControl>
