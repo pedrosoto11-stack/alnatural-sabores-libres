@@ -9,7 +9,7 @@ const corsHeaders = {
 
 const createClientSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
-  email: z.string().trim().email("Invalid email").max(255).nullable().optional(),
+  email: z.union([z.string().trim().email("Invalid email").max(255), z.literal("")]).optional().nullable(),
   phone: z.string().trim().max(20).nullable().optional(),
   company: z.string().trim().max(100).nullable().optional(),
   city: z.string().trim().max(50).nullable().optional(),

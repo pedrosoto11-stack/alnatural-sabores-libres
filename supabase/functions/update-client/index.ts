@@ -10,7 +10,7 @@ const corsHeaders = {
 const updateClientSchema = z.object({
   clientId: z.string().uuid(),
   name: z.string().trim().min(1).max(100).optional(),
-  email: z.string().trim().email().max(255).nullable().optional(),
+  email: z.union([z.string().trim().email().max(255), z.literal("")]).optional().nullable(),
   phone: z.string().trim().max(20).nullable().optional(),
   company: z.string().trim().max(100).nullable().optional(),
   city: z.string().trim().max(50).nullable().optional(),
