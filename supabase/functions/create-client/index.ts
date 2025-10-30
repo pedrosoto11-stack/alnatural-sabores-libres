@@ -61,7 +61,7 @@ serve(async (req) => {
       .from("clients")
       .insert({
         name,
-        email,
+        email: email || null,
         phone,
         company,
         city,

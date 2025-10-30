@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     // Build update object with only provided fields
     const updateData: any = {};
     if (validatedData.name !== undefined) updateData.name = validatedData.name;
-    if (validatedData.email !== undefined) updateData.email = validatedData.email;
+    if (validatedData.email !== undefined) updateData.email = validatedData.email || null;
     if (validatedData.phone !== undefined) updateData.phone = validatedData.phone;
     if (validatedData.company !== undefined) updateData.company = validatedData.company;
     if (validatedData.city !== undefined) updateData.city = validatedData.city;
