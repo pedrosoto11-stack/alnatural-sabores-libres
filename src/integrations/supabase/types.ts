@@ -54,7 +54,7 @@ export type Database = {
           city: string | null
           company: string | null
           created_at: string
-          email: string
+          email: string | null
           id: string
           is_active: boolean
           name: string
@@ -65,7 +65,7 @@ export type Database = {
           city?: string | null
           company?: string | null
           created_at?: string
-          email: string
+          email?: string | null
           id?: string
           is_active?: boolean
           name: string
@@ -76,7 +76,7 @@ export type Database = {
           city?: string | null
           company?: string | null
           created_at?: string
-          email?: string
+          email?: string | null
           id?: string
           is_active?: boolean
           name?: string
@@ -262,10 +262,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      generate_access_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_access_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -273,10 +270,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      validate_access_code: {
-        Args: { access_code: string }
-        Returns: Json
-      }
+      validate_access_code: { Args: { access_code: string }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "user"
