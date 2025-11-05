@@ -15,7 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil } from 'lucide-react';
+import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil, Package, Edit2, Save, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const clientSchema = z.object({
@@ -46,6 +46,16 @@ interface Client {
   }>;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  category?: string;
+  image_url?: string;
+  is_active: boolean;
+}
+
 const ProtectedAdmin: React.FC = () => {
   const { user, isAdmin, isLoading: adminLoading, signOut } = useAdmin();
   const [clients, setClients] = useState<Client[]>([]);
@@ -54,6 +64,10 @@ const ProtectedAdmin: React.FC = () => {
   const [updatingClientId, setUpdatingClientId] = useState<string | null>(null);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [editingPrice, setEditingPrice] = useState<string>("");
 
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
@@ -109,9 +123,73 @@ const ProtectedAdmin: React.FC = () => {
     }
   };
 
+  const fetchProducts = async () => {
+    try {
+      setIsLoadingProducts(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('category', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching products:', error);
+        toast.error("Error al cargar los productos");
+        return;
+      }
+
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al cargar los productos");
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
+  const startEditingPrice = (product: Product) => {
+    setEditingProductId(product.id);
+    setEditingPrice(product.price.toString());
+  };
+
+  const cancelEditingPrice = () => {
+    setEditingProductId(null);
+    setEditingPrice("");
+  };
+
+  const saveProductPrice = async (productId: string) => {
+    const newPrice = parseFloat(editingPrice);
+    
+    if (isNaN(newPrice) || newPrice < 0) {
+      toast.error("Por favor ingresa un precio válido");
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ price: newPrice })
+        .eq('id', productId);
+
+      if (error) {
+        console.error('Error updating price:', error);
+        toast.error("Error al actualizar el precio");
+        return;
+      }
+
+      toast.success("Precio actualizado exitosamente");
+      setEditingProductId(null);
+      setEditingPrice("");
+      fetchProducts();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al actualizar el precio");
+    }
+  };
+
   useEffect(() => {
     if (user && isAdmin) {
       fetchClients();
+      fetchProducts();
     }
   }, [user, isAdmin]);
 
@@ -492,6 +570,119 @@ const ProtectedAdmin: React.FC = () => {
                               <Pencil className="h-3 w-3 mr-1" />
                               Editar
                             </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </ScrollArea>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Product Price Management Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="h-5 w-5" />
+                Gestión de Precios de Productos ({products.length})
+              </CardTitle>
+              <CardDescription>
+                Edita los precios de los productos del catálogo
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingProducts ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                  Cargando productos...
+                </div>
+              ) : products.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  No hay productos registrados
+                </div>
+              ) : (
+                <ScrollArea className="h-[400px]">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Producto</TableHead>
+                        <TableHead>Categoría</TableHead>
+                        <TableHead>Precio Actual</TableHead>
+                        <TableHead>Estado</TableHead>
+                        <TableHead>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {products.map((product) => (
+                        <TableRow key={product.id}>
+                          <TableCell className="font-medium">
+                            <div className="space-y-1">
+                              <div>{product.name}</div>
+                              {product.description && (
+                                <div className="text-sm text-muted-foreground line-clamp-1">
+                                  {product.description}
+                                </div>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {product.category || '-'}
+                          </TableCell>
+                          <TableCell>
+                            {editingProductId === product.id ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">$</span>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={editingPrice}
+                                  onChange={(e) => setEditingPrice(e.target.value)}
+                                  className="w-24"
+                                  autoFocus
+                                />
+                              </div>
+                            ) : (
+                              <div className="font-mono text-lg">
+                                ${product.price.toFixed(2)}
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={product.is_active ? "default" : "secondary"}>
+                              {product.is_active ? "Activo" : "Inactivo"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {editingProductId === product.id ? (
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  size="sm"
+                                  onClick={() => saveProductPrice(product.id)}
+                                >
+                                  <Save className="h-3 w-3 mr-1" />
+                                  Guardar
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={cancelEditingPrice}
+                                >
+                                  <X className="h-3 w-3 mr-1" />
+                                  Cancelar
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => startEditingPrice(product)}
+                              >
+                                <Edit2 className="h-3 w-3 mr-1" />
+                                Editar Precio
+                              </Button>
+                            )}
                           </TableCell>
                         </TableRow>
                       ))}
