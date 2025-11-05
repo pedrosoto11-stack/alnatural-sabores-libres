@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useAccessCode } from "@/contexts/AccessCodeContext";
+import { useAdmin } from "@/contexts/AdminContext";
 import { AccessCodeModal } from "@/components/AccessCodeModal";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Minus, Lock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, Minus, Lock, Pencil, Save, X, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import arepasImg from "@/assets/arepas.jpg";
 import tequenosImg from "@/assets/tequeños.jpg";
@@ -239,8 +241,12 @@ const Productos = () => {
   const [showAccessModal, setShowAccessModal] = useState(false);
   const [productPrices, setProductPrices] = useState<Record<string, number>>({});
   const [isLoadingPrices, setIsLoadingPrices] = useState(true);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [editingPrice, setEditingPrice] = useState<string>("");
+  const [isSavingPrice, setIsSavingPrice] = useState(false);
   const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
   const { isAuthenticated } = useAccessCode();
+  const { isAdmin } = useAdmin();
   const { toast } = useToast();
 
   // Cargar precios desde la base de datos
@@ -279,6 +285,73 @@ const Productos = () => {
     const dbId = PRODUCT_ID_MAP[productId];
     return productPrices[dbId] || 0;
   };
+
+  const startEditingPrice = (productId: string) => {
+    const currentPrice = getProductPrice(productId);
+    setEditingProductId(productId);
+    setEditingPrice(currentPrice.toString());
+  };
+
+  const cancelEditingPrice = () => {
+    setEditingProductId(null);
+    setEditingPrice("");
+  };
+
+  const updateProductPrice = async (productId: string) => {
+    const newPrice = parseFloat(editingPrice);
+    
+    if (isNaN(newPrice) || newPrice < 0) {
+      toast({
+        title: "Error",
+        description: "Por favor ingresa un precio válido",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSavingPrice(true);
+    try {
+      const dbId = PRODUCT_ID_MAP[productId];
+      const { error } = await supabase
+        .from('products')
+        .update({ price: newPrice })
+        .eq('id', dbId);
+
+      if (error) {
+        console.error('Error updating price:', error);
+        toast({
+          title: "Error",
+          description: "Error al actualizar el precio",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Update local state
+      setProductPrices(prev => ({
+        ...prev,
+        [dbId]: newPrice
+      }));
+
+      toast({
+        title: "Precio actualizado",
+        description: "El precio se ha actualizado exitosamente"
+      });
+      
+      setEditingProductId(null);
+      setEditingPrice("");
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Error al actualizar el precio",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSavingPrice(false);
+    }
+  };
+
   const handleAddToCart = (product: Product, variant?: string) => {
     if (!isAuthenticated) {
       setShowAccessModal(true);
@@ -399,7 +472,57 @@ const Productos = () => {
                             <div className="flex-1">
                               <span className="text-sm">{variant}</span>
                               {isAuthenticated && (
-                                <div className="text-xs text-muted-foreground mt-1">${getProductPrice(product.id)}</div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  {isAdmin && editingProductId === product.id ? (
+                                    <>
+                                      <span className="text-xs">$</span>
+                                      <Input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        value={editingPrice}
+                                        onChange={(e) => setEditingPrice(e.target.value)}
+                                        className="h-6 w-20 text-xs"
+                                        disabled={isSavingPrice}
+                                      />
+                                      <Button
+                                        size="sm"
+                                        onClick={() => updateProductPrice(product.id)}
+                                        disabled={isSavingPrice}
+                                        className="h-6 w-6 p-0"
+                                      >
+                                        {isSavingPrice ? (
+                                          <Loader2 className="h-3 w-3 animate-spin" />
+                                        ) : (
+                                          <Save className="h-3 w-3" />
+                                        )}
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={cancelEditingPrice}
+                                        disabled={isSavingPrice}
+                                        className="h-6 w-6 p-0"
+                                      >
+                                        <X className="h-3 w-3" />
+                                      </Button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <div className="text-xs text-muted-foreground">${getProductPrice(product.id)}</div>
+                                      {isAdmin && (
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => startEditingPrice(product.id)}
+                                          className="h-6 w-6 p-0"
+                                        >
+                                          <Pencil className="h-3 w-3" />
+                                        </Button>
+                                      )}
+                                    </>
+                                  )}
+                                </div>
                               )}
                             </div>
                             {isAuthenticated ? (
@@ -445,9 +568,55 @@ const Productos = () => {
                   <div className="space-y-3">
                     {/* Show price only when authenticated */}
                     {isAuthenticated && (
-                      <div>
-                        <span className="text-lg font-bold text-primary">${getProductPrice(product.id)}</span>
-                        <span className="text-sm text-muted-foreground ml-1">por paquete</span>
+                      <div className="flex items-center gap-2">
+                        {isAdmin && editingProductId === product.id ? (
+                          <>
+                            <span className="text-lg font-bold">$</span>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={editingPrice}
+                              onChange={(e) => setEditingPrice(e.target.value)}
+                              className="h-9 w-28"
+                              disabled={isSavingPrice}
+                            />
+                            <Button
+                              size="sm"
+                              onClick={() => updateProductPrice(product.id)}
+                              disabled={isSavingPrice}
+                            >
+                              {isSavingPrice ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Save className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={cancelEditingPrice}
+                              disabled={isSavingPrice}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-lg font-bold text-primary">${getProductPrice(product.id)}</span>
+                            <span className="text-sm text-muted-foreground">por paquete</span>
+                            {isAdmin && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => startEditingPrice(product.id)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </>
+                        )}
                       </div>
                     )}
                     {isAuthenticated ? (
