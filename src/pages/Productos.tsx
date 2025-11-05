@@ -205,34 +205,38 @@ const products: Product[] = [
 }];
 
 // Mapeo de IDs de producto string a UUIDs de la base de datos
-// IMPORTANTE: Todos los productos que no estén en la BD usarán un UUID genérico temporalmente
 const PRODUCT_ID_MAP: Record<string, string> = {
-  // Productos que SÍ están en la BD
+  // FAJITAS
   "fajita-yuca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "arepa-platano-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
-  "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
-  "tequenos-platano": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-  "patacones": "234b7735-689f-4e91-b52d-681cbea947c6",
-  "panes-yuca-queso-4": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
+  "fajita-yuca-pimenton": "b1a0ab03-9792-432a-9db4-ba04e1081cc1",
+  "fajita-yuca-zanahoria": "0bc55979-9ac5-459f-8299-f37a57f66724",
+  "fajita-yuca-acelga-espinaca": "b8bf85c5-dcda-466c-b162-408ff25e5a08",
+  "fajita-yuca-oregano": "684b2c67-dcde-41a1-b4c4-9dbb2d421067",
+  "fajita-platano-amarillo": "6221cd34-2d72-459d-a45c-cdad5536e277",
+  "fajita-platano-verde": "b8f65471-f41d-406f-83c2-378ebd4d2ff0",
+  "fajita-cambur-verde": "b77b96e6-3dc5-44f9-a25d-119a4911a814",
   
-  // Para todos los demás productos, usar el UUID de fajita-yuca como fallback
-  // hasta que se agreguen a la BD
-  "fajita-yuca-pimenton": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "fajita-yuca-zanahoria": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "fajita-yuca-acelga-espinaca": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "fajita-yuca-oregano": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "fajita-platano-amarillo": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "fajita-platano-verde": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "fajita-cambur-verde": "37dad07f-a242-4d94-917d-d8c0203fdcfa",
-  "tequenos-yuca": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
+  // TEQUEÑOS
+  "tequenos-yuca": "e290c4a9-cecc-4bcd-bd17-eeb6345780c2",
+  "tequenos-platano": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
   "tequenos-platano-verde": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-  "tequenos-platano-amarillo": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-  "tequenos-combinado": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-  "panes-yuca-queso-12": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
-  "arepa-platano-verde-ajo-perejil": "73d8a386-a327-4809-82ee-79f69e8d1157",
-  "arepa-platano-amarillo": "73d8a386-a327-4809-82ee-79f69e8d1157",
-  "arepa-yuca-mixta-6-sabores": "36516820-5e05-4b10-8164-aa2225daddd6",
-  "arepa-cambur-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
+  "tequenos-platano-amarillo": "ed69f3fa-7a47-4822-81fa-b48596925ae4",
+  "tequenos-combinado": "170f6455-3ba1-4472-9043-e8547aa78395",
+  
+  // PANES
+  "panes-yuca-queso-4": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
+  "panes-yuca-queso-12": "e1a91fcc-0f36-4018-8bf9-2e42757eff62",
+  
+  // AREPAS
+  "arepa-platano-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
+  "arepa-platano-verde-ajo-perejil": "9cf19f05-8846-44d1-8169-2c9826ad2286",
+  "arepa-platano-amarillo": "5ddfd0fe-de90-44b5-a2ce-8b660166890e",
+  "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
+  "arepa-yuca-mixta-6-sabores": "da9c6ec0-c122-4aa2-8861-de7845d4ddfe",
+  "arepa-cambur-verde": "ada7c81d-f39e-4145-984b-b021fff59373",
+  
+  // PATACONES
+  "patacones": "234b7735-689f-4e91-b52d-681cbea947c6",
 };
 
 
