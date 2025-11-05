@@ -15,7 +15,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil, Package, Edit2, Save, X } from 'lucide-react';
+import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil, Package, Edit2, Save, X, Trash2 } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const clientSchema = z.object({
@@ -68,6 +69,9 @@ const ProtectedAdmin: React.FC = () => {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [editingPrice, setEditingPrice] = useState<string>("");
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
@@ -183,6 +187,39 @@ const ProtectedAdmin: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
       toast.error("Error al actualizar el precio");
+    }
+  };
+
+  const confirmDeleteProduct = (product: Product) => {
+    setProductToDelete(product);
+    setShowDeleteDialog(true);
+  };
+
+  const deleteProduct = async () => {
+    if (!productToDelete) return;
+    
+    setDeletingProductId(productToDelete.id);
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ is_active: false })
+        .eq('id', productToDelete.id);
+
+      if (error) {
+        console.error('Error deleting product:', error);
+        toast.error("Error al eliminar el producto");
+        return;
+      }
+
+      toast.success("Producto eliminado exitosamente");
+      setShowDeleteDialog(false);
+      setProductToDelete(null);
+      fetchProducts();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al eliminar el producto");
+    } finally {
+      setDeletingProductId(null);
     }
   };
 
@@ -674,14 +711,29 @@ const ProtectedAdmin: React.FC = () => {
                                 </Button>
                               </div>
                             ) : (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => startEditingPrice(product)}
-                              >
-                                <Edit2 className="h-3 w-3 mr-1" />
-                                Editar Precio
-                              </Button>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => startEditingPrice(product)}
+                                >
+                                  <Edit2 className="h-3 w-3 mr-1" />
+                                  Editar Precio
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => confirmDeleteProduct(product)}
+                                  disabled={deletingProductId === product.id}
+                                >
+                                  {deletingProductId === product.id ? (
+                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                  ) : (
+                                    <Trash2 className="h-3 w-3 mr-1" />
+                                  )}
+                                  Eliminar
+                                </Button>
+                              </div>
                             )}
                           </TableCell>
                         </TableRow>
@@ -802,6 +854,36 @@ const ProtectedAdmin: React.FC = () => {
           </Form>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Product Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción desactivará el producto "{productToDelete?.name}". El producto ya no aparecerá en el catálogo pero se mantendrá en el sistema.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setProductToDelete(null)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={deleteProduct}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deletingProductId ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Eliminando...
+                </>
+              ) : (
+                "Eliminar Producto"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
