@@ -309,9 +309,18 @@ const Productos = () => {
       return;
     }
 
+    const dbId = PRODUCT_ID_MAP[productId];
+    if (!dbId) {
+      toast({
+        title: "Error",
+        description: "Este producto no está configurado en la base de datos",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSavingPrice(true);
     try {
-      const dbId = PRODUCT_ID_MAP[productId];
       const { error } = await supabase
         .from('products')
         .update({ price: newPrice })
