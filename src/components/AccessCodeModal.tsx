@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { useAccessCode } from "@/contexts/AccessCodeContext";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface AccessCodeModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const AccessCodeModal = ({ isOpen, onClose }: AccessCodeModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { validateAccessCode } = useAccessCode();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +110,14 @@ export const AccessCodeModal = ({ isOpen, onClose }: AccessCodeModalProps) => {
         
         <div className="text-center text-sm text-muted-foreground">
           ¿No tienes código? <br />
-          <Button variant="link" className="p-0 h-auto text-primary">
+          <Button 
+            variant="link" 
+            className="p-0 h-auto text-primary"
+            onClick={() => {
+              onClose();
+              navigate("/contacto");
+            }}
+          >
             Contacta a nuestro equipo comercial
           </Button>
         </div>
