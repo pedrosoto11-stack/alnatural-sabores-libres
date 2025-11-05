@@ -217,15 +217,17 @@ const PRODUCT_ID_MAP: Record<string, string> = {
   "fajita-cambur-verde": "b77b96e6-3dc5-44f9-a25d-119a4911a814",
   
   // TEQUEÑOS
-  "tequenos-yuca": "e290c4a9-cecc-4bcd-bd17-eeb6345780c2",
-  "tequenos-platano": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-  "tequenos-platano-verde": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
-  "tequenos-platano-amarillo": "ed69f3fa-7a47-4822-81fa-b48596925ae4",
-  "tequenos-combinado": "170f6455-3ba1-4472-9043-e8547aa78395",
+  "tequenos-yuca-queso": "e290c4a9-cecc-4bcd-bd17-eeb6345780c2",
+  "tequenos-platano-verde-queso": "8ef692f8-edc5-4bc1-ae98-6a014fc073af",
+  "tequenos-platano-amarillo-queso": "ed69f3fa-7a47-4822-81fa-b48596925ae4",
+  "tequenos-combinados-queso": "170f6455-3ba1-4472-9043-e8547aa78395",
   
   // PANES
   "panes-yuca-queso-4": "7bbac9c6-74c2-4c5e-b02c-772cbd6b3f2c",
   "panes-yuca-queso-12": "e1a91fcc-0f36-4018-8bf9-2e42757eff62",
+  
+  // PATACONES
+  "patacones-platano-verde": "234b7735-689f-4e91-b52d-681cbea947c6",
   
   // AREPAS
   "arepa-platano-verde": "73d8a386-a327-4809-82ee-79f69e8d1157",
@@ -234,9 +236,6 @@ const PRODUCT_ID_MAP: Record<string, string> = {
   "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
   "arepa-yuca-mixta-6-sabores": "da9c6ec0-c122-4aa2-8861-de7845d4ddfe",
   "arepa-cambur-verde": "ada7c81d-f39e-4145-984b-b021fff59373",
-  
-  // PATACONES
-  "patacones": "234b7735-689f-4e91-b52d-681cbea947c6",
 };
 
 
