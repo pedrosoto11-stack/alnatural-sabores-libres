@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Users, Calendar, Phone } from "lucide-react";
+import { Loader2, Users, Calendar, Phone, Package, Edit2, Save, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const clientSchema = z.object({
@@ -42,11 +42,25 @@ interface Client {
   }>;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  category?: string;
+  is_active: boolean;
+  image_url?: string;
+}
+
 const Admin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoadingClients, setIsLoadingClients] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  const [editingPrice, setEditingPrice] = useState<string>("");
 
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
@@ -79,9 +93,72 @@ const Admin = () => {
     }
   };
 
+  const fetchProducts = async () => {
+    try {
+      setIsLoadingProducts(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('name');
+      
+      if (error) {
+        console.error('Error fetching products:', error);
+        toast.error("Error al cargar los productos");
+        return;
+      }
+
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al cargar los productos");
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
   useEffect(() => {
     fetchClients();
+    fetchProducts();
   }, []);
+
+  const startEditingPrice = (productId: string, currentPrice: number) => {
+    setEditingProduct(productId);
+    setEditingPrice(currentPrice.toString());
+  };
+
+  const cancelEditingPrice = () => {
+    setEditingProduct(null);
+    setEditingPrice("");
+  };
+
+  const saveProductPrice = async (productId: string) => {
+    const newPrice = parseFloat(editingPrice);
+    if (isNaN(newPrice) || newPrice < 0) {
+      toast.error("Por favor ingrese un precio válido");
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ price: newPrice })
+        .eq('id', productId);
+
+      if (error) {
+        console.error('Error updating product price:', error);
+        toast.error("Error al actualizar el precio");
+        return;
+      }
+
+      toast.success("Precio actualizado exitosamente");
+      setEditingProduct(null);
+      setEditingPrice("");
+      fetchProducts();
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Error al actualizar el precio");
+    }
+  };
 
   const updateClientStatus = async (clientId: string, isActive: boolean) => {
     setUpdatingStatus(clientId);
@@ -324,6 +401,109 @@ const Admin = () => {
                           </TableCell>
                           <TableCell>
                             {new Date(client.created_at).toLocaleDateString('es-ES')}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </ScrollArea>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Products Management Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="h-5 w-5" />
+                Gestión de Precios de Productos
+              </CardTitle>
+              <CardDescription>
+                Actualiza los precios de los productos del catálogo
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingProducts ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                  Cargando productos...
+                </div>
+              ) : products.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  No hay productos registrados
+                </div>
+              ) : (
+                <ScrollArea className="h-[400px]">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Producto</TableHead>
+                        <TableHead>Categoría</TableHead>
+                        <TableHead>Precio Actual</TableHead>
+                        <TableHead>Estado</TableHead>
+                        <TableHead>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {products.map((product) => (
+                        <TableRow key={product.id}>
+                          <TableCell className="font-medium">{product.name}</TableCell>
+                          <TableCell>{product.category || '-'}</TableCell>
+                          <TableCell>
+                            {editingProduct === product.id ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">$</span>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={editingPrice}
+                                  onChange={(e) => setEditingPrice(e.target.value)}
+                                  className="w-24"
+                                  autoFocus
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-lg font-semibold">
+                                ${product.price.toFixed(2)}
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={product.is_active ? "default" : "secondary"}>
+                              {product.is_active ? "Activo" : "Inactivo"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {editingProduct === product.id ? (
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  onClick={() => saveProductPrice(product.id)}
+                                >
+                                  <Save className="h-4 w-4 mr-1" />
+                                  Guardar
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={cancelEditingPrice}
+                                >
+                                  <X className="h-4 w-4 mr-1" />
+                                  Cancelar
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => startEditingPrice(product.id, product.price)}
+                              >
+                                <Edit2 className="h-4 w-4 mr-1" />
+                                Editar Precio
+                              </Button>
+                            )}
                           </TableCell>
                         </TableRow>
                       ))}
