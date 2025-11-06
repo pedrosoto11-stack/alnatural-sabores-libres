@@ -13,7 +13,6 @@ Deno.serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
     // Get user from auth header
@@ -27,17 +26,11 @@ Deno.serve(async (req) => {
 
     const token = authHeader.replace('Bearer ', '');
 
-    // Create client with anon key for auth verification
-    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
-      global: {
-        headers: {
-          Authorization: authHeader,
-        },
-      },
-    });
+    // Create client with service role key (can verify JWT and access all data)
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Verify user is authenticated
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(token);
+    // Verify user is authenticated using the JWT token
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
       console.error('Auth error:', authError);
@@ -48,9 +41,6 @@ Deno.serve(async (req) => {
     }
 
     console.log('User authenticated:', user.email);
-
-    // Create client with service role key for database operations
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Check if user has admin role
     const { data: roleData, error: roleError } = await supabase
