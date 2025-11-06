@@ -398,7 +398,7 @@ const Productos = () => {
   };
 
   const handleAddToCart = (product: Product, variant?: string) => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isAdmin) {
       setShowAccessModal(true);
       return;
     }
@@ -430,7 +430,7 @@ const Productos = () => {
         </div>
 
         {/* Authentication Notice */}
-        {!isAuthenticated && (
+        {!isAuthenticated && !isAdmin && (
           <div className="mb-8 p-6 bg-amber-50 border border-amber-200 rounded-lg">
             <div className="flex items-start space-x-3">
               <Lock className="h-5 w-5 text-amber-600 mt-0.5" />
@@ -439,7 +439,7 @@ const Productos = () => {
                   Acceso para Distribuidores
                 </h3>
                 <p className="text-amber-700 text-sm mb-3">
-                  Para ver precios y realizar pedidos necesitas un código de acceso. Los consumidores pueden explorar nuestros productos y solicitar información.
+                  Para realizar pedidos necesitas un código de acceso. Los consumidores pueden explorar nuestros productos y solicitar información.
                 </p>
                 <Button 
                   size="sm" 
@@ -465,7 +465,7 @@ const Productos = () => {
                 className="bg-primary hover:bg-primary-dark"
                 onClick={handleFinalizarPedido}
               >
-                {isAuthenticated ? "Finalizar pedido" : "Solicitar cotización"}
+                {isAuthenticated || isAdmin ? "Finalizar pedido" : "Solicitar cotización"}
               </Button>
             </div>
           </div>
@@ -516,9 +516,9 @@ const Productos = () => {
                   return <div key={variant} className="flex items-center justify-between p-2 rounded bg-muted/30">
                             <div className="flex-1">
                               <span className="text-sm">{variant}</span>
-                              {isAuthenticated && (
+                              {isAdmin && (
                                 <div className="flex items-center gap-2 mt-1">
-                                  {isAdmin && editingProductId === product.id ? (
+                                  {editingProductId === product.id ? (
                                     <>
                                       <span className="text-xs">$</span>
                                       <Input
@@ -555,22 +555,20 @@ const Productos = () => {
                                   ) : (
                                     <>
                                       <div className="text-xs text-muted-foreground">${getProductPrice(product.id)}</div>
-                                      {isAdmin && (
-                                        <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          onClick={() => startEditingPrice(product.id)}
-                                          className="h-6 w-6 p-0"
-                                        >
-                                          <Pencil className="h-3 w-3" />
-                                        </Button>
-                                      )}
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => startEditingPrice(product.id)}
+                                        className="h-6 w-6 p-0"
+                                      >
+                                        <Pencil className="h-3 w-3" />
+                                      </Button>
                                     </>
                                   )}
                                 </div>
-                              )}
+                            )}
                             </div>
-                            {isAuthenticated ? (
+                            {isAuthenticated || isAdmin ? (
                               <div className="flex items-center border rounded-lg bg-background">
                                 <Button 
                                   size="sm" 
@@ -611,10 +609,10 @@ const Productos = () => {
                 {/* Add to cart for products without variants */}
                 {!product.variants && (
                   <div className="space-y-3">
-                    {/* Show price only when authenticated */}
-                    {isAuthenticated && (
+                    {/* Show price only to admin */}
+                    {isAdmin && (
                       <div className="flex items-center gap-2">
-                        {isAdmin && editingProductId === product.id ? (
+                        {editingProductId === product.id ? (
                           <>
                             <span className="text-lg font-bold">$</span>
                             <Input
@@ -650,21 +648,19 @@ const Productos = () => {
                           <>
                             <span className="text-lg font-bold text-primary">${getProductPrice(product.id)}</span>
                             <span className="text-sm text-muted-foreground">por paquete</span>
-                            {isAdmin && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => startEditingPrice(product.id)}
-                                className="h-8 w-8 p-0"
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                            )}
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => startEditingPrice(product.id)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
                           </>
                         )}
                       </div>
                     )}
-                    {isAuthenticated ? (
+                    {isAuthenticated || isAdmin ? (
                       <div className="flex items-center gap-3">
                         <div className="flex items-center border rounded-lg bg-background">
                           <Button 
