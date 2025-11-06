@@ -312,6 +312,15 @@ const Productos = () => {
       return;
     }
 
+    if (newPrice > 1000000) {
+      toast({
+        title: "Error",
+        description: "El precio no puede exceder $1,000,000",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const dbId = PRODUCT_ID_MAP[productId];
     if (!dbId) {
       toast({
@@ -322,18 +331,42 @@ const Productos = () => {
       return;
     }
 
+    // Verificación adicional de seguridad antes de actualizar
+    if (!isAdmin) {
+      toast({
+        title: "Error",
+        description: "No tienes permisos para modificar precios",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSavingPrice(true);
     try {
-      const { error } = await supabase
-        .from('products')
-        .update({ price: newPrice })
-        .eq('id', dbId);
+      // Usar edge function que valida permisos en el servidor
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Debes iniciar sesión como administrador",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('update-product-price', {
+        body: { 
+          productId: dbId,
+          newPrice: newPrice
+        }
+      });
 
       if (error) {
         console.error('Error updating price:', error);
         toast({
           title: "Error",
-          description: "Error al actualizar el precio",
+          description: error.message || "Error al actualizar el precio",
           variant: "destructive"
         });
         return;
@@ -352,11 +385,11 @@ const Productos = () => {
       
       setEditingProductId(null);
       setEditingPrice("");
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
       toast({
         title: "Error",
-        description: "Error al actualizar el precio",
+        description: error.message || "Error al actualizar el precio",
         variant: "destructive"
       });
     } finally {

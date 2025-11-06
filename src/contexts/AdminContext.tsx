@@ -53,6 +53,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (session?.user) {
         const adminStatus = await checkAdminRole(session.user.id);
         setIsAdmin(adminStatus);
+        console.log(`Admin check for ${session.user.email}: ${adminStatus}`);
       } else {
         setIsAdmin(false);
       }
@@ -64,16 +65,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // Only synchronous state updates here
       setUser(session?.user ?? null);
       
+      // Always reset to false first for security
+      setIsAdmin(false);
+      
       // Defer Supabase calls with setTimeout
       if (session?.user) {
         setTimeout(() => {
           checkAdminRole(session.user.id).then(adminStatus => {
             setIsAdmin(adminStatus);
             setIsLoading(false);
+            console.log(`Admin check for ${session.user.email}: ${adminStatus}`);
           });
         }, 0);
       } else {
-        setIsAdmin(false);
         setIsLoading(false);
       }
     });
