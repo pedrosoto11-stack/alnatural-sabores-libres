@@ -439,7 +439,7 @@ const Productos = () => {
                   Acceso para Distribuidores
                 </h3>
                 <p className="text-amber-700 text-sm mb-3">
-                  Para realizar pedidos necesitas un código de acceso. Los consumidores pueden explorar nuestros productos y solicitar información.
+                  Para ver precios y realizar pedidos necesitas un código de acceso. Los consumidores pueden explorar nuestros productos y solicitar información.
                 </p>
                 <Button 
                   size="sm" 
@@ -516,9 +516,9 @@ const Productos = () => {
                   return <div key={variant} className="flex items-center justify-between p-2 rounded bg-muted/30">
                             <div className="flex-1">
                               <span className="text-sm">{variant}</span>
-                              {isAdmin && (
+                              {(isAuthenticated || isAdmin) && (
                                 <div className="flex items-center gap-2 mt-1">
-                                  {editingProductId === product.id ? (
+                                  {isAdmin && editingProductId === product.id ? (
                                     <>
                                       <span className="text-xs">$</span>
                                       <Input
@@ -555,18 +555,20 @@ const Productos = () => {
                                   ) : (
                                     <>
                                       <div className="text-xs text-muted-foreground">${getProductPrice(product.id)}</div>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => startEditingPrice(product.id)}
-                                        className="h-6 w-6 p-0"
-                                      >
-                                        <Pencil className="h-3 w-3" />
-                                      </Button>
+                                      {isAdmin && (
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => startEditingPrice(product.id)}
+                                          className="h-6 w-6 p-0"
+                                        >
+                                          <Pencil className="h-3 w-3" />
+                                        </Button>
+                                      )}
                                     </>
                                   )}
                                 </div>
-                            )}
+                              )}
                             </div>
                             {isAuthenticated || isAdmin ? (
                               <div className="flex items-center border rounded-lg bg-background">
@@ -609,10 +611,10 @@ const Productos = () => {
                 {/* Add to cart for products without variants */}
                 {!product.variants && (
                   <div className="space-y-3">
-                    {/* Show price only to admin */}
-                    {isAdmin && (
+                    {/* Show price to authenticated users and admin */}
+                    {(isAuthenticated || isAdmin) && (
                       <div className="flex items-center gap-2">
-                        {editingProductId === product.id ? (
+                        {isAdmin && editingProductId === product.id ? (
                           <>
                             <span className="text-lg font-bold">$</span>
                             <Input
@@ -648,14 +650,16 @@ const Productos = () => {
                           <>
                             <span className="text-lg font-bold text-primary">${getProductPrice(product.id)}</span>
                             <span className="text-sm text-muted-foreground">por paquete</span>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => startEditingPrice(product.id)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
+                            {isAdmin && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => startEditingPrice(product.id)}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            )}
                           </>
                         )}
                       </div>
