@@ -15,11 +15,6 @@ const createClientSchema = z.object({
   city: z.string().trim().max(50).nullable().optional(),
 });
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-);
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -32,11 +27,31 @@ serve(async (req) => {
       throw new Error('Authorization header required');
     }
 
-    // Verify user is authenticated and has admin role
-    const { data: { user }, error: userError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+    const token = authHeader.replace('Bearer ', '');
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Create client with anon key for auth verification
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: authHeader,
+        },
+      },
+    });
+
+    // Verify user is authenticated
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser(token);
     if (userError || !user) {
+      console.error('Auth error:', userError);
       throw new Error('Invalid authentication');
     }
+
+    console.log('User authenticated:', user.email);
+
+    // Create client with service role key for database operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Check if user has admin role
     const { data: roleData, error: roleError } = await supabase
@@ -47,6 +62,7 @@ serve(async (req) => {
       .single();
 
     if (roleError || !roleData) {
+      console.error('Role check failed for user:', user.email);
       throw new Error('Admin access required');
     }
 
