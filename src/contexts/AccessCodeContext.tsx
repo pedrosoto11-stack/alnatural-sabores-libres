@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useInactivityLogout } from "@/hooks/useInactivityLogout";
 
@@ -23,12 +23,12 @@ export const AccessCodeProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [client, setClient] = useState<any | null>(null);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setIsAuthenticated(false);
     setClient(null);
     localStorage.removeItem('al_natural_client');
     localStorage.removeItem('al_natural_access_code');
-  };
+  }, []);
 
   // Enable inactivity logout only for access code authenticated clients
   useInactivityLogout({
