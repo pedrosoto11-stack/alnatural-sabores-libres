@@ -20,12 +20,17 @@ export const useAdmin = () => {
   return context;
 };
 
+const ADMIN_EMAIL = "pedrosoto11@gmail.com";
+
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const checkAdminRole = async (userId: string) => {
+  const checkAdminRole = async (userId: string, email?: string | null) => {
+    if (!email || email.toLowerCase() !== ADMIN_EMAIL) {
+      return false;
+    }
     try {
       const { data, error } = await supabase
         .from('user_roles')
