@@ -192,7 +192,7 @@ const products: Product[] = [
   id: "arepa-yuca-mixta-6-sabores",
   name: "Arepa Mixta de Yuca (6 Sabores)",
   category: "Arepas",
-  description: "Una experiencia única: 6 arepas de yuca con diferentes sabores (remolacha, pimentón, zanahoria, acelgas y espinacas, semillas de chía y ajonjolí, orégano). 6 unidades de 140g empacadas al vacío.",
+  description: "Una experiencia única: 6 arepas de yuca con diferentes sabores (yuca, pimentón, zanahoria, acelgas y espinacas, semillas de chía y ajonjolí, orégano). 6 unidades de 140g empacadas al vacío.",
   benefits: ["Sin gluten y aptas para celíacos", "Empacadas al vacío", "Opción variada y nutritiva", "Colores y sabores naturales"],
   image: arepaYucaMixtaImg
 }, {
