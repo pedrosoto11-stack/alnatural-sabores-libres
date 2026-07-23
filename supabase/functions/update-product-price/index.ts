@@ -42,7 +42,17 @@ Deno.serve(async (req) => {
 
     console.log('User authenticated:', user.email);
 
-    // Check if user has admin role
+    // Enforce that only the authorized admin email can modify prices
+    const ADMIN_EMAIL = 'pedrosoto11@gmail.com';
+    if (!user.email || user.email.toLowerCase() !== ADMIN_EMAIL) {
+      console.log(`Unauthorized price update attempt by user: ${user.email}`);
+      return new Response(
+        JSON.stringify({ error: 'No tienes permisos para modificar precios' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check if user has admin role (defense in depth)
     const { data: roleData, error: roleError } = await supabase
       .from('user_roles')
       .select('role')
