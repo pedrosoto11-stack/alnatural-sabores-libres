@@ -56,7 +56,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        const adminStatus = await checkAdminRole(session.user.id);
+        const adminStatus = await checkAdminRole(session.user.id, session.user.email);
         setIsAdmin(adminStatus);
         console.log(`Admin check for ${session.user.email}: ${adminStatus}`);
       } else {
@@ -76,7 +76,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // Defer Supabase calls with setTimeout
       if (session?.user) {
         setTimeout(() => {
-          checkAdminRole(session.user.id).then(adminStatus => {
+          checkAdminRole(session.user.id, session.user.email).then(adminStatus => {
             setIsAdmin(adminStatus);
             setIsLoading(false);
             console.log(`Admin check for ${session.user.email}: ${adminStatus}`);
