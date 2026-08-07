@@ -203,6 +203,13 @@ const products: Product[] = [
   description: "Arepas elaboradas con cambur verde, una alternativa natural, nutritiva y libre de gluten. Sabor suave, ligeramente menos dulce que el plátano. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Elaboradas con cambur verde fresco", "Libres de gluten", "Empacadas al vacío", "Sabor diferente, nutritivo y versátil"],
   image: arepaCamburVerdeImg
+}, {
+  id: "arepa-yuca-rellena-queso",
+  name: "Arepa de Yuca Rellena con Queso",
+  category: "Arepas",
+  description: "Arepa de yuca rellena con queso blanco, lista para calentar y disfrutar. 6 unidades de 140g empacadas al vacío.",
+  benefits: ["Elaboradas con yuca fresca", "Rellenas con queso blanco", "Libres de gluten", "Empacadas al vacío"],
+  image: arepaYucaRellenaQuesoImg
 }];
 
 // Mapeo de IDs de producto string a UUIDs de la base de datos
