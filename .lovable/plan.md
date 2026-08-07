@@ -1,39 +1,26 @@
-## Objetivo
+# Agregar "Arepa de Yuca rellena con queso"
 
-Asegurar que solo el administrador **pedrosoto11@gmail.com** pueda ver y usar la opción de editar precios en la página de Productos. Los clientes que ingresen con código de acceso (o cualquier otro usuario autenticado) no deben ver el ícono de lápiz ni poder invocar la actualización de precio.
+Nuevo producto en la categoría Arepas, con el mismo formato visual y funcional que los demás (imagen, descripción, beneficios, precio y carrito).
 
-## Estado actual verificado
+## Contenido del producto
 
-- En la base de datos, la tabla `user_roles` tiene un único registro con rol `admin` para `pedrosoto11@gmail.com`.
-- `AdminContext` calcula `isAdmin` consultando `user_roles`, así que en teoría solo ese correo obtiene `isAdmin = true`.
-- En `Productos.tsx` los botones/inputs de edición ya están envueltos en `isAdmin && ...`.
-- Aun así, el usuario reporta que clientes ven la opción. Esto puede ocurrir si:
-  1. El cliente inició sesión en el mismo navegador con la cuenta admin previamente (sesión persistida) y luego usó un código de acceso.
-  2. En el futuro se agrega otro rol `admin` en `user_roles` por error.
-  3. Alguien manipula el estado del cliente para forzar `isAdmin = true`.
+- Nombre: Arepa de Yuca rellena con queso
+- Descripción: Arepa de yuca rellena con queso blanco, lista para calentar y disfrutar. 6 unidades de 140 g c/u, empacadas al vacío.
+- Beneficios: Elaboradas con yuca fresca · Rellenas con queso blanco · Libres de gluten · Empacadas al vacío
+- Precio: $5.70
+- Imagen: la foto que enviaste, ajustada al mismo tamaño y encuadre que las demás arepas (864x990)
 
-Para eliminar los tres riesgos añadimos una verificación explícita por correo (defensa en profundidad) en frontend y backend.
+Nota: las fichas actuales no muestran tabla nutricional, así que la información nutricional no se agregará para mantener el mismo formato. Si la quieres visible, puedo añadirla como sección para todos los productos en un paso aparte.
 
-## Cambios propuestos
+## Pasos
 
-### 1. `src/contexts/AdminContext.tsx`
-- Añadir constante `ADMIN_EMAIL = "pedrosoto11@gmail.com"`.
-- Cambiar `setIsAdmin(adminStatus)` por `setIsAdmin(adminStatus && session.user.email?.toLowerCase() === ADMIN_EMAIL)` en las dos ramas donde se calcula (getSession inicial y onAuthStateChange).
-- Resultado: aunque exista otro admin en `user_roles` o alguien manipule la respuesta, el frontend solo activa la UI de admin para ese correo.
+1. Subir la imagen como asset del proyecto, redimensionada a 864x990 igual que el resto.
+2. Agregar el producto al listado de la página de Productos, al final de la categoría Arepas.
+3. Crear el producto en la base de datos (categoría arepas, precio 5.70, activo) y enlazar su ID en el mapa de productos para que funcionen precios, edición de precio por admin y pedidos.
+4. Verificar en móvil y escritorio que la tarjeta se vea igual a las demás.
 
-### 2. `supabase/functions/update-product-price/index.ts`
-- Después de obtener `user` con `supabase.auth.getUser(token)` y antes/además de verificar el rol, comprobar `user.email?.toLowerCase() === "pedrosoto11@gmail.com"`.
-- Si no coincide, devolver `403` con `"No tienes permisos para modificar precios"`.
-- Mantener también la verificación de `user_roles` como capa adicional.
+## Detalles técnicos
 
-### 3. Verificación
-- Con la sesión de Lovable Cloud activa (si es la del admin), probar `supabase--curl_edge_functions` a `/update-product-price` con un `productId` real y un `newPrice` inválido para confirmar validación 400/403 según corresponda.
-- Confirmar visualmente en la vista Productos que:
-  - Sin sesión / con código de acceso: sin ícono de lápiz.
-  - Con sesión admin (pedrosoto11): ícono de lápiz visible y edición funcional.
-
-## Fuera de alcance
-
-- No se tocan otros permisos (gestión de clientes, códigos de acceso).
-- No se modifica el esquema de `user_roles` ni sus políticas RLS.
-- No se cambia la visibilidad de precios para clientes con código (siguen viendo precios, solo no pueden editarlos).
+- `src/assets/arepa-yuca-rellena-queso.png` vía `lovable-assets` o archivo local, siguiendo el patrón de las otras arepas.
+- Nuevo objeto en el array de productos de `src/pages/Productos.tsx` con `id: "arepa-yuca-rellena-queso"`.
+- Insert en la tabla `products` y nueva entrada en `PRODUCT_ID_MAP` con el UUID generado.
