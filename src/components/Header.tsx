@@ -161,6 +161,7 @@ const Header = () => {
         "arepa-yuca-mixta-6-sabores": "f56338dc-98bb-4d01-ad4b-bf2529fb1997",
         "arepa-yuca-mixta": "f56338dc-98bb-4d01-ad4b-bf2529fb1997",
         "arepa-reina-pepiada": "0b79763b-44b8-4f5b-98a8-c0848fefa9e4",
+        "arepa-yuca-rellena-queso": "f25ef3f1-afb9-4be2-9a4f-ce6c1441f06e",
         
         // Wraps
         "wrap-saludable-fajitas": "92d12d3e-ff77-409f-8f4e-195c6597b15f",
