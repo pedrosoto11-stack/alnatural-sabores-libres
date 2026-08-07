@@ -36,6 +36,7 @@ import arepaPlátanoAmarilloImg from "@/assets/arepa-platano-amarillo.png";
 import arepaYucaImg from "@/assets/arepa-yuca.png";
 import arepaYucaMixtaImg from "@/assets/arepa-yuca-mixta.png";
 import arepaCamburVerdeImg from "@/assets/arepa-cambur-verde.png";
+import arepaYucaRellenaQuesoImg from "@/assets/arepa-yuca-rellena-queso.png";
 interface Product {
   id: string;
   name: string;
