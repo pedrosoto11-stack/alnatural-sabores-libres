@@ -244,6 +244,7 @@ const PRODUCT_ID_MAP: Record<string, string> = {
   "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
   "arepa-yuca-mixta-6-sabores": "da9c6ec0-c122-4aa2-8861-de7845d4ddfe",
   "arepa-cambur-verde": "ada7c81d-f39e-4145-984b-b021fff59373",
+  "arepa-yuca-rellena-queso": "c71309e4-b2c4-46d9-9fcf-5b4726e9a42e",
 };
 
 
