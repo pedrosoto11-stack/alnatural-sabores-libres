@@ -36,6 +36,7 @@ import arepaPlátanoAmarilloImg from "@/assets/arepa-platano-amarillo.png";
 import arepaYucaImg from "@/assets/arepa-yuca.png";
 import arepaYucaMixtaImg from "@/assets/arepa-yuca-mixta.png";
 import arepaCamburVerdeImg from "@/assets/arepa-cambur-verde.png";
+import arepaYucaRellenaQuesoImg from "@/assets/arepa-yuca-rellena-queso.png";
 interface Product {
   id: string;
   name: string;
@@ -202,6 +203,13 @@ const products: Product[] = [
   description: "Arepas elaboradas con cambur verde, una alternativa natural, nutritiva y libre de gluten. Sabor suave, ligeramente menos dulce que el plátano. 6 unidades de 140g empacadas al vacío.",
   benefits: ["Elaboradas con cambur verde fresco", "Libres de gluten", "Empacadas al vacío", "Sabor diferente, nutritivo y versátil"],
   image: arepaCamburVerdeImg
+}, {
+  id: "arepa-yuca-rellena-queso",
+  name: "Arepa de Yuca Rellena con Queso",
+  category: "Arepas",
+  description: "Arepa de yuca rellena con queso blanco, lista para calentar y disfrutar. 6 unidades de 140g empacadas al vacío.",
+  benefits: ["Elaboradas con yuca fresca", "Rellenas con queso blanco", "Libres de gluten", "Empacadas al vacío"],
+  image: arepaYucaRellenaQuesoImg
 }];
 
 // Mapeo de IDs de producto string a UUIDs de la base de datos
@@ -236,6 +244,7 @@ const PRODUCT_ID_MAP: Record<string, string> = {
   "arepa-yuca": "36516820-5e05-4b10-8164-aa2225daddd6",
   "arepa-yuca-mixta-6-sabores": "da9c6ec0-c122-4aa2-8861-de7845d4ddfe",
   "arepa-cambur-verde": "ada7c81d-f39e-4145-984b-b021fff59373",
+  "arepa-yuca-rellena-queso": "c71309e4-b2c4-46d9-9fcf-5b4726e9a42e",
 };
 
 
