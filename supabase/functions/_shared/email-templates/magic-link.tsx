@@ -31,11 +31,12 @@ export const MagicLinkEmail = ({
       <Container style={container}>
         <Heading style={h1}>Tu enlace de acceso</Heading>
         <Text style={text}>
-          Click the button below to log in to {siteName}. This link will expire
-          shortly.
+          Haz clic en el botón para entrar a {siteName}. Este enlace caduca en
+          unos minutos.
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Log In
+          Entrar
+
         </Button>
         <Text style={footer}>
           Si no solicitaste este enlace, puedes ignorar este correo.
