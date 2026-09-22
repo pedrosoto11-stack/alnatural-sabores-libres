@@ -5,9 +5,11 @@ import { User } from '@supabase/supabase-js';
 interface AdminContextType {
   user: User | null;
   isAdmin: boolean;
+  canEditPrices: boolean;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: Error | null }>;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
