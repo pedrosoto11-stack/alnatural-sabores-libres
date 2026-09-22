@@ -18,6 +18,7 @@ import Contacto from "./pages/Contacto";
 import Auth from "./pages/Auth";
 import ProtectedAdmin from "./pages/ProtectedAdmin";
 import AdminAuth from "./pages/AdminAuth";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
