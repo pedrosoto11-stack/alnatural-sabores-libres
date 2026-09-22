@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessCodeProvider } from "@/contexts/AccessCodeContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import Header from "./components/Header";
+import RecoveryRedirect from "./components/RecoveryRedirect";
 import Index from "./pages/Index";
 import Nosotros from "./pages/Nosotros";
 import Productos from "./pages/Productos";
@@ -34,6 +35,7 @@ const App = () => (
               <Sonner />
               <BrowserRouter>
               <div className="min-h-screen bg-background">
+                <RecoveryRedirect />
                 <Header />
                 <Routes>
                   <Route path="/" element={<Index />} />
