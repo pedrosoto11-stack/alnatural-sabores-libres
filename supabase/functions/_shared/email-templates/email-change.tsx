@@ -36,10 +36,10 @@ export const EmailChangeEmail = ({
     <Head>
       <style>{darkModeCss}</style>
     </Head>
-    <Preview>Confirma tu correo change for {siteName}</Preview>
+    <Preview>Confirma el cambio de tu correo en {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirma tu correo change</Heading>
+        <Heading style={h1}>Confirma el cambio de tu correo</Heading>
         <Text style={text}>
           You requested to change your email address for {siteName} from{' '}
           <Link href={`mailto:${oldEmail}`} style={link}>
