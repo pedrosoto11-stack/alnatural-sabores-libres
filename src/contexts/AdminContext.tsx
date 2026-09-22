@@ -29,10 +29,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const checkAdminRole = async (userId: string, email?: string | null) => {
-    if (!email || email.toLowerCase() !== ADMIN_EMAIL) {
-      return false;
-    }
+  const checkAdminRole = async (userId: string, _email?: string | null) => {
     try {
       const { data, error } = await supabase
         .from('user_roles')
