@@ -26,20 +26,19 @@ export const MagicLinkEmail = ({
     <Head>
       <style>{darkModeCss}</style>
     </Head>
-    <Preview>Tu enlace de acceso a {siteName}</Preview>
+    <Preview>Your login link for {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Tu enlace de acceso</Heading>
+        <Heading style={h1}>Your login link</Heading>
         <Text style={text}>
-          Haz clic en el botón para entrar a {siteName}. Este enlace caduca en
-          unos minutos.
+          Click the button below to log in to {siteName}. This link will expire
+          shortly.
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Entrar
-
+          Log In
         </Button>
         <Text style={footer}>
-          Si no solicitaste este enlace, puedes ignorar este correo.
+          If you didn't request this link, you can safely ignore this email.
         </Text>
       </Container>
     </Body>
@@ -48,12 +47,12 @@ export const MagicLinkEmail = ({
 
 export default MagicLinkEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Helvetica, Arial, sans-serif' }
+const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
 const container = { padding: '20px 25px' }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#23252a',
+  color: '#16a34a',
   margin: '0 0 20px',
 }
 const text = {
@@ -63,11 +62,11 @@ const text = {
   margin: '0 0 25px',
 }
 const button = {
-  backgroundColor: '#16a34a',
+  backgroundColor: '#22c55e',
   color: '#ffffff',
   fontSize: '14px',
-  border: '1px solid #16a34a',
-  borderRadius: '12px',
+  border: '1px solid #22c55e',
+  borderRadius: '8px',
   padding: '12px 20px',
   textDecoration: 'none',
 }
@@ -75,8 +74,8 @@ const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
 // Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
 const darkModeCss = `
   @media (prefers-color-scheme: dark) {
-    .dm-btn { background-color: #22c55e !important; color: #ffffff !important; }
+    .dm-btn { background-color: #ffffff !important; color: #16a34a !important; }
   }
-  [data-ogsc] .dm-btn { background-color: #22c55e !important; color: #ffffff !important; }
-  [data-ogsb] .dm-btn { background-color: #22c55e !important; color: #ffffff !important; }
+  [data-ogsc] .dm-btn { background-color: #ffffff !important; color: #16a34a !important; }
+  [data-ogsb] .dm-btn { background-color: #ffffff !important; color: #16a34a !important; }
 `

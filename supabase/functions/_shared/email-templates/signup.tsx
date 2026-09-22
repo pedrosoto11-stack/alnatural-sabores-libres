@@ -31,29 +31,29 @@ export const SignupEmail = ({
     <Head>
       <style>{darkModeCss}</style>
     </Head>
-    <Preview>Confirma tu correo en {siteName}</Preview>
+    <Preview>Confirm your email for {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirma tu correo</Heading>
+        <Heading style={h1}>Confirm your email</Heading>
         <Text style={text}>
-          Gracias por registrarte en{' '}
+          Thanks for signing up for{' '}
           <Link href={siteUrl} style={link}>
             <strong>{siteName}</strong>
           </Link>
           !
         </Text>
         <Text style={text}>
-          Confirma tu dirección de correo (
+          Please confirm your email address (
           <Link href={`mailto:${recipient}`} style={link}>
             {recipient}
           </Link>
-          ) con el botón de abajo:
+          ) by clicking the button below:
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Confirmar correo
+          Verify Email
         </Button>
         <Text style={footer}>
-          Si no creaste una cuenta, puedes ignorar este correo.
+          If you didn't create an account, you can safely ignore this email.
         </Text>
       </Container>
     </Body>
@@ -62,12 +62,12 @@ export const SignupEmail = ({
 
 export default SignupEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Helvetica, Arial, sans-serif' }
+const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
 const container = { padding: '20px 25px' }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#23252a',
+  color: '#16a34a',
   margin: '0 0 20px',
 }
 const text = {
@@ -78,11 +78,11 @@ const text = {
 }
 const link = { color: 'inherit', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#16a34a',
+  backgroundColor: '#22c55e',
   color: '#ffffff',
   fontSize: '14px',
-  border: '1px solid #16a34a',
-  borderRadius: '12px',
+  border: '1px solid #22c55e',
+  borderRadius: '8px',
   padding: '12px 20px',
   textDecoration: 'none',
 }
@@ -90,8 +90,8 @@ const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
 // Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
 const darkModeCss = `
   @media (prefers-color-scheme: dark) {
-    .dm-btn { background-color: #22c55e !important; color: #ffffff !important; }
+    .dm-btn { background-color: #ffffff !important; color: #16a34a !important; }
   }
-  [data-ogsc] .dm-btn { background-color: #22c55e !important; color: #ffffff !important; }
-  [data-ogsb] .dm-btn { background-color: #22c55e !important; color: #ffffff !important; }
+  [data-ogsc] .dm-btn { background-color: #ffffff !important; color: #16a34a !important; }
+  [data-ogsb] .dm-btn { background-color: #ffffff !important; color: #16a34a !important; }
 `
