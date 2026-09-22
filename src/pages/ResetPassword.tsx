@@ -23,9 +23,35 @@ const ResetPassword: React.FC = () => {
       if (session) setHasRecoverySession(true);
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const init = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const tokenHash = params.get("token_hash");
+      const code = params.get("code");
+
+      if (tokenHash) {
+        const { data, error } = await supabase.auth.verifyOtp({
+          type: "recovery",
+          token_hash: tokenHash,
+        });
+        if (!error && data.session) {
+          setHasRecoverySession(true);
+          window.history.replaceState({}, "", "/reset-password");
+          return;
+        }
+      } else if (code) {
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error && data.session) {
+          setHasRecoverySession(true);
+          window.history.replaceState({}, "", "/reset-password");
+          return;
+        }
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
       setHasRecoverySession(!!session);
-    });
+    };
+
+    init();
 
     return () => subscription.unsubscribe();
   }, []);
