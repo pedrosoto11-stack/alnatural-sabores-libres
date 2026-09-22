@@ -36,21 +36,21 @@ export const SignupEmail = ({
       <Container style={container}>
         <Heading style={h1}>Confirma tu correo</Heading>
         <Text style={text}>
-          Thanks for signing up for{' '}
+          Gracias por registrarte en{' '}
           <Link href={siteUrl} style={link}>
             <strong>{siteName}</strong>
           </Link>
           !
         </Text>
         <Text style={text}>
-          Please confirm your email address (
+          Confirma tu dirección de correo (
           <Link href={`mailto:${recipient}`} style={link}>
             {recipient}
           </Link>
-          ) by clicking the button below:
+          ) con el botón de abajo:
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Verify Email
+          Confirmar correo
         </Button>
         <Text style={footer}>
           Si no creaste una cuenta, puedes ignorar este correo.

@@ -41,25 +41,24 @@ export const EmailChangeEmail = ({
       <Container style={container}>
         <Heading style={h1}>Confirma el cambio de tu correo</Heading>
         <Text style={text}>
-          You requested to change your email address for {siteName} from{' '}
+          Solicitaste cambiar tu correo en {siteName} de{' '}
           <Link href={`mailto:${oldEmail}`} style={link}>
             {oldEmail}
           </Link>{' '}
-          to{' '}
+          a{' '}
           <Link href={`mailto:${newEmail}`} style={link}>
             {newEmail}
           </Link>
           .
         </Text>
         <Text style={text}>
-          Click the button below to confirm this change:
+          Haz clic en el botón para confirmar el cambio:
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Confirm Email Change
+          Confirmar cambio
         </Button>
         <Text style={footer}>
-          If you didn't request this change, please secure your account
-          immediately.
+          Si no solicitaste este cambio, protege tu cuenta de inmediato.
         </Text>
       </Container>
     </Body>
