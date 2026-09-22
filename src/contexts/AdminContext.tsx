@@ -105,13 +105,29 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     await supabase.auth.signOut();
   };
 
+  const resetPassword = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      return { error };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const canEditPrices =
+    isAdmin && !!user?.email && user.email.toLowerCase() === ADMIN_EMAIL;
+
   return (
     <AdminContext.Provider value={{
       user,
       isAdmin,
+      canEditPrices,
       isLoading,
       signIn,
       signOut,
+      resetPassword,
     }}>
       {children}
     </AdminContext.Provider>
