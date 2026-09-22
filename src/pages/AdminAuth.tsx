@@ -5,16 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Eye, EyeOff, LogOut } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Eye, EyeOff, LogOut } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AdminAuth: React.FC = () => {
-  const { user, isAdmin, isLoading, signIn, signOut } = useAdmin();
+  const { user, isAdmin, isLoading, signIn, signOut, resetPassword } = useAdmin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [mode, setMode] = useState<'login' | 'forgot'>('login');
+  const [resetSent, setResetSent] = useState(false);
 
   // If loading, show loading state
   if (isLoading) {
@@ -70,6 +72,98 @@ const AdminAuth: React.FC = () => {
 
     setLoading(false);
   };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const { error } = await resetPassword(email);
+
+    if (error) {
+      setError('No se pudo enviar el enlace. Intenta de nuevo en unos minutos.');
+    } else {
+      setResetSent(true);
+    }
+
+    setLoading(false);
+  };
+
+  if (mode === 'forgot') {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle>Recuperar contraseña</CardTitle>
+            <CardDescription>
+              Te enviamos un enlace para definir una nueva contraseña
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {resetSent ? (
+              <div className="space-y-4">
+                <Alert>
+                  <CheckCircle2 className="h-4 w-4" />
+                  <AlertDescription>
+                    Si esa dirección tiene una cuenta, recibirá el enlace en unos minutos.
+                    Revisa también la carpeta de correo no deseado.
+                  </AlertDescription>
+                </Alert>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    setMode('login');
+                    setResetSent(false);
+                    setError('');
+                  }}
+                >
+                  Volver al inicio de sesión
+                </Button>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">Email</Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="tucorreo@ejemplo.com"
+                  />
+                </div>
+
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Enviando...' : 'Enviar enlace de recuperación'}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full"
+                  onClick={() => {
+                    setMode('login');
+                    setError('');
+                  }}
+                >
+                  Volver al inicio de sesión
+                </Button>
+              </form>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -130,6 +224,18 @@ const AdminAuth: React.FC = () => {
             
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            </Button>
+
+            <Button
+              type="button"
+              variant="link"
+              className="w-full"
+              onClick={() => {
+                setMode('forgot');
+                setError('');
+              }}
+            >
+              ¿Olvidaste tu contraseña?
             </Button>
           </form>
         </CardContent>

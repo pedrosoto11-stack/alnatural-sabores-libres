@@ -258,7 +258,7 @@ const Productos = () => {
   const [isSavingPrice, setIsSavingPrice] = useState(false);
   const { addToCart, removeFromCart, getCartQuantity, getTotalItems, setShowCartDropdown } = useCart();
   const { isAuthenticated } = useAccessCode();
-  const { isAdmin } = useAdmin();
+  const { isAdmin, canEditPrices } = useAdmin();
   const { toast } = useToast();
 
   // Cargar precios desde la base de datos
@@ -341,7 +341,7 @@ const Productos = () => {
     }
 
     // Verificación adicional de seguridad antes de actualizar
-    if (!isAdmin) {
+    if (!canEditPrices) {
       toast({
         title: "Error",
         description: "No tienes permisos para modificar precios",
@@ -527,7 +527,7 @@ const Productos = () => {
                               <span className="text-sm">{variant}</span>
                               {(isAuthenticated || isAdmin) && (
                                 <div className="flex items-center gap-2 mt-1">
-                                  {isAdmin && editingProductId === product.id ? (
+                                  {canEditPrices && editingProductId === product.id ? (
                                     <>
                                       <span className="text-xs">$</span>
                                       <Input
@@ -564,7 +564,7 @@ const Productos = () => {
                                   ) : (
                                     <>
                                       <div className="text-xs text-muted-foreground">${getProductPrice(product.id)}</div>
-                                      {isAdmin && (
+                                      {canEditPrices && (
                                         <Button
                                           size="sm"
                                           variant="ghost"
@@ -623,7 +623,7 @@ const Productos = () => {
                     {/* Show price to authenticated users and admin */}
                     {(isAuthenticated || isAdmin) && (
                       <div className="flex items-center gap-2">
-                        {isAdmin && editingProductId === product.id ? (
+                        {canEditPrices && editingProductId === product.id ? (
                           <>
                             <span className="text-lg font-bold">$</span>
                             <Input
@@ -659,7 +659,7 @@ const Productos = () => {
                           <>
                             <span className="text-lg font-bold text-primary">${getProductPrice(product.id)}</span>
                             <span className="text-sm text-muted-foreground">por paquete</span>
-                            {isAdmin && (
+                            {canEditPrices && (
                               <Button
                                 size="sm"
                                 variant="ghost"
