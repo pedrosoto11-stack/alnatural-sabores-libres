@@ -51,9 +51,11 @@ export type Database = {
       }
       clients: {
         Row: {
+          address: string | null
           city: string | null
           company: string | null
           created_at: string
+          dashboard_client_id: string | null
           email: string | null
           id: string
           is_active: boolean
@@ -62,9 +64,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          address?: string | null
           city?: string | null
           company?: string | null
           created_at?: string
+          dashboard_client_id?: string | null
           email?: string | null
           id?: string
           is_active?: boolean
@@ -73,9 +77,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          address?: string | null
           city?: string | null
           company?: string | null
           created_at?: string
+          dashboard_client_id?: string | null
           email?: string | null
           id?: string
           is_active?: boolean

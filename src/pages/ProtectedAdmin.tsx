@@ -15,7 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil } from 'lucide-react';
+import { Loader2, Users, UserPlus, Calendar, Mail, Phone, Building, MapPin, LogOut, Pencil, RefreshCw } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -25,6 +25,7 @@ const clientSchema = z.object({
   phone: z.string().trim().max(20, "El teléfono debe tener menos de 20 caracteres").optional(),
   company: z.string().trim().max(100, "La empresa debe tener menos de 100 caracteres").optional(),
   city: z.string().trim().max(50, "La ciudad debe tener menos de 50 caracteres").optional(),
+  address: z.string().trim().max(255, "La dirección debe tener menos de 255 caracteres").optional(),
 });
 
 type ClientFormData = z.infer<typeof clientSchema>;
@@ -36,6 +37,7 @@ interface Client {
   phone?: string;
   company?: string;
   city?: string;
+  address?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -56,6 +58,24 @@ const ProtectedAdmin: React.FC = () => {
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const syncDashboard = async () => {
+    setIsSyncing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-dashboard-clients');
+      if (error || data?.error) {
+        console.error('Sync error:', error || data?.error);
+        toast.error("No se pudo sincronizar con el dashboard. Verifica que el dashboard tenga la función de clientes activa.");
+        return;
+      }
+      toast.success(`Sincronizado: ${data.imported} clientes nuevos, ${data.updated} actualizados`);
+      fetchClients();
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -64,6 +84,7 @@ const ProtectedAdmin: React.FC = () => {
       phone: "",
       company: "",
       city: "",
+      address: "",
     },
   });
 
@@ -75,6 +96,7 @@ const ProtectedAdmin: React.FC = () => {
       phone: "",
       company: "",
       city: "",
+      address: "",
     },
   });
 
@@ -180,6 +202,7 @@ const ProtectedAdmin: React.FC = () => {
           phone: data.phone || null,
           company: data.company || null,
           city: data.city || null,
+          address: data.address || null,
         },
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -212,6 +235,7 @@ const ProtectedAdmin: React.FC = () => {
       phone: client.phone || "",
       company: client.company || "",
       city: client.city || "",
+      address: client.address || "",
     });
     setIsEditDialogOpen(true);
   };
@@ -236,6 +260,7 @@ const ProtectedAdmin: React.FC = () => {
           phone: data.phone || null,
           company: data.company || null,
           city: data.city || null,
+          address: data.address || null,
         },
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -360,6 +385,19 @@ const ProtectedAdmin: React.FC = () => {
                         </FormItem>
                       )}
                     />
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dirección</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ej: Garzón, La Pedregosa" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                   </div>
 
                   <Button 
@@ -391,6 +429,10 @@ const ProtectedAdmin: React.FC = () => {
               <CardDescription>
                 Lista de todos los clientes registrados en el sistema
               </CardDescription>
+              <Button variant="outline" size="sm" className="w-fit" onClick={syncDashboard} disabled={isSyncing}>
+                {isSyncing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                Sincronizar con Dashboard
+              </Button>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -410,6 +452,7 @@ const ProtectedAdmin: React.FC = () => {
                         <TableHead>Cliente</TableHead>
                         <TableHead>Contacto</TableHead>
                         <TableHead>Empresa</TableHead>
+                        <TableHead>Dirección</TableHead>
                         <TableHead>Código de Acceso</TableHead>
                         <TableHead>Estado</TableHead>
                         <TableHead>Fecha de Registro</TableHead>
@@ -454,6 +497,7 @@ const ProtectedAdmin: React.FC = () => {
                               '-'
                             )}
                           </TableCell>
+                          <TableCell>{client.address || '-'}</TableCell>
                           <TableCell>
                             {client.access_codes[0] ? (
                               <Badge variant="secondary" className="font-mono">
@@ -581,6 +625,19 @@ const ProtectedAdmin: React.FC = () => {
                       <FormLabel>Ciudad</FormLabel>
                       <FormControl>
                         <Input placeholder="Ciudad del cliente" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dirección</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ej: Garzón, La Pedregosa" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

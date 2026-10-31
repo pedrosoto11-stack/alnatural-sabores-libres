@@ -14,6 +14,7 @@ const updateClientSchema = z.object({
   phone: z.string().trim().max(20).nullable().optional(),
   company: z.string().trim().max(100).nullable().optional(),
   city: z.string().trim().max(50).nullable().optional(),
+  address: z.string().trim().max(255).nullable().optional(),
 });
 
 Deno.serve(async (req) => {
@@ -89,6 +90,7 @@ Deno.serve(async (req) => {
     if (validatedData.phone !== undefined) updateData.phone = validatedData.phone;
     if (validatedData.company !== undefined) updateData.company = validatedData.company;
     if (validatedData.city !== undefined) updateData.city = validatedData.city;
+    if (validatedData.address !== undefined) updateData.address = validatedData.address;
 
     // Update client
     const { data: client, error: updateError } = await supabase
