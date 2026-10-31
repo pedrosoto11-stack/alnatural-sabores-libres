@@ -69,7 +69,7 @@ const ProtectedAdmin: React.FC = () => {
         toast.error("No se pudo sincronizar con el dashboard. Verifica que el dashboard tenga la función de clientes activa.");
         return;
       }
-      toast.success(`Sincronizado: ${data.imported} clientes nuevos, ${data.updated} actualizados`);
+      toast.success(`Sincronizado: ${data.imported} clientes nuevos, ${data.updated} actualizados, ${data.pushed ?? 0} enviados al dashboard`);
       fetchClients();
     } finally {
       setIsSyncing(false);
