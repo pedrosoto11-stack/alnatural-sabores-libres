@@ -79,7 +79,27 @@ Deno.serve(async (req) => {
     // Send codes back so the dashboard can show them too (best effort)
     try { await callDashboard({ action: "set_codes", codes: codesBack }); } catch (e) { console.warn(e); }
 
-    return json({ success: true, total: dashClients.length, imported, updated });
+    // Push store clients that are not yet in the dashboard
+    let pushed = 0;
+    const { data: pending } = await supabase.from("clients")
+      .select("id, name, email, phone, address").is("dashboard_client_id", null);
+    for (const c of pending || []) {
+      try {
+        const { data: codes } = await supabase.from("access_codes").select("code")
+          .eq("client_id", c.id).eq("is_active", true).limit(1);
+        const res = await callDashboard({
+          action: "upsert",
+          client: { name: c.name, email: c.email, phone: c.phone, address: c.address, access_code: codes?.[0]?.code ?? null },
+        });
+        if (res?.client?.id) {
+          await supabase.from("clients").update({ dashboard_client_id: res.client.id }).eq("id", c.id);
+          pushed++;
+        }
+      } catch (e) { console.warn("push failed", c.name, e); }
+    }
+
+    console.log(`sync done: imported=${imported} updated=${updated} pushed=${pushed}`);
+    return json({ success: true, total: dashClients.length, imported, updated, pushed });
   } catch (e: any) {
     console.error("sync error", e);
     return json({ error: e.message }, 500);
