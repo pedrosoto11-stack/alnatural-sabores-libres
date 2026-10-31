@@ -429,6 +429,10 @@ const ProtectedAdmin: React.FC = () => {
               <CardDescription>
                 Lista de todos los clientes registrados en el sistema
               </CardDescription>
+              <Button variant="outline" size="sm" className="w-fit" onClick={syncDashboard} disabled={isSyncing}>
+                {isSyncing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                Sincronizar con Dashboard
+              </Button>
             </CardHeader>
             <CardContent>
               {isLoading ? (
