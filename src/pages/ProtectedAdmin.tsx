@@ -380,6 +380,11 @@ const ProtectedAdmin: React.FC = () => {
                           <FormLabel>Ciudad</FormLabel>
                           <FormControl>
                             <Input placeholder="Ciudad del cliente" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                 <FormField
                   control={form.control}
                   name="address"
@@ -393,11 +398,6 @@ const ProtectedAdmin: React.FC = () => {
                     </FormItem>
                   )}
                 />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
 
                   <Button 
@@ -625,6 +625,11 @@ const ProtectedAdmin: React.FC = () => {
                       <FormLabel>Ciudad</FormLabel>
                       <FormControl>
                         <Input placeholder="Ciudad del cliente" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={editForm.control}
                   name="address"
@@ -633,11 +638,6 @@ const ProtectedAdmin: React.FC = () => {
                       <FormLabel>Dirección</FormLabel>
                       <FormControl>
                         <Input placeholder="Ej: Garzón, La Pedregosa" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
