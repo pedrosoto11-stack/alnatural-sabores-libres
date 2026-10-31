@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { callDashboard } from "../_shared/dashboard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,6 +14,7 @@ const createClientSchema = z.object({
   phone: z.string().trim().max(20).nullable().optional(),
   company: z.string().trim().max(100).nullable().optional(),
   city: z.string().trim().max(50).nullable().optional(),
+  address: z.string().trim().max(255).nullable().optional(),
 });
 
 serve(async (req) => {
@@ -115,6 +117,19 @@ serve(async (req) => {
     if (codeError) {
       console.error("Error creating access code:", codeError);
       throw new Error(`Error creating access code: ${codeError.message}`);
+    }
+
+    // Register client in the dashboard too (best effort, never blocks)
+    try {
+      const res = await callDashboard({
+        action: "upsert",
+        client: { name, email: email || null, phone: phone || null, address: address || null, access_code: accessCode },
+      });
+      if (res?.client?.id) {
+        await supabase.from("clients").update({ dashboard_client_id: res.client.id }).eq("id", client.id);
+      }
+    } catch (e) {
+      console.warn("Dashboard sync failed:", e);
     }
 
     console.log("Client and access code created successfully - manual handling required");
