@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Users, Calendar, Phone, Package, Edit2, Save, X } from "lucide-react";
+import { Loader2, Users, Calendar, Phone, Package, Edit2, Save, X, RefreshCw } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const clientSchema = z.object({
@@ -20,6 +20,7 @@ const clientSchema = z.object({
   phone: z.string().trim().max(20, "El teléfono debe tener menos de 20 caracteres").optional(),
   company: z.string().trim().max(100, "La empresa debe tener menos de 100 caracteres").optional(),
   city: z.string().trim().max(50, "La ciudad debe tener menos de 50 caracteres").optional(),
+  address: z.string().trim().max(255, "La dirección debe tener menos de 255 caracteres").optional(),
 });
 
 type ClientFormData = z.infer<typeof clientSchema>;
@@ -31,6 +32,7 @@ interface Client {
   phone?: string;
   company?: string;
   city?: string;
+  address?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -61,6 +63,23 @@ const Admin = () => {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
   const [editingPrice, setEditingPrice] = useState<string>("");
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const syncDashboard = async () => {
+    setIsSyncing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-dashboard-clients');
+      if (error || data?.error) {
+        console.error('Sync error:', error || data?.error);
+        toast.error("No se pudo sincronizar con el dashboard. Verifica que el dashboard tenga la función de clientes activa.");
+        return;
+      }
+      toast.success(`Sincronizado: ${data.imported} clientes nuevos, ${data.updated} actualizados`);
+      fetchClients();
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
@@ -70,6 +89,7 @@ const Admin = () => {
       phone: "",
       company: "",
       city: "",
+      address: "",
     },
   });
 
@@ -194,6 +214,7 @@ const Admin = () => {
           phone: data.phone || null,
           company: data.company || null,
           city: data.city || null,
+          address: data.address || null,
         }
       });
 
@@ -303,6 +324,20 @@ const Admin = () => {
                     )}
                   />
 
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Dirección</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ej: Garzón, La Pedregosa" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <Button 
                     type="submit" 
                     className="w-full" 
@@ -332,6 +367,10 @@ const Admin = () => {
               <CardDescription>
                 Lista de todos los clientes registrados en el sistema
               </CardDescription>
+              <Button variant="outline" size="sm" className="w-fit" onClick={syncDashboard} disabled={isSyncing}>
+                {isSyncing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                Sincronizar con Dashboard
+              </Button>
             </CardHeader>
             <CardContent>
               {isLoadingClients ? (
@@ -352,6 +391,7 @@ const Admin = () => {
                         <TableHead>Email</TableHead>
                         <TableHead>Teléfono</TableHead>
                         <TableHead>Empresa</TableHead>
+                        <TableHead>Dirección</TableHead>
                         <TableHead>Código de Acceso</TableHead>
                         <TableHead>Estado</TableHead>
                         <TableHead>Fecha de Registro</TableHead>
@@ -375,6 +415,7 @@ const Admin = () => {
                             </div>
                           </TableCell>
                           <TableCell>{client.company || '-'}</TableCell>
+                          <TableCell>{client.address || '-'}</TableCell>
                           <TableCell>
                             {client.access_codes[0] ? (
                               <code className="text-sm bg-muted px-2 py-1 rounded">
