@@ -59,6 +59,8 @@ serve(async (req: Request) => {
         phone,
         company,
         city,
+        address,
+        dashboard_client_id,
         is_active,
         created_at,
         updated_at,

@@ -60,7 +60,7 @@ serve(async (req) => {
 
     // Validate request body
     const requestData = await req.json();
-    const { name, email, phone, company, city } = createClientSchema.parse(requestData);
+    const { name, email, phone, company, city, address } = createClientSchema.parse(requestData);
 
     console.log("Creating client:", { name, email, company });
 
@@ -73,6 +73,7 @@ serve(async (req) => {
         phone,
         company,
         city,
+        address: address || null,
       })
       .select()
       .single();
